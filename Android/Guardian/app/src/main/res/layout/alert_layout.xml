@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/emerg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="911" />
+
+    <TextView
+        android:id="@+id/guardianText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/guardian" />
+
+    <Button
+        android:id="@+id/guardianBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="555-555-5555" />
+
+    <TextView
+        android:id="@+id/policeText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/police" />
+
+    <Button
+        android:id="@+id/policeBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="555-555-5555" />
+
+    <TextView
+        android:id="@+id/fireText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fire" />
+
+    <Button
+        android:id="@+id/fireBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="555-555-5555" />
+
+    <TextView
+        android:id="@+id/hospitalText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hospital" />
+
+    <Button
+        android:id="@+id/hospitalBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="555-555-5555" />
+</LinearLayout>

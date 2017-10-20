@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Guardian</string>
+    <string name="login">Log In</string>
+    <string name="passwordHint">Password</string>
+    <string name="emailHint">example@example.com</string>
+    <string name="regQues">Don\'t have an account? Register </string>
+    <string name="clickText">here</string>
+    <string name="guardian">Guardian</string>
+    <string name="username">Username</string>
+    <string name="phone">Phone Number</string>
+    <string name="register">Register</string>
+    <string name="alert">Alert</string>
+    <string name="map">Map</string>
+    <string name="linkAcc">Linked Accounts</string>
+    <string name="userAcc">User Account</string>
+    <string name="logout">Logout</string>
+    <string name="police">Police</string>
+    <string name="fire">Fire Department</string>
+    <string name="hospital">Hospital</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="back">Back</string>
+    <string name="email">Email Address</string>
+    <string name="add">+</string>
+</resources>

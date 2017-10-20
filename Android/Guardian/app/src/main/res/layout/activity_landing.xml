@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ca.bcit.comp3717.guardian.LandingActivity">
+
+    <ImageView
+        android:id="@+id/newWestLogo"
+        android:layout_width="152dp"
+        android:layout_height="64dp"
+        app:srcCompat="@drawable/newwestlogo"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageView
+        android:id="@+id/guardianLogo"
+        android:layout_width="101dp"
+        android:layout_height="83dp"
+        app:srcCompat="@drawable/guardianlogo"
+        app:layout_constraintTop_toBottomOf="@+id/newWestLogo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/newWestLogo"
+        android:layout_toStartOf="@+id/login" />
+
+    <TextView
+        android:id="@+id/guardianBtn"
+        android:layout_width="153dp"
+        android:layout_height="46dp"
+        android:text="@string/guardian"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintLeft_toRightOf="@+id/guardianLogo"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_alignBottom="@+id/guardianLogo"
+        android:layout_toEndOf="@+id/guardianLogo"
+        android:layout_marginBottom="15dp" />
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:layout_marginRight="72dp"
+        android:ems="10"
+        android:hint="@string/emailHint"
+        android:inputType="textEmailAddress"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guardianBtn"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginTop="80dp"
+        android:layout_below="@+id/guardianLogo" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="72dp"
+        android:layout_marginRight="72dp"
+        android:ems="10"
+        android:hint="@string/passwordHint"
+        android:inputType="textPassword"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_below="@+id/email"
+        android:layout_alignStart="@+id/textView2"
+        android:layout_marginTop="13dp" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="login"
+        android:text="@string/login"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_below="@+id/password"
+        android:layout_alignEnd="@+id/clickText"
+        android:layout_marginEnd="58dp"
+        android:layout_marginTop="40dp" />
+
+    <Button
+        android:id="@+id/clickText"
+        style="@style/Widget.AppCompat.Button.Small"
+        android:layout_width="88dp"
+        android:layout_height="48dp"
+        android:layout_marginRight="20dp"
+        android:background="@android:color/transparent"
+        android:editable="false"
+        android:ems="10"
+        android:inputType="none"
+        android:onClick="register"
+        android:text="@string/clickText"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_alignBaseline="@+id/textView2"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_toEndOf="@+id/newWestLogo"
+        android:layout_marginStart="47dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/regQues"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="55dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintRight_toLeftOf="@+id/clickText"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/newWestLogo" />
+</RelativeLayout>
