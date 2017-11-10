@@ -23,7 +23,7 @@ namespace Filters.BasicAuthenticationAttribute
             {
                 string authToken = actionContext.Request.Headers.Authorization.Parameter;
                 string decodedToken = Encoding.UTF8.GetString(Convert.FromBase64String(authToken));
-                string username = decodedToken.Substring(0, decodedToken.IndexOf(":"));
+                string email = decodedToken.Substring(0, decodedToken.IndexOf(":"));
                 string password = decodedToken.Substring(decodedToken.IndexOf(":") + 1);
 
                 User user = new User();
@@ -39,10 +39,10 @@ namespace Filters.BasicAuthenticationAttribute
                             ArrayList conditions = new ArrayList();
                             string statement = string.Empty;
 
-                            colums.Add("UserName");
+                            colums.Add("Email");
                             colums.Add("Password");
                             colums.Add("Del");
-                            conditions.Add("UserName = " + QueryGenerator.QuoteString(username));
+                            conditions.Add("Email = " + QueryGenerator.QuoteString(email));
                             statement = QueryGenerator.GenerateSqlSelect(colums, QueryGenerator.UserTable(), conditions);
 
                             cmd.CommandType = CommandType.Text;
@@ -52,7 +52,7 @@ namespace Filters.BasicAuthenticationAttribute
                             {
                                 while (dr.Read())
                                 {
-                                    user.UserName = dr.GetString(0);
+                                    user.Email = dr.GetString(0);
                                     user.Password = dr.GetString(1);
                                     user.Deleted = dr.GetBoolean(2);
                                 }
@@ -67,7 +67,7 @@ namespace Filters.BasicAuthenticationAttribute
                     actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError);
                 }
 
-                if (username.Equals(user.UserName)
+                if (email.Equals(user.Email)
                     && password.Equals(user.Password)
                     && !user.Deleted)
                 {

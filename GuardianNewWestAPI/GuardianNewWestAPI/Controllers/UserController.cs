@@ -10,6 +10,8 @@ using System.Collections;
 using Utilities.QueryGenerator;
 using Utilities.JsonContent;
 using Filters.BasicAuthenticationAttribute;
+using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace UserList.Controllers
 {
@@ -24,14 +26,17 @@ namespace UserList.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound,
             Description = "User not found",
             Type = typeof(IEnumerable<User>))]
-        [SwaggerOperation("GetUserByUserName")]
-        [Route("~/user/get/{userName}")]
-        public IHttpActionResult GetUserByUserName([FromUri] string userName)
+        [SwaggerOperation("GetUserByEmail")]
+        [Route("~/user/get")]
+        public IHttpActionResult GetUserByEmail([FromBody] object data)
         {
             User user = new User();
 
             try
             {
+                var headers = Request.Headers;
+                string email = headers.GetValues("email").First();
+
                 using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
                 {
                     con.Open();
@@ -46,7 +51,10 @@ namespace UserList.Controllers
                         colums.Add("Phone");
                         colums.Add("Login");
                         colums.Add("LastLogin");
-                        conditions.Add("UserName = " + QueryGenerator.QuoteString(userName));
+                        colums.Add("StatusTypeID");
+                        conditions.Add("Email = " + QueryGenerator.QuoteString(email));
+                        conditions.Add(QueryGenerator.And());
+                        conditions.Add("Del = 0");
                         statement = QueryGenerator.GenerateSqlSelect(colums, QueryGenerator.UserTable(), conditions);
 
                         cmd.CommandType = CommandType.Text;
@@ -62,6 +70,7 @@ namespace UserList.Controllers
                                 user.Login = dr.GetBoolean(3);
                                 if (dr.GetValue(4) != DBNull.Value)
                                     user.LastLogin = dr.GetDateTime(4);
+                                user.Status = dr.GetInt32(5);
                             }
                             dr.Close();
                         }
@@ -85,11 +94,17 @@ namespace UserList.Controllers
             Description = "Created",
             Type = typeof(bool))]
         [SwaggerOperation("CreateUser")]
-        [Route("~/user/create/{userName}/{email}/{password}/{phone}")]
-        public IHttpActionResult CreateUser([FromUri] string userName, string email, string password, long phone)
+        [Route("~/user/create")]
+        public IHttpActionResult CreateUser([FromBody] object data)
         {
             try
             {
+                var headers = Request.Headers;
+                string userName = headers.GetValues("userName").First();
+                string email = headers.GetValues("email").First();
+                string password = headers.GetValues("password").First();
+                string phone = headers.GetValues("phone").First();
+
                 using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
                 {
                     con.Open();
@@ -135,12 +150,15 @@ namespace UserList.Controllers
         [SwaggerResponse(HttpStatusCode.NotFound,
             Description = "Account not found",
             Type = typeof(bool))]
-        [SwaggerOperation("DeleteUserByUserName")]
-        [Route("~/user/delete/{username}")]
-        public IHttpActionResult DeleteUserByUserName([FromUri] string userName)
+        [SwaggerOperation("DeleteUserByEmail")]
+        [Route("~/user/delete")]
+        public IHttpActionResult DeleteUserByEmail([FromBody] object data)
         {
             try
             {
+                var headers = Request.Headers;
+                string email = headers.GetValues("email").First();
+
                 using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
                 {
                     con.Open();
@@ -151,7 +169,7 @@ namespace UserList.Controllers
                         string statement;
 
                         assignments.Add("Del = 1");
-                        conditions.Add("UserName = " + QueryGenerator.QuoteString(userName));
+                        conditions.Add("Email = " + QueryGenerator.QuoteString(email));
                         statement = QueryGenerator.GenerateSqlUpdate(QueryGenerator.UserTable(), assignments, conditions);
 
                         cmd.CommandType = CommandType.Text;

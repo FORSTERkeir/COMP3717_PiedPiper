@@ -16,6 +16,8 @@ namespace Utilities.QueryGenerator
         private const string KW_UPDATE = "UPDATE";
         private const string KW_SET = "SET";
         private const string KW_WHERE = "WHERE";
+        private const string KW_AND = "AND";
+        private const string KW_OR = "OR";
         private const string SPACE = " ";
         private const string EQUALS = " = ";
         private const string COMMA = ", ";
@@ -48,6 +50,14 @@ namespace Utilities.QueryGenerator
             return "Location";
         }
 
+        public static string And()
+        {
+            return "AND";
+        }
+        public static string Or()
+        {
+            return "OR";
+        }
         public static string GenerateSqlSelect(ArrayList columns,
                                             string targetTableName,
                                             ArrayList conditions)
@@ -89,11 +99,18 @@ namespace Utilities.QueryGenerator
 
                 foreach (string condition in conditions)
                 {
-                    sbStatement.Append(PRTH_OPEN);
-                    sbStatement.Append(condition);
-                    sbStatement.Append(PRTH_CLOSE);
-                    if ((conditions.IndexOf(condition) < (conditions.Count - 1)))
-                        sbStatement.Append(COMMA);
+                    if (condition.Equals(KW_AND) || condition.Equals(KW_OR))
+                    {
+                        sbStatement.Append(SPACE);
+                        sbStatement.Append(condition);
+                        sbStatement.Append(SPACE);
+                    }
+                    else
+                    {
+                        sbStatement.Append(PRTH_OPEN);
+                        sbStatement.Append(condition);
+                        sbStatement.Append(PRTH_CLOSE);
+                    }
                 }
             }
             sbStatement.Append(SEMI_COLON);
@@ -176,11 +193,18 @@ namespace Utilities.QueryGenerator
 
                 foreach (string condition in conditions)
                 {
-                    sbStatement.Append(PRTH_OPEN);
-                    sbStatement.Append(condition);
-                    sbStatement.Append(PRTH_CLOSE);
-                    if ((conditions.IndexOf(condition) < (conditions.Count - 1)))
-                        sbStatement.Append(COMMA);
+                    if (condition.Equals(KW_AND) || condition.Equals(KW_OR))
+                    {
+                        sbStatement.Append(SPACE);
+                        sbStatement.Append(condition);
+                        sbStatement.Append(SPACE);
+                    }
+                    else
+                    {
+                        sbStatement.Append(PRTH_OPEN);
+                        sbStatement.Append(condition);
+                        sbStatement.Append(PRTH_CLOSE);
+                    }
                 }
             }
             sbStatement.Append(SEMI_COLON);
