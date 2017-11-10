@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Security.Principal;
 using System.Text;
 using System.Web;
-using UserList.Models;
+using Models.User;
 using Utilities.QueryGenerator;
 using Filters.ApiIdentityModel;
 
@@ -39,11 +39,11 @@ namespace Filters.BasicAuthenticationAttribute
                             ArrayList conditions = new ArrayList();
                             string statement = string.Empty;
 
-                            colums.Add("Email");
-                            colums.Add("Password");
-                            colums.Add("Del");
-                            conditions.Add("Email = " + QueryGenerator.QuoteString(email));
-                            statement = QueryGenerator.GenerateSqlSelect(colums, QueryGenerator.UserTable(), conditions);
+                            colums.Add(User.COL_EMAIL);
+                            colums.Add(User.COL_PASSWORD);
+                            colums.Add(User.COL_DELETED);
+                            conditions.Add(User.COL_EMAIL + " = " + QueryGenerator.QuoteString(email));
+                            statement = QueryGenerator.GenerateSqlSelect(colums, User.TABLE, conditions);
 
                             cmd.CommandType = CommandType.Text;
                             cmd.CommandText = statement;

@@ -1,5 +1,4 @@
-﻿using UserList.Models;
-using Swashbuckle.Swagger.Annotations;
+﻿using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -11,9 +10,10 @@ using Utilities.QueryGenerator;
 using Utilities.JsonContent;
 using Filters.BasicAuthenticationAttribute;
 using System.Linq;
+using Models.User;
 using Newtonsoft.Json.Linq;
 
-namespace UserList.Controllers
+namespace Models.Controllers
 {
     public class UserController : ApiController
     {
@@ -22,20 +22,20 @@ namespace UserList.Controllers
         [AcceptVerbs("GET", "POST")]
         [SwaggerResponse(HttpStatusCode.OK,
             Description = "OK",
-            Type = typeof(IEnumerable<User>))]
+            Type = typeof(IEnumerable<User.User>))]
         [SwaggerResponse(HttpStatusCode.NotFound,
             Description = "User not found",
-            Type = typeof(IEnumerable<User>))]
+            Type = typeof(IEnumerable<User.User>))]
         [SwaggerOperation("GetUserByEmail")]
         [Route("~/user/get")]
         public IHttpActionResult GetUserByEmail([FromBody] object data)
         {
-            User user = new User();
+            User.User user = new User.User();
 
             try
             {
                 var headers = Request.Headers;
-                string email = headers.GetValues("email").First();
+                string email = headers.GetValues(Models.User.User.COL_EMAIL).First();
 
                 using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
                 {
@@ -46,16 +46,17 @@ namespace UserList.Controllers
                         ArrayList conditions = new ArrayList();
                         string statement = string.Empty;
 
-                        colums.Add("UserName");
-                        colums.Add("Email");
-                        colums.Add("Phone");
-                        colums.Add("Login");
-                        colums.Add("LastLogin");
-                        colums.Add("StatusTypeID");
-                        conditions.Add("Email = " + QueryGenerator.QuoteString(email));
-                        conditions.Add(QueryGenerator.And());
-                        conditions.Add("Del = 0");
-                        statement = QueryGenerator.GenerateSqlSelect(colums, QueryGenerator.UserTable(), conditions);
+                        colums.Add(Models.User.User.COL_ID);
+                        colums.Add(Models.User.User.COL_USERNAME);
+                        colums.Add(Models.User.User.COL_EMAIL);
+                        colums.Add(Models.User.User.COL_PHONE);
+                        colums.Add(Models.User.User.COL_LOGIN);
+                        colums.Add(Models.User.User.COL_LASTLOGIN);
+                        colums.Add(Models.User.User.COL_STATUS);
+                        conditions.Add(Models.User.User.COL_EMAIL + " = " + QueryGenerator.QuoteString(email));
+                        conditions.Add(QueryGenerator.KW_AND);
+                        conditions.Add(Models.User.User.COL_DELETED + " = 0");
+                        statement = QueryGenerator.GenerateSqlSelect(colums, Models.User.User.TABLE, conditions);
 
                         cmd.CommandType = CommandType.Text;
                         cmd.CommandText = statement;
@@ -64,13 +65,14 @@ namespace UserList.Controllers
                         {
                             while (dr.Read())
                             {
-                                user.UserName = dr.GetString(0);
-                                user.Email = dr.GetString(1);
-                                user.Phone = dr.GetInt64(2);
-                                user.Login = dr.GetBoolean(3);
-                                if (dr.GetValue(4) != DBNull.Value)
-                                    user.LastLogin = dr.GetDateTime(4);
-                                user.Status = dr.GetInt32(5);
+                                user.ID = dr.GetInt32(0);
+                                user.UserName = dr.GetString(1);
+                                user.Email = dr.GetString(2);
+                                user.Phone = dr.GetInt64(3);
+                                user.Login = dr.GetBoolean(4);
+                                if (dr.GetValue(5) != DBNull.Value)
+                                    user.LastLogin = dr.GetDateTime(5);
+                                user.Status = dr.GetInt32(6);
                             }
                             dr.Close();
                         }
@@ -100,10 +102,10 @@ namespace UserList.Controllers
             try
             {
                 var headers = Request.Headers;
-                string userName = headers.GetValues("userName").First();
-                string email = headers.GetValues("email").First();
-                string password = headers.GetValues("password").First();
-                string phone = headers.GetValues("phone").First();
+                string userName = headers.GetValues(Models.User.User.COL_USERNAME).First();
+                string email = headers.GetValues(Models.User.User.COL_EMAIL).First();
+                string password = headers.GetValues(Models.User.User.COL_PASSWORD).First();
+                string phone = headers.GetValues(Models.User.User.COL_PHONE).First();
 
                 using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
                 {
@@ -122,7 +124,7 @@ namespace UserList.Controllers
                         values.Add("NULL"); // LastLogin
                         values.Add("1"); // StatusID
                         values.Add("0"); // Deleted
-                        statement = QueryGenerator.GenerateSqlInsert(values, QueryGenerator.UserTable());
+                        statement = QueryGenerator.GenerateSqlInsert(values, Models.User.User.TABLE);
 
                         cmd.CommandType = CommandType.Text;
                         cmd.CommandText = statement;
@@ -157,7 +159,7 @@ namespace UserList.Controllers
             try
             {
                 var headers = Request.Headers;
-                string email = headers.GetValues("email").First();
+                string email = headers.GetValues(Models.User.User.COL_EMAIL).First();
 
                 using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
                 {
@@ -168,9 +170,9 @@ namespace UserList.Controllers
                         ArrayList conditions = new ArrayList();
                         string statement;
 
-                        assignments.Add("Del = 1");
-                        conditions.Add("Email = " + QueryGenerator.QuoteString(email));
-                        statement = QueryGenerator.GenerateSqlUpdate(QueryGenerator.UserTable(), assignments, conditions);
+                        assignments.Add(Models.User.User.COL_DELETED + " = 1");
+                        conditions.Add(Models.User.User.COL_EMAIL + " = " + QueryGenerator.QuoteString(email));
+                        statement = QueryGenerator.GenerateSqlUpdate(Models.User.User.TABLE, assignments, conditions);
 
                         cmd.CommandType = CommandType.Text;
                         cmd.CommandText = statement.ToString();

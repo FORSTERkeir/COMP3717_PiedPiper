@@ -8,36 +8,31 @@ namespace Utilities.QueryGenerator
 {
     public static class QueryGenerator
     {
-        private const string KW_SELECT = "SELECT";
-        private const string KW_FROM = "FROM";
-        private const string KW_INSERT = "INSERT";
-        private const string KW_INTO = "INTO";
-        private const string KW_VALUE = "VALUES";
-        private const string KW_UPDATE = "UPDATE";
-        private const string KW_SET = "SET";
-        private const string KW_WHERE = "WHERE";
-        private const string KW_AND = "AND";
-        private const string KW_OR = "OR";
-        private const string SPACE = " ";
-        private const string EQUALS = " = ";
-        private const string COMMA = ", ";
-        private const string SQRBRC_OPEN = "[";
-        private const string SQRBRC_CLOSE = "]";
-        private const string PRTH_OPEN = "(";
-        private const string PRTH_CLOSE = ")";
-        private const string SEMI_COLON = ";";
-        private const string CON_STR_NAME = "ConStarBurst_Test_GuardianNewWest";
+        public const string KW_SELECT = "SELECT";
+        public const string KW_FROM = "FROM";
+        public const string KW_INSERT = "INSERT";
+        public const string KW_INTO = "INTO";
+        public const string KW_VALUE = "VALUES";
+        public const string KW_UPDATE = "UPDATE";
+        public const string KW_SET = "SET";
+        public const string KW_WHERE = "WHERE";
+        public const string KW_AND = "AND";
+        public const string KW_OR = "OR";
+        public const string SPACE = " ";
+        public const string EQUALS = " = ";
+        public const string COMMA = ", ";
+        public const string SQRBRC_OPEN = "[";
+        public const string SQRBRC_CLOSE = "]";
+        public const string PRTH_OPEN = "(";
+        public const string PRTH_CLOSE = ")";
+        public const string SEMI_COLON = ";";
+        public const string CON_STR_NAME = "ConStarBurst_Test_GuardianNewWest";
 
         private static string conStr = ConfigurationManager.ConnectionStrings[CON_STR_NAME].ToString();
 
         public static string ConnectionString()
         {
             return conStr;
-        }
-
-        public static string UserTable()
-        {
-            return "User";
         }
 
         public static string LinkedUserTable()
@@ -50,14 +45,6 @@ namespace Utilities.QueryGenerator
             return "Location";
         }
 
-        public static string And()
-        {
-            return "AND";
-        }
-        public static string Or()
-        {
-            return "OR";
-        }
         public static string GenerateSqlSelect(ArrayList columns,
                                             string targetTableName,
                                             ArrayList conditions)

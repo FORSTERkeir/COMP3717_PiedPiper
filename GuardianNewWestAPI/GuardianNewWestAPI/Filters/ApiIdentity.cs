@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Security.Principal;
-using UserList.Models;
+using Models.User;
 
 namespace Filters.ApiIdentityModel
 {
