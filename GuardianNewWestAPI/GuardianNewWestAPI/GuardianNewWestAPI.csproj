@@ -101,6 +101,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\DebugController.cs" />
     <Compile Include="Controllers\EmergencyBldgController.cs" />
+    <Compile Include="Controllers\LocationController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Filters\ApiIdentity.cs" />
@@ -109,6 +110,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\EmergencyBldg.cs" />
+    <Compile Include="Models\LinkedUser.cs" />
+    <Compile Include="Models\Location.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

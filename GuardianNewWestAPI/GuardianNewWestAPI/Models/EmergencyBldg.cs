@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Models.EmergencyBldg
+﻿namespace Models.EmergencyBldg
 {
     public class EmergencyBldg
     {

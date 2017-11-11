@@ -10,23 +10,14 @@ using Utilities.QueryGenerator;
 using Utilities.JsonContent;
 using Filters.BasicAuthenticationAttribute;
 using System.Linq;
-using Models.User;
-using Newtonsoft.Json.Linq;
 
-namespace Models.Controllers
+namespace Models
 {
     public class UserController : ApiController
     {
         [HttpPost]
         [BasicAuthentication]
         [AcceptVerbs("GET", "POST")]
-        [SwaggerResponse(HttpStatusCode.OK,
-            Description = "OK",
-            Type = typeof(IEnumerable<User.User>))]
-        [SwaggerResponse(HttpStatusCode.NotFound,
-            Description = "User not found",
-            Type = typeof(IEnumerable<User.User>))]
-        [SwaggerOperation("GetUserByEmail")]
         [Route("~/user/get")]
         public IHttpActionResult GetUserByEmail([FromBody] object data)
         {
@@ -85,17 +76,13 @@ namespace Models.Controllers
                 return ResponseMessage(JsonContent.ReturnMessage("The request is invalid.", ""));
             }
 
-            if (user.UserName == null)
+            if (user.ID == 0)
                 return ResponseMessage(JsonContent.ReturnMessage("No user is found.", ""));
             return Ok(new { user });
         }
 
         [HttpPost]
         [AcceptVerbs("GET", "POST")]
-        [SwaggerResponse(HttpStatusCode.Created,
-            Description = "Created",
-            Type = typeof(bool))]
-        [SwaggerOperation("CreateUser")]
         [Route("~/user/create")]
         public IHttpActionResult CreateUser([FromBody] object data)
         {
@@ -146,13 +133,6 @@ namespace Models.Controllers
         [HttpPost]
         [BasicAuthentication]
         [AcceptVerbs("GET", "POST")]
-        [SwaggerResponse(HttpStatusCode.OK,
-            Description = "OK",
-            Type = typeof(bool))]
-        [SwaggerResponse(HttpStatusCode.NotFound,
-            Description = "Account not found",
-            Type = typeof(bool))]
-        [SwaggerOperation("DeleteUserByEmail")]
         [Route("~/user/delete")]
         public IHttpActionResult DeleteUserByEmail([FromBody] object data)
         {

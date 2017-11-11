@@ -8,24 +8,20 @@ using System.Data;
 using System.Collections;
 using Utilities.QueryGenerator;
 using Utilities.JsonContent;
-using Filters.BasicAuthenticationAttribute;
-using System.Linq;
-using Models.User;
-using Newtonsoft.Json.Linq;
 
-namespace Models.Controllers
+namespace Models
 {
     public class EmergencyBldgController : ApiController
     {
         [HttpGet]
-        [BasicAuthentication]
+        //[BasicAuthentication]
         [AcceptVerbs("GET")]
         [SwaggerResponse(HttpStatusCode.OK,
             Description = "OK",
-            Type = typeof(IEnumerable<User.User>))]
+            Type = typeof(IEnumerable<EmergencyBldg.EmergencyBldg>))]
         [SwaggerResponse(HttpStatusCode.NotFound,
             Description = "Emergency building not found",
-            Type = typeof(IEnumerable<User.User>))]
+            Type = typeof(IEnumerable<EmergencyBldg.EmergencyBldg>))]
         [SwaggerOperation("GetEmergencyBldgAll")]
         [Route("~/emergencybldg/get/all")]
         public IHttpActionResult GetEmergencyBldgAll()
@@ -35,9 +31,6 @@ namespace Models.Controllers
 
             try
             {
-                //var headers = Request.Headers;
-                //string email = headers.GetValues(Models.User.User.COL_EMAIL).First();
-
                 using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
                 {
                     con.Open();
@@ -58,7 +51,8 @@ namespace Models.Controllers
                         colums.Add(EmergencyBldg.EmergencyBldg.COL_LNG);
                         colums.Add(EmergencyBldg.EmergencyBldg.COL_PHONE);
                         colums.Add(EmergencyBldg.EmergencyBldg.COL_LOCNAME);
-                        statement = QueryGenerator.GenerateSqlSelect(colums, EmergencyBldg.EmergencyBldg.TABLE, conditions);
+                        statement = QueryGenerator.GenerateSqlSelect(colums,
+                            EmergencyBldg.EmergencyBldg.TABLE, conditions);
 
                         cmd.CommandType = CommandType.Text;
                         cmd.CommandText = statement;
@@ -87,11 +81,11 @@ namespace Models.Controllers
                                 i++;
                                 bldg.Lng = dr.GetDouble(i);
                                 i++;
-                                //if (dr.GetValue(i) != DBNull.Value)
-                                //    bldg.Phone = dr.GetInt64(i);
-                                //i++;
-                                //if (dr.GetValue(i) != DBNull.Value)
-                                //    bldg.LocName = dr.GetString(i);
+                                if (dr.GetValue(i) != DBNull.Value)
+                                    bldg.Phone = dr.GetInt64(i);
+                                i++;
+                                if (dr.GetValue(i) != DBNull.Value)
+                                    bldg.LocName = dr.GetString(i);
                                 buildings.Add(bldg);
                             }
                             dr.Close();

@@ -16,8 +16,12 @@ namespace Utilities.QueryGenerator
         public const string KW_UPDATE = "UPDATE";
         public const string KW_SET = "SET";
         public const string KW_WHERE = "WHERE";
+        public const string KW_ORDERBY = "ORDER BY";
+        public const string KW_ASC = "ASC";
+        public const string KW_DSC = "DESC";
         public const string KW_AND = "AND";
         public const string KW_OR = "OR";
+        public const string KW_TOP = "TOP";
         public const string SPACE = " ";
         public const string EQUALS = " = ";
         public const string COMMA = ", ";
@@ -29,6 +33,7 @@ namespace Utilities.QueryGenerator
         public const string CON_STR_NAME = "ConStarBurst_Test_GuardianNewWest";
 
         private static string conStr = ConfigurationManager.ConnectionStrings[CON_STR_NAME].ToString();
+        //private static string conStr = "";
 
         public static string ConnectionString()
         {
@@ -40,14 +45,12 @@ namespace Utilities.QueryGenerator
             return "LinkedUser";
         }
 
-        public static string LocationTable()
-        {
-            return "Location";
-        }
-
         public static string GenerateSqlSelect(ArrayList columns,
                                             string targetTableName,
-                                            ArrayList conditions)
+                                            ArrayList conditions,
+                                            ArrayList orders = null,
+                                            string order = KW_ASC,
+                                            int top = 0)
         {
             string statement = string.Empty;
             StringBuilder sbStatement = new StringBuilder(string.Empty);
@@ -55,32 +58,39 @@ namespace Utilities.QueryGenerator
             // SELECT
             sbStatement.Append(KW_SELECT);
             sbStatement.Append(SPACE);
+            if (top > 0)
+            {
+                sbStatement.Append(KW_TOP);
+                sbStatement.Append(SPACE);
+                sbStatement.Append(top);
+                sbStatement.Append(SPACE);
+            }
             if (columns.Count > 0)
             {
                 for (int i = 0; i < columns.Count; ++i)
                 {
-                    sbStatement.Append(columns[i]);
-                    if (i != columns.Count - 1)
+                    if (i > 0)
                         sbStatement.Append(COMMA);
+                    sbStatement.Append(columns[i]);
                 }
             }
             else
             {
                 sbStatement.Append("*");
             }
-            sbStatement.Append(SPACE);
 
             // FROM
+            sbStatement.Append(SPACE);
             sbStatement.Append(KW_FROM);
             sbStatement.Append(SPACE);
             sbStatement.Append(SQRBRC_OPEN);
             sbStatement.Append(targetTableName);
             sbStatement.Append(SQRBRC_CLOSE);
-            sbStatement.Append(SPACE);
 
             // WHERE
             if (conditions.Count > 0)
             {
+                sbStatement.Append(SPACE);
                 sbStatement.Append(KW_WHERE);
                 sbStatement.Append(SPACE);
 
@@ -100,7 +110,24 @@ namespace Utilities.QueryGenerator
                     }
                 }
             }
-            sbStatement.Append(SEMI_COLON);
+
+            // ORDER BY
+            if (orders != null && orders.Count > 0)
+            {
+                sbStatement.Append(SPACE);
+                sbStatement.Append(KW_ORDERBY);
+                sbStatement.Append(SPACE);
+
+                for (int i = 0; i < orders.Count; ++i)
+                {
+                    if (i > 0)
+                        sbStatement.Append(COMMA);
+                    sbStatement.Append(orders[i]);
+                }
+                sbStatement.Append(SPACE);
+
+                sbStatement.Append(order);
+            }
 
             return sbStatement.ToString();
         }
@@ -131,9 +158,9 @@ namespace Utilities.QueryGenerator
                 sbStatement.Append(PRTH_OPEN);
                 for (int i = 0; i < values.Count; ++i)
                 {
-                    sbStatement.Append(values[i]);
-                    if (i != values.Count - 1)
+                    if (i > 0)
                         sbStatement.Append(COMMA);
+                    sbStatement.Append(values[i]);
                 }
                 sbStatement.Append(PRTH_CLOSE);
             }
@@ -165,9 +192,9 @@ namespace Utilities.QueryGenerator
                 sbStatement.Append(SPACE);
                 for (int i = 0; i < assignments.Count; ++i)
                 {
-                    sbStatement.Append(assignments[i]);
-                    if (i != assignments.Count - 1)
+                    if (i > 0)
                         sbStatement.Append(COMMA);
+                    sbStatement.Append(assignments[i]);
                 }
             }
             sbStatement.Append(SPACE);
@@ -284,6 +311,11 @@ namespace Utilities.QueryGenerator
         public static string QuoteString(string str)
         {
             return ("'" + str + "'");
+        }
+
+        public static string ParenthesisString(string str)
+        {
+            return ("(" + str + ")");
         }
     }
 }
