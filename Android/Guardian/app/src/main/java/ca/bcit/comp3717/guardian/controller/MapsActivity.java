@@ -1,4 +1,4 @@
-package ca.bcit.comp3717.guardian;
+package ca.bcit.comp3717.guardian.controller;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -20,6 +20,9 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import ca.bcit.comp3717.guardian.HttpHandler;
+import ca.bcit.comp3717.guardian.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 

@@ -1,4 +1,4 @@
-package ca.bcit.comp3717.guardian;
+package ca.bcit.comp3717.guardian.controller;
 
 /**
  * Created by Haley on 11/10/2017.

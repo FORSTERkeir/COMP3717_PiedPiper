@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity" >
+    tools:context=".controller.MapsActivity" >
 
 
     <Button
@@ -19,7 +19,7 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ca.bcit.comp3717.guardian.MapsActivity" />
+    tools:context="ca.bcit.comp3717.guardian.controller.MapsActivity" />
 
     <LinearLayout
         android:layout_width="match_parent"
