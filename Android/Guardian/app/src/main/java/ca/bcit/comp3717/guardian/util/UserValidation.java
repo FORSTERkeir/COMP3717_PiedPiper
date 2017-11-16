@@ -50,7 +50,7 @@ public class UserValidation {
     public static boolean createUserAccountValidation(String jsonResponse) {
         try {
             JSONObject obj = new JSONObject(jsonResponse);
-            if (obj.getString("Message").equalsIgnoreCase("The request is processed")) {
+            if (obj.getString("Message").equalsIgnoreCase("The request is processed.")) {
                 return true;
             }
 

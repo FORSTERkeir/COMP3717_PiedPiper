@@ -19,6 +19,7 @@ import ca.bcit.comp3717.guardian.util.UserValidation;
 public class LandingActivity extends AppCompatActivity {
 
     private String TAG = LandingActivity.class.getSimpleName();
+    private Dialog registerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,20 +29,20 @@ public class LandingActivity extends AppCompatActivity {
 
     public void register(View view){
         // Create custom dialog object
-        final Dialog dialog = new Dialog(LandingActivity.this);
+        registerDialog = new Dialog(LandingActivity.this);
         // Include dialog.xml file
-        dialog.setContentView(R.layout.register_layout);
+        registerDialog.setContentView(R.layout.register_layout);
         // Set dialog title
-        dialog.setTitle("Register");
+        registerDialog.setTitle("Register");
 
-        dialog.show();
+        registerDialog.show();
 
-        Button register = (Button) dialog.findViewById(R.id.button_dialog_register_register);
+        Button register = (Button) registerDialog.findViewById(R.id.button_dialog_register_register);
         register.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                registerRequest(dialog);
+                registerRequest(registerDialog);
             }
         });
     }
@@ -61,6 +62,7 @@ public class LandingActivity extends AppCompatActivity {
     private void registerResponse(User user) {
         if (user != null) {
             goToMainActivity(user);
+            registerDialog.dismiss();
         } else {
             Log.e(TAG, "That username is already taken.");
         }
