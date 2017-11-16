@@ -1,4 +1,4 @@
-package ca.bcit.comp3717.guardian;
+package ca.bcit.comp3717.guardian.controller;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +11,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import ca.bcit.comp3717.guardian.R;
+import ca.bcit.comp3717.guardian.controller.MainActivity;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 

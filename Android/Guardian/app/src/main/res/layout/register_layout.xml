@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/editText_dialog_register_userName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -12,18 +12,18 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/username"
-        android:inputType="textEmailAddress"
+        android:id="@+id/editText_dialog_register_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="4dp"
-        android:hint="@string/emailHint" />
+        android:layout_marginTop="16dp"
+        android:hint="@string/emailHint"
+        android:inputType="textEmailAddress" />
 
     <EditText
-        android:id="@+id/phone"
+        android:id="@+id/editText_dialog_register_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -31,7 +31,7 @@
         android:inputType="phone" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/editText_dialog_register_password"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         android:hint="@string/passwordHint"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_dialog_register_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/register" />
