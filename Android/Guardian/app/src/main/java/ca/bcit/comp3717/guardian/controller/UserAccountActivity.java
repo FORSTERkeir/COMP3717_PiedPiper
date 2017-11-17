@@ -1,9 +1,12 @@
-package ca.bcit.comp3717.guardian;
+package ca.bcit.comp3717.guardian.controller;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import ca.bcit.comp3717.guardian.R;
+import ca.bcit.comp3717.guardian.controller.MainActivity;
 
 public class UserAccountActivity extends Activity {
 
