@@ -19,35 +19,20 @@ namespace Models
         [BasicAuthentication]
         [AcceptVerbs("GET", "POST")]
         [Route("~/location/get")]
-        public IHttpActionResult GetLocationByEmail([FromBody] object data)
+        public IHttpActionResult GetLocationById([FromBody] object data)
         {
             Location.Location location = new Location.Location();
 
             try
             {
                 var headers = Request.Headers;
-                string email = headers.GetValues(Models.User.User.COL_EMAIL).First();
+                string id = headers.GetValues(Models.User.User.COL_ID).First();
 
                 using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
                 {
                     con.Open();
                     using (SqlCommand cmd = con.CreateCommand())
                     {
-                        ArrayList innerColums = new ArrayList();
-                        ArrayList innerConditions = new ArrayList();
-                        string innerSelect = string.Empty;
-
-                        innerColums.Add(Models.User.User.COL_ID);
-                        innerConditions.Add(Models.User.User.COL_EMAIL
-                                            + " = "
-                                            + QueryGenerator.QuoteString(email));
-                        innerSelect = QueryGenerator.GenerateSqlSelect(innerColums,
-                                                                       Models.User.User.TABLE,
-                                                                       innerConditions,
-                                                                       null,
-                                                                       QueryGenerator.KW_ASC,
-                                                                       1);
-
                         ArrayList colums = new ArrayList();
                         ArrayList conditions = new ArrayList();
                         ArrayList orders = new ArrayList();
@@ -58,9 +43,7 @@ namespace Models
                         colums.Add(Location.Location.COL_LAT);
                         colums.Add(Location.Location.COL_LNG);
                         colums.Add(Location.Location.COL_ALERTTIME);
-                        conditions.Add(Location.Location.COL_USERID
-                                       + " = "
-                                       + QueryGenerator.ParenthesisString(innerSelect));
+                        conditions.Add(Location.Location.COL_USERID + "=" + id);
                         orders.Add(Location.Location.COL_ALERTTIME);
                         statement = QueryGenerator.GenerateSqlSelect(colums,
                                                                      Location.Location.TABLE,
@@ -111,7 +94,7 @@ namespace Models
             try
             {
                 var headers = Request.Headers;
-                string email = headers.GetValues(Models.User.User.COL_EMAIL).First();
+                string id = headers.GetValues(Models.User.User.COL_ID).First();
                 string lat = headers.GetValues(Location.Location.COL_LAT).First();
                 string lng = headers.GetValues(Location.Location.COL_LNG).First();
                 string time = headers.GetValues(Location.Location.COL_ALERTTIME).First();
@@ -121,26 +104,11 @@ namespace Models
                     con.Open();
                     using (SqlCommand cmd = con.CreateCommand())
                     {
-                        ArrayList innerColums = new ArrayList();
-                        ArrayList innerConditions = new ArrayList();
-                        string innerSelect = string.Empty;
-
-                        innerColums.Add(Models.User.User.COL_ID);
-                        innerConditions.Add(Models.User.User.COL_EMAIL
-                                            + " = "
-                                            + QueryGenerator.QuoteString(email));
-                        innerSelect = QueryGenerator.GenerateSqlSelect(innerColums,
-                                                                       Models.User.User.TABLE,
-                                                                       innerConditions,
-                                                                       null,
-                                                                       QueryGenerator.KW_ASC,
-                                                                       1);
-
                         ArrayList values = new ArrayList();
                         ArrayList assignments = new ArrayList();
                         string statement = string.Empty;
 
-                        values.Add(QueryGenerator.ParenthesisString(innerSelect));
+                        values.Add(id);
                         values.Add(lat);
                         values.Add(lng);
                         values.Add(QueryGenerator.QuoteString(time));

@@ -42,6 +42,7 @@ namespace Filters.BasicAuthenticationAttribute
                             colums.Add(User.COL_EMAIL);
                             colums.Add(User.COL_PASSWORD);
                             colums.Add(User.COL_DELETED);
+                            colums.Add(User.COL_LOGIN);
                             conditions.Add(User.COL_EMAIL + " = " + QueryGenerator.QuoteString(email));
                             statement = QueryGenerator.GenerateSqlSelect(colums, User.TABLE, conditions);
 
@@ -55,6 +56,7 @@ namespace Filters.BasicAuthenticationAttribute
                                     user.Email = dr.GetString(0);
                                     user.Password = dr.GetString(1);
                                     user.Deleted = dr.GetBoolean(2);
+                                    user.Login = dr.GetBoolean(3);
                                 }
                                 dr.Close();
                             }
@@ -69,7 +71,8 @@ namespace Filters.BasicAuthenticationAttribute
 
                 if (email.Equals(user.Email)
                     && password.Equals(user.Password)
-                    && !user.Deleted)
+                    && !user.Deleted
+                    && user.Login)
                 {
                     HttpContext.Current.User = new GenericPrincipal(new ApiIdentity(user), new string[] { });
                     base.OnActionExecuting(actionContext);

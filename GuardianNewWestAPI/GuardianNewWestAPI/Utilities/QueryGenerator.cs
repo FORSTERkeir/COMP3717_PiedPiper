@@ -22,6 +22,10 @@ namespace Utilities.QueryGenerator
         public const string KW_AND = "AND";
         public const string KW_OR = "OR";
         public const string KW_TOP = "TOP";
+        public const string KW_IF = "IF";
+        public const string KW_ELSE = "ELSE";
+        public const string KW_ELSEIF = "ELSE IF";
+        public const string KW_EXISTS = "EXISTS";
         public const string SPACE = " ";
         public const string EQUALS = " = ";
         public const string COMMA = ", ";
@@ -221,7 +225,6 @@ namespace Utilities.QueryGenerator
                     }
                 }
             }
-            sbStatement.Append(SEMI_COLON);
 
             return sbStatement.ToString();
         }
@@ -297,6 +300,134 @@ namespace Utilities.QueryGenerator
             sSqlDeletes = sbSqlStatements.ToString();
             return sSqlDeletes;
         }
+
+        public static string GenerateSqlIfElse(ArrayList conditions,
+                                               string statement1,
+                                               string statement2)
+        {
+            string statement = string.Empty;
+            StringBuilder sbStatement = new StringBuilder(string.Empty);
+
+            // IF
+            sbStatement.Append(KW_IF);
+
+            // conditions
+            if (conditions.Count > 0)
+            {
+                sbStatement.Append(SPACE);
+
+                foreach (string condition in conditions)
+                {
+                    if (condition.Equals(KW_AND) || condition.Equals(KW_OR))
+                    {
+                        sbStatement.Append(SPACE);
+                        sbStatement.Append(condition);
+                        sbStatement.Append(SPACE);
+                    }
+                    else
+                    {
+                        sbStatement.Append(PRTH_OPEN);
+                        sbStatement.Append(condition);
+                        sbStatement.Append(PRTH_CLOSE);
+                    }
+                }
+            }
+
+            // statement 1
+            sbStatement.Append(SPACE);
+            sbStatement.Append(statement1);
+
+            // ELSE
+            sbStatement.Append(SPACE);
+            sbStatement.Append(KW_ELSE);
+
+            // statement 2
+            sbStatement.Append(SPACE);
+            sbStatement.Append(statement2);
+
+            return sbStatement.ToString();
+        }
+
+
+        public static string GenerateSqlIfElseIfElse(ArrayList conditions1,
+                                               ArrayList conditions2,
+                                               string statement1,
+                                               string statement2,
+                                               string statement3)
+        {
+            string statement = string.Empty;
+            StringBuilder sbStatement = new StringBuilder(string.Empty);
+
+            // IF
+            sbStatement.Append(KW_IF);
+
+            // conditions 1
+            if (conditions1.Count > 0)
+            {
+                sbStatement.Append(SPACE);
+
+                foreach (string condition in conditions1)
+                {
+                    if (condition.Equals(KW_AND) || condition.Equals(KW_OR))
+                    {
+                        sbStatement.Append(SPACE);
+                        sbStatement.Append(condition);
+                        sbStatement.Append(SPACE);
+                    }
+                    else
+                    {
+                        sbStatement.Append(PRTH_OPEN);
+                        sbStatement.Append(condition);
+                        sbStatement.Append(PRTH_CLOSE);
+                    }
+                }
+            }
+
+            // statement 1
+            sbStatement.Append(SPACE);
+            sbStatement.Append(statement1);
+
+            // ELSE IF
+            sbStatement.Append(SPACE);
+            sbStatement.Append(KW_ELSEIF);
+
+            // conditions 2
+            if (conditions2.Count > 0)
+            {
+                sbStatement.Append(SPACE);
+
+                foreach (string condition in conditions2)
+                {
+                    if (condition.Equals(KW_AND) || condition.Equals(KW_OR))
+                    {
+                        sbStatement.Append(SPACE);
+                        sbStatement.Append(condition);
+                        sbStatement.Append(SPACE);
+                    }
+                    else
+                    {
+                        sbStatement.Append(PRTH_OPEN);
+                        sbStatement.Append(condition);
+                        sbStatement.Append(PRTH_CLOSE);
+                    }
+                }
+            }
+
+            // statement 2
+            sbStatement.Append(SPACE);
+            sbStatement.Append(statement2);
+
+            // ELSE
+            sbStatement.Append(SPACE);
+            sbStatement.Append(KW_ELSE);
+
+            // statement 3
+            sbStatement.Append(SPACE);
+            sbStatement.Append(statement3);
+
+            return sbStatement.ToString();
+        }
+
 
         public static string ConvertQuote(object ostr)
         {
