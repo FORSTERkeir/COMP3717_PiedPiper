@@ -19,7 +19,7 @@ namespace Models
         [HttpPost]
         [BasicAuthentication]
         [AcceptVerbs("GET", "POST")]
-        [Route("~/user/get")]
+        [Route("~/user/getbyid")]
         public IHttpActionResult GetUserById([FromBody] object data)
         {
             User.User user = new User.User();
@@ -45,7 +45,73 @@ namespace Models
                         colums.Add(Models.User.User.COL_LOGIN);
                         colums.Add(Models.User.User.COL_LASTLOGIN);
                         colums.Add(Models.User.User.COL_STATUS);
-                        conditions.Add(Models.User.User.COL_ID + "=" + QueryGenerator.QuoteString(id));
+                        conditions.Add(Models.User.User.COL_ID + "=" + id);
+                        conditions.Add(QueryGenerator.KW_AND);
+                        conditions.Add(Models.User.User.COL_DELETED + "=0");
+                        statement = QueryGenerator.GenerateSqlSelect(colums, Models.User.User.TABLE, conditions);
+
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = statement;
+
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                user.ID = dr.GetInt32(0);
+                                user.UserName = dr.GetString(1);
+                                user.Email = dr.GetString(2);
+                                user.Phone = dr.GetInt64(3);
+                                user.Login = dr.GetBoolean(4);
+                                if (dr.GetValue(5) != DBNull.Value)
+                                    user.LastLogin = dr.GetDateTime(5);
+                                user.Status = dr.GetInt32(6);
+                            }
+                            dr.Close();
+                        }
+                    }
+                    con.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                return ResponseMessage(JsonContent.ReturnMessage("The request is invalid.", ""));
+            }
+
+            if (user.ID == 0)
+                return ResponseMessage(JsonContent.ReturnMessage("No user is found.", ""));
+            return Ok(new { user });
+        }
+
+        [HttpPost]
+        [BasicAuthentication]
+        [AcceptVerbs("GET", "POST")]
+        [Route("~/user/get")]
+        public IHttpActionResult GetUserByEmail([FromBody] object data)
+        {
+            User.User user = new User.User();
+
+            try
+            {
+                var headers = Request.Headers;
+                string email = headers.GetValues(Models.User.User.COL_EMAIL).First();
+
+                using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
+                {
+                    con.Open();
+                    using (SqlCommand cmd = con.CreateCommand())
+                    {
+                        ArrayList colums = new ArrayList();
+                        ArrayList conditions = new ArrayList();
+                        string statement = string.Empty;
+
+                        colums.Add(Models.User.User.COL_ID);
+                        colums.Add(Models.User.User.COL_USERNAME);
+                        colums.Add(Models.User.User.COL_EMAIL);
+                        colums.Add(Models.User.User.COL_PHONE);
+                        colums.Add(Models.User.User.COL_LOGIN);
+                        colums.Add(Models.User.User.COL_LASTLOGIN);
+                        colums.Add(Models.User.User.COL_STATUS);
+                        conditions.Add(Models.User.User.COL_EMAIL + "=" + QueryGenerator.QuoteString(email));
                         conditions.Add(QueryGenerator.KW_AND);
                         conditions.Add(Models.User.User.COL_DELETED + "=0");
                         statement = QueryGenerator.GenerateSqlSelect(colums, Models.User.User.TABLE, conditions);
@@ -151,7 +217,7 @@ namespace Models
                         string statement;
 
                         assignments.Add(Models.User.User.COL_DELETED + " = 1");
-                        conditions.Add(Models.User.User.COL_ID + " = " + QueryGenerator.QuoteString(id));
+                        conditions.Add(Models.User.User.COL_ID + " = " + id);
                         statement = QueryGenerator.GenerateSqlUpdate(Models.User.User.TABLE, assignments, conditions);
 
                         cmd.CommandType = CommandType.Text;
