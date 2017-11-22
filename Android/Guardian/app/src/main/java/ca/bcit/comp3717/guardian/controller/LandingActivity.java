@@ -61,7 +61,8 @@ public class LandingActivity extends AppCompatActivity {
 
     private void registerResponse(User user) {
         if (user != null) {
-            goToMainActivity(user);
+//            goToMainActivity(user);
+            new LoginUserTask(user.getEmail(), user.getPassword()).execute();
             registerDialog.dismiss();
         } else {
             Log.e(TAG, "That username is already taken.");
