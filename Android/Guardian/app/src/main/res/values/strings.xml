@@ -13,7 +13,7 @@
     <string name="map">Map</string>
     <string name="linkAcc">Linked Accounts</string>
     <string name="userAcc">User Account</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Log Out</string>
     <string name="police">Police</string>
     <string name="fire">Fire Department</string>
     <string name="hospital">Hospital</string>

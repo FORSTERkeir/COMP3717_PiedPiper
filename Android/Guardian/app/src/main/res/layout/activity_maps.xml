@@ -2,24 +2,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.MapsActivity" >
+    tools:context=".controller.MapsActivity"
+    android:background="@color/background">
 
 
     <Button
         android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:background="@drawable/blue_btn"
         android:onClick="back"
         android:text="@string/back" />
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="ca.bcit.comp3717.guardian.controller.MapsActivity" />
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|left"
+        tools:context="ca.bcit.comp3717.guardian.controller.MapsActivity" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,28 +31,37 @@
         android:background="#ffffff">
 
         <CheckBox
-            android:id="@+id/police"
+            android:id="@+id/policeCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:checked="true"
             android:gravity="end"
-            android:text="@string/police" />
+            android:text="@string/police"
+            android:onClick="onCheckboxClicked"
+            android:buttonTint="@color/blue"/>
 
         <CheckBox
-            android:id="@+id/hospital"
+            android:id="@+id/hospitalCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:checked="true"
             android:gravity="start"
-            android:text="@string/hospital" />
+            android:text="@string/hospital"
+            android:onClick="onCheckboxClicked"
+            android:buttonTint="@color/green"/>
 
         <CheckBox
-            android:id="@+id/fire"
+            android:id="@+id/fireCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:checked="true"
             android:gravity="center_horizontal"
-            android:text="@string/fire" />
+            android:text="@string/fire"
+            android:onClick="onCheckboxClicked"
+            android:buttonTint="@color/red"/>
 
     </LinearLayout>
 </FrameLayout>

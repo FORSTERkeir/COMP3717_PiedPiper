@@ -1,59 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
     <Button
         android:id="@+id/emerg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:background="@drawable/blue_btn"
+        android:gravity="center_vertical|center_horizontal"
         android:text="911" />
 
     <TextView
         android:id="@+id/guardianText"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
         android:text="@string/guardian" />
 
     <Button
         android:id="@+id/guardianBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:background="@drawable/blue_btn"
+        android:gravity="center_vertical|center_horizontal"
         android:text="555-555-5555" />
 
     <TextView
         android:id="@+id/policeText"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
         android:text="@string/police" />
 
     <Button
         android:id="@+id/policeBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:background="@drawable/blue_btn"
+        android:gravity="center_vertical|center_horizontal"
         android:text="555-555-5555" />
 
     <TextView
         android:id="@+id/fireText"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
         android:text="@string/fire" />
 
     <Button
         android:id="@+id/fireBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:background="@drawable/blue_btn"
+        android:gravity="center_vertical|center_horizontal"
         android:text="555-555-5555" />
 
     <TextView
         android:id="@+id/hospitalText"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:foregroundGravity="center_vertical|center_horizontal"
+        android:gravity="center_vertical|center_horizontal"
         android:text="@string/hospital" />
 
     <Button
         android:id="@+id/hospitalBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:background="@drawable/blue_btn"
         android:text="555-555-5555" />
 </LinearLayout>

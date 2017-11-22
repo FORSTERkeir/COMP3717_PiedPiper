@@ -6,43 +6,71 @@
     android:layout_height="match_parent"
     tools:context="ca.bcit.comp3717.guardian.controller.MainActivity"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="@color/background">
 
-    <Button
+    <ImageButton
         android:id="@+id/alert"
-        android:layout_width="227dp"
-        android:layout_height="166dp"
-        android:background="@drawable/alertbtn"
-        android:gravity="center_horizontal"
+        android:layout_width="203dp"
+        android:layout_height="152dp"
         android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
         android:onClick="alert"
-        android:layout_weight="0.30" />
+        android:scaleType="fitCenter"
+        android:src="@drawable/alertbtn"
+        android:contentDescription=""
+        android:background="@null" />
 
     <Button
-        android:id="@+id/map"
+        android:id="@+id/mapBtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.02"
+        android:background="@drawable/blue_btn"
+        android:contentDescription=""
+        android:gravity="center_vertical|center_horizontal"
         android:onClick="map"
-        android:text="@string/map" />
+        android:scaleType="fitXY"
+        android:text="Service Buildings" />
 
     <Button
-        android:id="@+id/linkAcc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/linkAccBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.24"
+        android:background="@drawable/blue_btn"
+        android:contentDescription=""
+        android:gravity="center_vertical|center_horizontal"
         android:onClick="linkAcc"
+        android:scaleType="fitXY"
         android:text="@string/linkAcc" />
 
     <Button
-        android:id="@+id/userAcc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/userAccBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.06"
+        android:background="@drawable/blue_btn"
+        android:contentDescription=""
+        android:gravity="center_vertical|center_horizontal"
         android:onClick="userAcc"
+        android:scaleType="fitXY"
         android:text="@string/userAcc" />
 
     <Button
-        android:id="@+id/logout"
+        android:id="@+id/logoutBtn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.07"
+        android:adjustViewBounds="false"
+        android:background="@drawable/blue_btn"
+        android:contentDescription=""
+        android:gravity="center_vertical|center_horizontal"
         android:onClick="logout"
+        android:scaleType="fitXY"
         android:text="@string/logout" />
 </LinearLayout>

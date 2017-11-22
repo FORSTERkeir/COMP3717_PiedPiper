@@ -2,6 +2,7 @@ package ca.bcit.comp3717.guardian.controller;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import ca.bcit.comp3717.guardian.R;
@@ -25,6 +27,11 @@ public class LandingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Guardians.ttf");
+        TextView tx = (TextView)findViewById(R.id.guardianText);
+        tx.setTypeface(custom_font);
+        tx = (TextView)findViewById(R.id.button_landingActivity_login);
+        tx.setTypeface(custom_font);
     }
 
     public void register(View view){
@@ -69,6 +76,8 @@ public class LandingActivity extends AppCompatActivity {
     }
 
     public void loginRequest(View v) {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
         EditText userName = (EditText) findViewById(R.id.editText_landingActivity_email);
         EditText password = (EditText) findViewById(R.id.editText_landingActivity_password);
 

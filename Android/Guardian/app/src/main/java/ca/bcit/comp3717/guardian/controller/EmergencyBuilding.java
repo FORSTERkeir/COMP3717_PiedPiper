@@ -8,6 +8,8 @@ public class EmergencyBuilding {
     private String latitutde;
     private String longitude;
     private String BldgName;
+    private int category;
+    private long phone;
 
     public void setBldgName(String BldgName) {
         this.BldgName = BldgName;
@@ -31,5 +33,20 @@ public class EmergencyBuilding {
 
     String getLongitude() {
         return this.longitude;
+    }
+
+    public void setCategory(int category) {
+        this.category = category;
+    }
+
+    public int getCategory() {
+        return category;
+    }
+
+    public void setPhone(long phone) {
+        this.phone = phone;
+    }
+    public long getPhone() {
+        return phone;
     }
 }
