@@ -88,9 +88,11 @@ public class LandingActivity extends AppCompatActivity {
 
     private void goToMainActivity(User user) {
         Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("userId", user.getId());
         i.putExtra("userName", user.getUserName());
+        i.putExtra("password", user.getPassword());
         i.putExtra("email", user.getEmail());
-        Toast.makeText(this.getBaseContext(), "Welcome " + user.getUserName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getBaseContext(), user.getUserName() + " Logged in", Toast.LENGTH_SHORT).show();
         startActivity(i);
     }
 
@@ -106,7 +108,7 @@ public class LandingActivity extends AppCompatActivity {
 
         @Override
         protected User doInBackground(Void... voidArgs) {
-            return HttpHandler.getUser(this.email, this.password);
+            return HttpHandler.userLogin(this.email, this.password);
         }
 
         @Override
