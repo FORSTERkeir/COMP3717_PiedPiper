@@ -105,7 +105,7 @@ public class MainActivity extends Activity {
                         }
                     }
                 });
-        for (int i = 0; i < locationList.size(); i++) {
+        /*for (int i = 0; i < locationList.size(); i++) {
             EmergencyBuilding item = locationList.get(i);
             if (numbers[0] == 0 && item.getCategory() == 1) {
                 numbers[0] = item.getPhone();
@@ -116,7 +116,7 @@ public class MainActivity extends Activity {
             if (numbers[2] == 0 && item.getCategory() == 3) {
                 numbers[2] = item.getPhone();
             }
-        }
+        }*/
 
         // Create custom dialog object
         final Dialog dialog = new Dialog(MainActivity.this);
