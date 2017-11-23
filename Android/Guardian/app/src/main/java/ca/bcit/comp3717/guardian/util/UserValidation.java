@@ -61,6 +61,23 @@ public class UserValidation {
         return false;
     }
 
+    public static boolean validateUserLogin(String jsonResponse) {
+        if (jsonResponse.length() > 0) {
+            try {
+                JSONObject jsonObj = new JSONObject(jsonResponse);
+                String message = jsonObj.getString("Message");
+
+                if (message.equals("The request is invalid.")) {
+                    return false;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
     public static boolean validateUserLogout(String jsonResponse) {
         if (jsonResponse.length() > 0) {
             try {

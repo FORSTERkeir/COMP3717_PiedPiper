@@ -134,8 +134,12 @@ public class HttpHandler {
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
                     String response = HttpHandler.convertStreamToString(in);
-                    user = HttpHandler.convertStringToUser(response);
-                    user.setPassword(password);
+                    boolean loginSuccess = UserValidation.validateUserLogout(response);
+
+                    if (loginSuccess) {
+                        user = HttpHandler.convertStringToUser(response);
+                        user.setPassword(password);
+                    }
                 }
 
             } catch (IOException e) {

@@ -68,7 +68,6 @@ public class LandingActivity extends AppCompatActivity {
 
     private void registerResponse(User user) {
         if (user != null) {
-//            goToMainActivity(user);
             new LoginUserTask(user.getEmail(), user.getPassword()).execute();
             registerDialog.dismiss();
         } else {
@@ -77,8 +76,6 @@ public class LandingActivity extends AppCompatActivity {
     }
 
     public void loginRequest(View v) {
-        //Intent i = new Intent(this, MainActivity.class);
-        //startActivity(i);
         EditText userName = (EditText) findViewById(R.id.editText_landingActivity_email);
         EditText password = (EditText) findViewById(R.id.editText_landingActivity_password);
 
@@ -124,7 +121,6 @@ public class LandingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(User user) {
             super.onPostExecute(user);
-            Log.d("API Response", user.toString());
             loginResponse(user);
         }
     }
@@ -150,7 +146,6 @@ public class LandingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(User user) {
             super.onPostExecute(user);
-            Log.d("API Response", user.toString());
             registerResponse(user);
         }
     }
