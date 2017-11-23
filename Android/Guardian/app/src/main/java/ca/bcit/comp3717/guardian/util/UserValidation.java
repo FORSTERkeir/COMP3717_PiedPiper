@@ -11,7 +11,7 @@ public class UserValidation {
 
     private UserValidation() {}
 
-    public static boolean validateInputs(EditText userName, EditText password) {
+    public static boolean validateLoginUserInputs(EditText userName, EditText password) {
         if (userName == null || userName.getText().toString().length() == 0) {
             Log.e(TAG, "Username must not be blank");
             return false;
@@ -24,7 +24,7 @@ public class UserValidation {
         return true;
     }
 
-    public static boolean validateInputs(EditText userName, EditText email, EditText phone, EditText password) {
+    public static boolean validateRegisterUserInputs(EditText userName, EditText email, EditText phone, EditText password) {
         if (userName == null || userName.getText().toString().length() == 0) {
             Log.e(TAG, "Username must not be blank");
             return false;
@@ -59,5 +59,22 @@ public class UserValidation {
             return false;
         }
         return false;
+    }
+
+    public static boolean validateUserLogout(String jsonResponse) {
+        if (jsonResponse.length() > 0) {
+            try {
+                JSONObject jsonObj = new JSONObject(jsonResponse);
+                String message = jsonObj.getString("Message");
+
+                if (message.equals("The request is invalid.")) {
+                    return false;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }

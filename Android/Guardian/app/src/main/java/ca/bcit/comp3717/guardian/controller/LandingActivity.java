@@ -60,7 +60,7 @@ public class LandingActivity extends AppCompatActivity {
         EditText phone = (EditText) d.findViewById(R.id.editText_dialog_register_phone);
         EditText password = (EditText) d.findViewById(R.id.editText_dialog_register_password);
 
-        if (UserValidation.validateInputs(userName, email, phone, password)) {
+        if (UserValidation.validateRegisterUserInputs(userName, email, phone, password)) {
             new RegisterUserTask(userName.getText().toString(), password.getText().toString(),
                     email.getText().toString(), phone.getText().toString()).execute();
         }
@@ -82,7 +82,7 @@ public class LandingActivity extends AppCompatActivity {
         EditText userName = (EditText) findViewById(R.id.editText_landingActivity_email);
         EditText password = (EditText) findViewById(R.id.editText_landingActivity_password);
 
-        if (UserValidation.validateInputs(userName, password)) {
+        if (UserValidation.validateLoginUserInputs(userName, password)) {
             new LoginUserTask(userName.getText().toString(), password.getText().toString()).execute();
         }
     }
@@ -118,7 +118,7 @@ public class LandingActivity extends AppCompatActivity {
 
         @Override
         protected User doInBackground(Void... voidArgs) {
-            return HttpHandler.userLogin(this.email, this.password);
+            return HttpHandler.UserController.loginByEmail(this.email, this.password);
         }
 
         @Override
@@ -144,7 +144,7 @@ public class LandingActivity extends AppCompatActivity {
 
         @Override
         protected User doInBackground(Void... voidArgs) {
-            return HttpHandler.createUser(this.userName, this.password, this.email, this.phone);
+            return HttpHandler.UserController.createUser(this.userName, this.password, this.email, this.phone);
         }
 
         @Override

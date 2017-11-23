@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
+import ca.bcit.comp3717.guardian.model.EmergencyBuilding;
 import ca.bcit.comp3717.guardian.model.User;
 
 public class MainActivity extends Activity {
@@ -48,7 +49,6 @@ public class MainActivity extends Activity {
         locationList = new ArrayList<>();
         new GetLocations().execute();
 
-        Intent i = getIntent();
         Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Guardians.ttf");
 
         Button tx = (Button)findViewById(R.id.mapBtn);
@@ -60,6 +60,7 @@ public class MainActivity extends Activity {
         tx = (Button)findViewById(R.id.logoutBtn);
         tx.setTypeface(custom_font);
 
+        Intent i = getIntent();
         user = new User();
         user.setId(i.getIntExtra("userId", -1));
         user.setUserName(i.getStringExtra("userName"));
@@ -152,7 +153,7 @@ public class MainActivity extends Activity {
     }
 
     public void logout (View view) {
-        new UserLogoutTask().execute();
+        new LogoutUserTask().execute();
     }
 
     public void goToLandingActivity() {
@@ -276,16 +277,17 @@ public class MainActivity extends Activity {
             super.onPostExecute(result);
         }
     }
-    private class UserLogoutTask extends AsyncTask<Void, Void, User> {
+    private class LogoutUserTask extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected User doInBackground(Void... voidArgs) {
-            return HttpHandler.userLogin(user.getEmail(), user.getPassword());
+        protected Void doInBackground(Void... voidArgs) {
+            HttpHandler.UserController.logoutByEmail(user.getEmail(), user.getPassword());
+            return null;
         }
 
         @Override
-        protected void onPostExecute(User user) {
-            super.onPostExecute(user);
+        protected void onPostExecute(Void args) {
+            super.onPostExecute(args);
             Log.d("API Response", user.toString());
             goToLandingActivity();
         }
