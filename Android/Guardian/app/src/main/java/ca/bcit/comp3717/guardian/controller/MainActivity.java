@@ -26,8 +26,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import ca.bcit.comp3717.guardian.HttpHandler;
 import ca.bcit.comp3717.guardian.R;
+import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.model.User;
 
 public class MainActivity extends Activity {
@@ -61,8 +61,10 @@ public class MainActivity extends Activity {
         tx.setTypeface(custom_font);
 
         user = new User();
+        user.setId(i.getIntExtra("userId", -1));
         user.setUserName(i.getStringExtra("userName"));
         user.setEmail(i.getStringExtra("email"));
+        user.setPassword(i.getStringExtra("password"));
     }
 
     public void alert (View view) {
@@ -150,8 +152,12 @@ public class MainActivity extends Activity {
     }
 
     public void logout (View view) {
+        new UserLogoutTask().execute();
+    }
+
+    public void goToLandingActivity() {
         Intent i = new Intent(this, LandingActivity.class);
-        Toast.makeText(this.getBaseContext(), "Goodbye " + user.getUserName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this.getBaseContext(), user.getUserName() + " Logged out", Toast.LENGTH_SHORT).show();
         startActivity(i);
     }
 
@@ -268,6 +274,20 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+        }
+    }
+    private class UserLogoutTask extends AsyncTask<Void, Void, User> {
+
+        @Override
+        protected User doInBackground(Void... voidArgs) {
+            return HttpHandler.userLogin(user.getEmail(), user.getPassword());
+        }
+
+        @Override
+        protected void onPostExecute(User user) {
+            super.onPostExecute(user);
+            Log.d("API Response", user.toString());
+            goToLandingActivity();
         }
     }
 }

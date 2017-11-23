@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import ca.bcit.comp3717.guardian.model.User;
@@ -20,6 +21,8 @@ public class HttpHandler {
     private static final String createUserURL = "http://guardiannewwestapi.azurewebsites.net/user/create";
     private static final String getUserURL = "http://guardiannewwestapi.azurewebsites.net/user/get";
     private static final String deleteUserURL = "http://guardiannewwestapi.azurewebsites.net/user/delete";
+    private static final String userLoginURL = "http://guardiannewwestapi.azurewebsites.net/user/login";
+    private static final String userLogoutURL = "http://guardiannewwestapi.azurewebsites.net/user/logout";
 
     public HttpHandler() {}
 
@@ -58,7 +61,7 @@ public class HttpHandler {
         return user;
     }
 
-    public static User getUser(String email, String password) {
+    public static User getUserByEmail(String email, String password) {
         User user = null;
 
         try {
@@ -83,6 +86,64 @@ public class HttpHandler {
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG, "ERROR in getUser(): " + e.getMessage());
+        }
+        return user;
+    }
+
+    public static User userLogin(String email, String password) {
+        User user = null;
+
+        try {
+            HttpURLConnection conn = openConnection(userLoginURL);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", getB64Auth(email, password));
+            conn.setRequestProperty("email", email);
+            conn.setRequestMethod("POST");
+
+            if (conn.getResponseCode() != 200) {
+                Log.e(TAG, "getUser() response code: " + conn.getResponseCode());
+
+            } else {
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                String response = HttpHandler.convertStreamToString(in);
+                user = HttpHandler.convertStringToUser(response);
+            }
+
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+            Log.e(TAG, "ERROR in userLogin(): " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "ERROR in userLogin(): " + e.getMessage());
+        }
+        return user;
+    }
+
+    public static User userLogout(String email, String password) {
+        User user = null;
+
+        try {
+            HttpURLConnection conn = openConnection(userLogoutURL);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", getB64Auth(email, password));
+            conn.setRequestProperty("email", email);
+            conn.setRequestMethod("POST");
+
+            if (conn.getResponseCode() != 200) {
+                Log.e(TAG, "getUser() response code: " + conn.getResponseCode());
+
+            } else {
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                String response = HttpHandler.convertStreamToString(in);
+                user = HttpHandler.convertStringToUser(response);
+            }
+
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+            Log.e(TAG, "ERROR in userLogout(): " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "ERROR in userLogout(): " + e.getMessage());
         }
         return user;
     }
@@ -172,5 +233,25 @@ public class HttpHandler {
             return null;
         }
         return user;
+    }
+    public String makeServiceCall(String reqUrl) {
+        String response = null;
+        try {
+            URL url = new URL(reqUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            // read the response
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            response = convertStreamToString(in);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "MalformedURLException: " + e.getMessage());
+        } catch (ProtocolException e) {
+            Log.e(TAG, "ProtocolException: " + e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG, "IOException: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+        }
+        return response;
     }
 }
