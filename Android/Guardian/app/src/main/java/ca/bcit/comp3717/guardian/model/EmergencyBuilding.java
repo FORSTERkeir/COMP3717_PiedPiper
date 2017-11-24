@@ -1,4 +1,4 @@
-package ca.bcit.comp3717.guardian.controller;
+package ca.bcit.comp3717.guardian.model;
 
 /**
  * Created by Haley on 11/10/2017.
@@ -19,19 +19,19 @@ public class EmergencyBuilding {
         return this.BldgName;
     }
 
-    void setLatitutde(String latitutde) {
+    public void setLatitutde(String latitutde) {
         this.latitutde = latitutde;
     }
 
-    String getLatitutde() {
+    public String getLatitutde() {
         return this.latitutde;
     }
 
-    void setLongitude(String longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
-    String getLongitude() {
+    public String getLongitude() {
         return this.longitude;
     }
 

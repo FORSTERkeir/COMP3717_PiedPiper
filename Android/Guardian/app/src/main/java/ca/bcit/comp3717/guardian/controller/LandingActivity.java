@@ -60,7 +60,7 @@ public class LandingActivity extends AppCompatActivity {
         EditText phone = (EditText) d.findViewById(R.id.editText_dialog_register_phone);
         EditText password = (EditText) d.findViewById(R.id.editText_dialog_register_password);
 
-        if (UserValidation.validateInputs(userName, email, phone, password)) {
+        if (UserValidation.validateRegisterUserInputs(userName, email, phone, password)) {
             new RegisterUserTask(userName.getText().toString(), password.getText().toString(),
                     email.getText().toString(), phone.getText().toString()).execute();
         }
@@ -68,7 +68,6 @@ public class LandingActivity extends AppCompatActivity {
 
     private void registerResponse(User user) {
         if (user != null) {
-//            goToMainActivity(user);
             new LoginUserTask(user.getEmail(), user.getPassword()).execute();
             registerDialog.dismiss();
         } else {
@@ -77,12 +76,10 @@ public class LandingActivity extends AppCompatActivity {
     }
 
     public void loginRequest(View v) {
-        //Intent i = new Intent(this, MainActivity.class);
-        //startActivity(i);
         EditText userName = (EditText) findViewById(R.id.editText_landingActivity_email);
         EditText password = (EditText) findViewById(R.id.editText_landingActivity_password);
 
-        if (UserValidation.validateInputs(userName, password)) {
+        if (UserValidation.validateLoginUserInputs(userName, password)) {
             new LoginUserTask(userName.getText().toString(), password.getText().toString()).execute();
         }
     }
@@ -119,13 +116,12 @@ public class LandingActivity extends AppCompatActivity {
 
         @Override
         protected User doInBackground(Void... voidArgs) {
-            return HttpHandler.userLogin(this.email, this.password);
+            return HttpHandler.UserController.loginByEmail(this.email, this.password);
         }
 
         @Override
         protected void onPostExecute(User user) {
             super.onPostExecute(user);
-            Log.d("API Response", user.toString());
             loginResponse(user);
         }
     }
@@ -145,13 +141,12 @@ public class LandingActivity extends AppCompatActivity {
 
         @Override
         protected User doInBackground(Void... voidArgs) {
-            return HttpHandler.createUser(this.userName, this.password, this.email, this.phone);
+            return HttpHandler.UserController.createUser(this.userName, this.password, this.email, this.phone);
         }
 
         @Override
         protected void onPostExecute(User user) {
             super.onPostExecute(user);
-            Log.d("API Response", user.toString());
             registerResponse(user);
         }
     }

@@ -15,21 +15,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
+import ca.bcit.comp3717.guardian.model.EmergencyBuilding;
 import ca.bcit.comp3717.guardian.model.User;
+import ca.bcit.comp3717.guardian.util.UserBuilder;
 
 public class MainActivity extends Activity {
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
@@ -38,9 +36,7 @@ public class MainActivity extends Activity {
 
     private FusedLocationProviderClient mFusedLocationClient;
     private String TAG = MapsActivity.class.getSimpleName();
-
     ArrayList<EmergencyBuilding> locationList;
-
     private User user;
 
     @Override
@@ -57,7 +53,6 @@ public class MainActivity extends Activity {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
 
-        Intent i = getIntent();
         Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Guardians.ttf");
 
         Button tx = (Button)findViewById(R.id.mapBtn);
@@ -69,12 +64,30 @@ public class MainActivity extends Activity {
         tx = (Button)findViewById(R.id.logoutBtn);
         tx.setTypeface(custom_font);
 
+        if (savedInstanceState == null) {
+            user = UserBuilder.constructUserFromIntent(getIntent());
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("userId", user.getId());
+        outState.putString("userName", user.getUserName());
+        outState.putString("email", user.getEmail());
+        outState.putString("password", user.getPassword());
+        outState.putString("phoneNumber", user.getPhone());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         user = new User();
-        user.setId(i.getIntExtra("userId", -1));
-        user.setUserName(i.getStringExtra("userName"));
-        user.setEmail(i.getStringExtra("email"));
-        user.setPassword(i.getStringExtra("password"));
-        user.setPhone(i.getStringExtra("phoneNumber"));
+        user.setId(savedInstanceState.getInt("userId"));
+        user.setUserName(savedInstanceState.getString("userName"));
+        user.setEmail(savedInstanceState.getString("email"));
+        user.setPassword(savedInstanceState.getString("password"));
+        user.setPhone(savedInstanceState.getString("phoneNumber"));
     }
 
     public void alert (View view) {
@@ -86,11 +99,6 @@ public class MainActivity extends Activity {
         startActivity(i);
     }
 
-    public void linkAcc (View view) {
-        Intent i = new Intent(this, LinkedAccountActivity.class);
-        startActivity(i);
-    }
-
     public void userAcc (View view) {
         Intent i = new Intent(this, UserAccountActivity.class);
         i.putExtra("userId", user.getId());
@@ -99,10 +107,6 @@ public class MainActivity extends Activity {
         i.putExtra("password", user.getPassword());
         i.putExtra("phoneNumber", user.getPhone());
         startActivity(i);
-    }
-
-    public void logout (View view) {
-        new UserLogoutTask().execute();
     }
 
     public void goToLandingActivity() {
@@ -209,6 +213,15 @@ public class MainActivity extends Activity {
         startActivity(callIntent);
     }
 
+    public void linkAcc (View view) {
+        Intent i = new Intent(this, LinkedAccountActivity.class);
+        i.putExtra("userId", user.getId());
+        i.putExtra("userName", user.getUserName());
+        i.putExtra("password", user.getPassword());
+        i.putExtra("email", user.getEmail());
+        startActivity(i);
+    }
+
     public void callHospital(View v) {
         Intent callIntent = new Intent(Intent.ACTION_DIAL);
         Button btn = (Button) v.findViewById(R.id.hospitalBtn);
@@ -223,6 +236,10 @@ public class MainActivity extends Activity {
 
         callIntent.setData(Uri.parse("tel:" + btn.getText()));
         startActivity(callIntent);
+    }
+
+    public void logout (View view) {
+        new LogoutUserTask().execute();
     }
 
     public void callEmergency(View v) {
@@ -364,17 +381,18 @@ public class MainActivity extends Activity {
             showAlertDialog();
         }
     }
-    private class UserLogoutTask extends AsyncTask<Void, Void, User> {
+
+    private class LogoutUserTask extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected User doInBackground(Void... voidArgs) {
-            return HttpHandler.userLogin(user.getEmail(), user.getPassword());
+        protected Void doInBackground(Void... voidArgs) {
+            HttpHandler.UserController.logoutByEmail(user.getEmail(), user.getPassword());
+            return null;
         }
 
         @Override
-        protected void onPostExecute(User user) {
-            super.onPostExecute(user);
-            Log.d("API Response", user.toString());
+        protected void onPostExecute(Void args) {
+            super.onPostExecute(args);
             goToLandingActivity();
         }
     }

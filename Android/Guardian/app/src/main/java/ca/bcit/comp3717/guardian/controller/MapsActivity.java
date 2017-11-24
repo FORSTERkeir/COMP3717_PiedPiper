@@ -20,7 +20,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -34,8 +33,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ca.bcit.comp3717.guardian.HttpHandler;
 import ca.bcit.comp3717.guardian.R;
+import ca.bcit.comp3717.guardian.api.HttpHandler;
+import ca.bcit.comp3717.guardian.model.EmergencyBuilding;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -219,11 +219,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            HttpHandler sh = new HttpHandler();
+//            HttpHandler sh = new HttpHandler();
 
             // Making a request to url and getting response
             String SERVICE_URL = "http://guardiannewwestapi.azurewebsites.net/emergencybldg/get/all/";
-            String jsonStr = sh.makeServiceCall(SERVICE_URL);
+            String jsonStr = HttpHandler.makeServiceCall(SERVICE_URL);
             Log.e(TAG, "Response from url: " + jsonStr);
 
             if (jsonStr != null) {
