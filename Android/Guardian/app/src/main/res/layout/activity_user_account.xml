@@ -9,8 +9,9 @@
 
     <Button
         android:id="@+id/backBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:background="@drawable/blue_btn"
         android:onClick="back"
         android:text="@string/back" />
 
@@ -18,41 +19,53 @@
         android:id="@+id/usernameText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/username" />
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/username"
+        android:textSize="30sp"/>
 
-    <EditText
+    <TextView
         android:id="@+id/usernameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Edward Snowden" />
+        android:text="Edward Snowden"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="30sp"/>
 
     <TextView
         android:id="@+id/emailText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/email" />
+        android:text="@string/email"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="30sp"/>
 
-    <EditText
+    <TextView
         android:id="@+id/emailInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textEmailAddress"
-        android:text="esnowden@nsa.gov" />
+        android:text="esnowden@nsa.gov"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="30sp"/>
 
     <TextView
         android:id="@+id/phoneText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/phone" />
+        android:text="@string/phone"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="30sp"/>
 
-    <EditText
+    <TextView
         android:id="@+id/phoneInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="phone"
-        android:text="888-123-4567" />
+        android:text="888-123-4567"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="30sp"/>
 </LinearLayout>

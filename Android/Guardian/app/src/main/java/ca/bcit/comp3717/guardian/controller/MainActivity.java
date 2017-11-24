@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -33,6 +34,8 @@ import ca.bcit.comp3717.guardian.model.User;
 public class MainActivity extends Activity {
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 3;
+
     private FusedLocationProviderClient mFusedLocationClient;
     private String TAG = MapsActivity.class.getSimpleName();
 
@@ -44,9 +47,15 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CALL_PHONE},
+                    MY_PERMISSIONS_REQUEST_CALL_PHONE);
+        }
+
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
-        new GetLocations().execute();
 
         Intent i = getIntent();
         Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Guardians.ttf");
@@ -65,13 +74,45 @@ public class MainActivity extends Activity {
         user.setUserName(i.getStringExtra("userName"));
         user.setEmail(i.getStringExtra("email"));
         user.setPassword(i.getStringExtra("password"));
+        user.setPhone(i.getStringExtra("phoneNumber"));
     }
 
     public void alert (View view) {
-        final long numbers[] = new long[4];
-        HttpHandler sh = new HttpHandler();
-
         new GetLocations().execute();
+    }
+
+    public void map (View view) {
+        Intent i = new Intent(this, MapsActivity.class);
+        startActivity(i);
+    }
+
+    public void linkAcc (View view) {
+        Intent i = new Intent(this, LinkedAccountActivity.class);
+        startActivity(i);
+    }
+
+    public void userAcc (View view) {
+        Intent i = new Intent(this, UserAccountActivity.class);
+        i.putExtra("userId", user.getId());
+        i.putExtra("userName", user.getUserName());
+        i.putExtra("email", user.getEmail());
+        i.putExtra("password", user.getPassword());
+        i.putExtra("phoneNumber", user.getPhone());
+        startActivity(i);
+    }
+
+    public void logout (View view) {
+        new UserLogoutTask().execute();
+    }
+
+    public void goToLandingActivity() {
+        Intent i = new Intent(this, LandingActivity.class);
+        Toast.makeText(this.getBaseContext(), user.getUserName() + " Logged out", Toast.LENGTH_SHORT).show();
+        startActivity(i);
+    }
+
+    private void showAlertDialog() {
+        final long numbers[] = new long[4];
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -105,9 +146,24 @@ public class MainActivity extends Activity {
                                 }
                             }
                         }
+                        else {
+                            Toast.makeText(getApplicationContext(), "Location null", Toast.LENGTH_LONG).show();
+                            for (int i = 0; i < locationList.size(); i++) {
+                                EmergencyBuilding item = locationList.get(i);
+                                if (numbers[0] == 0 && item.getCategory() == 1) {
+                                    numbers[0] = item.getPhone();
+                                }
+                                if (numbers[1] == 0 && item.getCategory() == 2) {
+                                    numbers[1] = item.getPhone();
+                                }
+                                if (numbers[2] == 0 && item.getCategory() == 3) {
+                                    numbers[2] = item.getPhone();
+                                }
+                            }
+                        }
                     }
                 });
-        /*for (int i = 0; i < locationList.size(); i++) {
+        for (int i = 0; i < locationList.size(); i++) {
             EmergencyBuilding item = locationList.get(i);
             if (numbers[0] == 0 && item.getCategory() == 1) {
                 numbers[0] = item.getPhone();
@@ -118,7 +174,7 @@ public class MainActivity extends Activity {
             if (numbers[2] == 0 && item.getCategory() == 3) {
                 numbers[2] = item.getPhone();
             }
-        }*/
+        }
 
         // Create custom dialog object
         final Dialog dialog = new Dialog(MainActivity.this);
@@ -126,40 +182,57 @@ public class MainActivity extends Activity {
         dialog.setContentView(R.layout.alert_layout);
         // Set dialog title
         dialog.setTitle("Alert");
-            Button fire = (Button) dialog.findViewById(R.id.fireBtn);
-            fire.setText("" + numbers[0]);
-            Button hospital = (Button) dialog.findViewById(R.id.hospitalBtn);
-            hospital.setText("" + numbers[1]);
-            Button police = (Button) dialog.findViewById(R.id.policeBtn);
-            police.setText("" + numbers[2]);
+        Button fire = (Button) dialog.findViewById(R.id.fireBtn);
+        fire.setText("" + numbers[0]);
+        Button hospital = (Button) dialog.findViewById(R.id.hospitalBtn);
+        hospital.setText("" + numbers[1]);
+        Button police = (Button) dialog.findViewById(R.id.policeBtn);
+        police.setText("" + numbers[2]);
 
         dialog.show();
+
     }
 
-    public void map (View view) {
-        Intent i = new Intent(this, MapsActivity.class);
-        startActivity(i);
+    public void callPolice(View v) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        Button btn = (Button) v.findViewById(R.id.policeBtn);
+
+        callIntent.setData(Uri.parse("tel:" + btn.getText()));
+        startActivity(callIntent);
     }
 
-    public void linkAcc (View view) {
-        Intent i = new Intent(this, LinkedAccountActivity.class);
-        startActivity(i);
+    public void callGuardian(View v) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        Button btn = (Button) v.findViewById(R.id.guardianBtn);
+
+        callIntent.setData(Uri.parse("tel:" + btn.getText()));
+        startActivity(callIntent);
     }
 
-    public void userAcc (View view) {
-        Intent i = new Intent(this, UserAccountActivity.class);
-        startActivity(i);
+    public void callHospital(View v) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        Button btn = (Button) v.findViewById(R.id.hospitalBtn);
+
+        callIntent.setData(Uri.parse("tel:" + btn.getText()));
+        startActivity(callIntent);
     }
 
-    public void logout (View view) {
-        new UserLogoutTask().execute();
+    public void callFire(View v) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        Button btn = (Button) v.findViewById(R.id.fireBtn);
+
+        callIntent.setData(Uri.parse("tel:" + btn.getText()));
+        startActivity(callIntent);
     }
 
-    public void goToLandingActivity() {
-        Intent i = new Intent(this, LandingActivity.class);
-        Toast.makeText(this.getBaseContext(), user.getUserName() + " Logged out", Toast.LENGTH_SHORT).show();
-        startActivity(i);
+    public void callEmergency(View v) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL);
+        Button btn = (Button) v.findViewById(R.id.emerg);
+
+        callIntent.setData(Uri.parse("tel:" + btn.getText()));
+        startActivity(callIntent);
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -192,6 +265,20 @@ public class MainActivity extends Activity {
                     Toast.makeText(this, "Can not show your location.", Toast.LENGTH_SHORT).show();
                 }
             }
+            case MY_PERMISSIONS_REQUEST_CALL_PHONE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+
+                    Toast.makeText(this, "Can not make phone calls.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
         }
     }
 
@@ -274,6 +361,7 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            showAlertDialog();
         }
     }
     private class UserLogoutTask extends AsyncTask<Void, Void, User> {

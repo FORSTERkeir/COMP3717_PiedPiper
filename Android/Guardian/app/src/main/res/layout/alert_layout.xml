@@ -10,6 +10,7 @@
         android:layout_height="60dp"
         android:background="@drawable/blue_btn"
         android:gravity="center_vertical|center_horizontal"
+        android:onClick="callEmergency"
         android:text="911" />
 
     <TextView
@@ -25,7 +26,8 @@
         android:layout_height="60dp"
         android:background="@drawable/blue_btn"
         android:gravity="center_vertical|center_horizontal"
-        android:text="555-555-5555" />
+        android:text="555-555-5555"
+        android:onClick="callGuardian"/>
 
     <TextView
         android:id="@+id/policeText"
@@ -40,7 +42,8 @@
         android:layout_height="60dp"
         android:background="@drawable/blue_btn"
         android:gravity="center_vertical|center_horizontal"
-        android:text="555-555-5555" />
+        android:text="555-555-5555"
+        android:onClick="callPolice"/>
 
     <TextView
         android:id="@+id/fireText"
@@ -55,7 +58,8 @@
         android:layout_height="60dp"
         android:background="@drawable/blue_btn"
         android:gravity="center_vertical|center_horizontal"
-        android:text="555-555-5555" />
+        android:text="555-555-5555"
+        android:onClick="callFire"/>
 
     <TextView
         android:id="@+id/hospitalText"
@@ -70,5 +74,6 @@
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:background="@drawable/blue_btn"
-        android:text="555-555-5555" />
+        android:text="555-555-5555"
+        android:onClick="callHospital"/>
 </LinearLayout>

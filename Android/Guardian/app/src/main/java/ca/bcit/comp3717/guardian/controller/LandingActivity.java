@@ -102,6 +102,7 @@ public class LandingActivity extends AppCompatActivity {
         i.putExtra("userName", user.getUserName());
         i.putExtra("password", user.getPassword());
         i.putExtra("email", user.getEmail());
+        i.putExtra("phoneNumber", user.getPhone());
         Toast.makeText(this.getBaseContext(), user.getUserName() + " Logged in", Toast.LENGTH_SHORT).show();
         startActivity(i);
     }
