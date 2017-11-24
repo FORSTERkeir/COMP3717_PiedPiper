@@ -3,30 +3,94 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context="ca.bcit.comp3717.guardian.controller.LinkedAccountActivity"
-    android:background="@color/background">
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context="ca.bcit.comp3717.guardian.controller.LinkedAccountActivity">
 
     <Button
         android:id="@+id/backBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="back"
-        android:text="@string/back"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:onClick="back"
+        android:text="@string/back" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="31dp"
-        android:layout_marginTop="403dp"
-        android:clickable="true"
+        android:layout_marginBottom="13dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="addLinkedUser"
         app:fabSize="mini"
-        app:srcCompat="@android:drawable/ic_menu_add"
-        android:onClick="addLinkedUser"/>
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/backBtn"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/backBtn"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="40"
+                android:text="@string/textView_linkedAccount_username"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="21"
+                android:text="@string/textView_linkedAccount_Status"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="13"
+                android:text="@string/textView_linkedAccount_Alert"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="13"
+                android:text="@string/textView_linkedAccount_Mute"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="13"
+                android:text="@string/textView_linkedAccount_Delete"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listView_linkedAccount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/linearLayout">
+
+        </ListView>
+
+    </LinearLayout>
 
 </RelativeLayout>

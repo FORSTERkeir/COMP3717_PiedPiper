@@ -14,31 +14,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.model.EmergencyBuilding;
 import ca.bcit.comp3717.guardian.model.User;
+import ca.bcit.comp3717.guardian.util.UserBuilder;
 
 public class MainActivity extends Activity {
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2;
     private FusedLocationProviderClient mFusedLocationClient;
     private String TAG = MapsActivity.class.getSimpleName();
-
     ArrayList<EmergencyBuilding> locationList;
-
     private User user;
 
     @Override
@@ -60,12 +55,28 @@ public class MainActivity extends Activity {
         tx = (Button)findViewById(R.id.logoutBtn);
         tx.setTypeface(custom_font);
 
-        Intent i = getIntent();
+        if (savedInstanceState == null) {
+            user = UserBuilder.constructUserFromIntent(getIntent());
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("userId", user.getId());
+        outState.putString("userName", user.getUserName());
+        outState.putString("email", user.getEmail());
+        outState.putString("password", user.getPassword());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
         user = new User();
-        user.setId(i.getIntExtra("userId", -1));
-        user.setUserName(i.getStringExtra("userName"));
-        user.setEmail(i.getStringExtra("email"));
-        user.setPassword(i.getStringExtra("password"));
+        user.setId(savedInstanceState.getInt("userId"));
+        user.setUserName(savedInstanceState.getString("userName"));
+        user.setEmail(savedInstanceState.getString("email"));
+        user.setPassword(savedInstanceState.getString("password"));
     }
 
     public void alert (View view) {
@@ -144,6 +155,10 @@ public class MainActivity extends Activity {
 
     public void linkAcc (View view) {
         Intent i = new Intent(this, LinkedAccountActivity.class);
+        i.putExtra("userId", user.getId());
+        i.putExtra("userName", user.getUserName());
+        i.putExtra("password", user.getPassword());
+        i.putExtra("email", user.getEmail());
         startActivity(i);
     }
 
@@ -277,6 +292,7 @@ public class MainActivity extends Activity {
             super.onPostExecute(result);
         }
     }
+
     private class LogoutUserTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -288,7 +304,6 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(Void args) {
             super.onPostExecute(args);
-            Log.d("API Response", user.toString());
             goToLandingActivity();
         }
     }

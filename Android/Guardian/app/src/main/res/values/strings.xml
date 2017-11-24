@@ -21,4 +21,11 @@
     <string name="back">Back</string>
     <string name="email">Email Address</string>
     <string name="add">+</string>
+
+    <!-- activity_linked_account -->
+    <string name="textView_linkedAccount_username">Username</string>
+    <string name="textView_linkedAccount_Status">Status</string>
+    <string name="textView_linkedAccount_Alert">Alert</string>
+    <string name="textView_linkedAccount_Mute">Mute</string>
+    <string name="textView_linkedAccount_Delete">Delete</string>
 </resources>

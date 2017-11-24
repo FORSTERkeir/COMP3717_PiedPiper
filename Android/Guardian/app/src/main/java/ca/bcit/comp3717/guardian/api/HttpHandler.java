@@ -2,6 +2,8 @@ package ca.bcit.comp3717.guardian.api;
 
 import android.util.Base64;
 import android.util.Log;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedInputStream;
@@ -12,14 +14,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import ca.bcit.comp3717.guardian.model.LinkedUser;
 import ca.bcit.comp3717.guardian.model.User;
 import ca.bcit.comp3717.guardian.util.UserValidation;
 
 public class HttpHandler {
+
     private static String TAG = HttpHandler.class.getSimpleName();
     public HttpHandler() {}
 
     public static class UserController {
+
         private static final String URL_CreateUser = "http://guardiannewwestapi.azurewebsites.net/user/create";
         private static final String URL_GetUserByEmail = "http://guardiannewwestapi.azurewebsites.net/user/get";
         private static final String URL_GetUserById = "http://guardiannewwestapi.azurewebsites.net/user/getbyid";
@@ -67,7 +74,7 @@ public class HttpHandler {
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
                     String response = HttpHandler.convertStreamToString(in);
-                    user = HttpHandler.convertStringToUser(response);
+                    user = HttpHandler.convertResponseToUser(response);
                 }
 
             } catch (IOException e) {
@@ -90,7 +97,7 @@ public class HttpHandler {
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
                     String response = HttpHandler.convertStreamToString(in);
-                    user = HttpHandler.convertStringToUser(response);
+                    user = HttpHandler.convertResponseToUser(response);
                 }
 
             } catch (IOException e) {
@@ -137,7 +144,7 @@ public class HttpHandler {
                     boolean loginSuccess = UserValidation.validateUserLogout(response);
 
                     if (loginSuccess) {
-                        user = HttpHandler.convertStringToUser(response);
+                        user = HttpHandler.convertResponseToUser(response);
                         user.setPassword(password);
                     }
                 }
@@ -178,10 +185,11 @@ public class HttpHandler {
     }
 
     public static class LinkedUserController {
+
         private static final String URL_GetLinkedUsersById = "http://guardiannewwestapi.azurewebsites.net/linkeduser/get/all";
 
-        public static User getLinkedUsersById(String email, String password, int userId) {
-            User user = null;
+        public static List<LinkedUser> getLinkedUsersById(String email, String password, int userId) {
+            List<LinkedUser> linkedUsersList = null;
 
             try {
                 HttpURLConnection conn = openConnection(URL_GetLinkedUsersById);
@@ -193,14 +201,14 @@ public class HttpHandler {
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
                     String response = HttpHandler.convertStreamToString(in);
-//                    user = HttpHandler.convertStringToUser(response);
+                    linkedUsersList = HttpHandler.convertResponseToLinkedUserList(response);
                 }
 
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e(TAG, "ERROR in getLinkedUsersById(): " + e.getMessage());
             }
-            return user;
+            return linkedUsersList;
         }
     }
 
@@ -279,12 +287,12 @@ public class HttpHandler {
         return sb.toString();
     }
 
-    private static User convertStringToUser(String response) {
+    private static User convertResponseToUser(String response) {
         User user = null;
 
         try {
-            JSONObject obj = new JSONObject(response);
-            JSONObject userObj = obj.getJSONObject("user");
+            JSONObject responseObj = new JSONObject(response);
+            JSONObject userObj = responseObj.getJSONObject("user");
             user = new User();
 
             user.setId(userObj.getInt("ID"));
@@ -299,10 +307,45 @@ public class HttpHandler {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e(TAG, "ERROR in convertStringToUser(): " + e.getMessage());
+            Log.e(TAG, "ERROR in convertResponseToUser(): " + e.getMessage());
             return null;
         }
         return user;
+    }
+
+    private static List<LinkedUser> convertResponseToLinkedUserList(String response) {
+        List<LinkedUser> linkedUserList = null;
+
+        try {
+            JSONObject responseObj = new JSONObject(response);
+            JSONArray jsonArrLinkedUsers = responseObj.getJSONArray("linkedUsers");
+
+            if (jsonArrLinkedUsers.length() > 0) {
+                linkedUserList = new ArrayList<>();
+            }
+
+            for (int i = 0; i < jsonArrLinkedUsers.length(); i++) {
+                JSONObject jsonObjLinkedUser = jsonArrLinkedUsers.getJSONObject(i);
+                LinkedUser linkedUser = new LinkedUser();
+
+                linkedUser.setUserIdMe(jsonObjLinkedUser.getInt("UserIDMe"));
+                linkedUser.setUserIdTarget(jsonObjLinkedUser.getInt("UserIDTarget"));
+                linkedUser.setAlertMe(jsonObjLinkedUser.getBoolean("AlertMe"));
+                linkedUser.setAlertTarget(jsonObjLinkedUser.getBoolean("AlertTarget"));
+                linkedUser.setMuteMe(jsonObjLinkedUser.getBoolean("MuteMe"));
+                linkedUser.setMuteTarget(jsonObjLinkedUser.getBoolean("MuteTarget"));
+                linkedUser.setDeleted(jsonObjLinkedUser.getBoolean("Deleted"));
+                linkedUser.setAddedMe(jsonObjLinkedUser.getBoolean("AddedMe"));
+                linkedUser.setAddedTarget(jsonObjLinkedUser.getBoolean("AddedTarget"));
+
+                linkedUserList.add(linkedUser);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(TAG, "ERROR in convertResponseToLinkedUserList(): " + e.getMessage());
+        }
+        return linkedUserList;
     }
 
     public static String makeServiceCall(String reqUrl) {
