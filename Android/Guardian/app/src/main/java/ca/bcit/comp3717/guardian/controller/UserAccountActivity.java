@@ -41,6 +41,11 @@ public class UserAccountActivity extends Activity {
 
     public void back (View view) {
         Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("userId", user.getId());
+        i.putExtra("userName", user.getUserName());
+        i.putExtra("password", user.getPassword());
+        i.putExtra("email", user.getEmail());
+        i.putExtra("phoneNumber", user.getPhone());
         startActivity(i);
     }
 }

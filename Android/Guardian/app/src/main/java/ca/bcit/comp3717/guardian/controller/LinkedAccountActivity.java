@@ -39,6 +39,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
         outState.putString("userName", user.getUserName());
         outState.putString("email", user.getEmail());
         outState.putString("password", user.getPassword());
+        outState.putString("phoneNumber", user.getPhone());
     }
 
     @Override
@@ -49,6 +50,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
         user.setUserName(savedInstanceState.getString("userName"));
         user.setEmail(savedInstanceState.getString("email"));
         user.setPassword(savedInstanceState.getString("password"));
+        user.setPhone(savedInstanceState.getString("phoneNumber"));
         new GetLinkedUsersTask().execute();
     }
 
@@ -58,6 +60,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
         i.putExtra("userName", user.getUserName());
         i.putExtra("password", user.getPassword());
         i.putExtra("email", user.getEmail());
+        i.putExtra("phoneNumber", user.getPhone());
         startActivity(i);
     }
 

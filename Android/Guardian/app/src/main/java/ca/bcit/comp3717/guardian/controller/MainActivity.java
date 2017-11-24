@@ -96,6 +96,12 @@ public class MainActivity extends Activity {
 
     public void map (View view) {
         Intent i = new Intent(this, MapsActivity.class);
+        i.putExtra("userId", user.getId());
+        i.putExtra("userName", user.getUserName());
+        i.putExtra("email", user.getEmail());
+        i.putExtra("password", user.getPassword());
+        i.putExtra("phoneNumber", user.getPhone());
+
         startActivity(i);
     }
 
@@ -217,8 +223,9 @@ public class MainActivity extends Activity {
         Intent i = new Intent(this, LinkedAccountActivity.class);
         i.putExtra("userId", user.getId());
         i.putExtra("userName", user.getUserName());
-        i.putExtra("password", user.getPassword());
         i.putExtra("email", user.getEmail());
+        i.putExtra("password", user.getPassword());
+        i.putExtra("phoneNumber", user.getPhone());
         startActivity(i);
     }
 

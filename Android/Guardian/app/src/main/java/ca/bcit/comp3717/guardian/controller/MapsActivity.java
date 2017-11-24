@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.model.EmergencyBuilding;
+import ca.bcit.comp3717.guardian.model.User;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -49,6 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     boolean fireFilter;
     boolean hospitalFilter;
     boolean policeFilter;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Intent i = getIntent();
+
+        user = new User();
+        user.setId(i.getIntExtra("userId", -1));
+        user.setUserName(i.getStringExtra("userName"));
+        user.setEmail(i.getStringExtra("email"));
+        user.setPassword(i.getStringExtra("password"));
+        user.setPhone(i.getStringExtra("phoneNumber"));
+
     }
 
     public void loadMap(){
@@ -113,6 +125,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void back(View view) {
         Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("userId", user.getId());
+        i.putExtra("userName", user.getUserName());
+        i.putExtra("password", user.getPassword());
+        i.putExtra("email", user.getEmail());
+        i.putExtra("phoneNumber", user.getPhone());
+
         startActivity(i);
     }
 
