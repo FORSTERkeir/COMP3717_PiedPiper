@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="250dp"
     android:layout_height="wrap_content"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/editText_dialog_register_userName"
@@ -33,19 +33,21 @@
 
     <EditText
         android:id="@+id/editText_dialog_register_password"
-        android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="4dp"
         android:fontFamily="sans-serif"
-        android:hint="@string/passwordHint"/>
+        android:hint="@string/passwordHint"
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/button_dialog_register_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/register" />
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:background="@drawable/blue_btn"
+        android:text="@string/register"
+        android:layout_gravity="center_horizontal"/>
 </LinearLayout>
