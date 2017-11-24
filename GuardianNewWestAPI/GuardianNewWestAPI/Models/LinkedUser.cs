@@ -1,6 +1,8 @@
-﻿namespace Models.LinkedUser
+﻿using System;
+
+namespace Models.LinkedUser
 {
-    public class LinkedUser
+    public class LinkedUser : IComparable
     {
         public const string PARAM_TARGET = "TargetID";
         public const string PARAM_ALERT = "Alert";
@@ -20,6 +22,7 @@
         public int ID { get; set; }
         public int UserIDMe { get; set; }
         public int UserIDTarget { get; set; }
+        public string NameTarget { get; set; }
         public bool AlertMe { get; set; }
         public bool AlertTarget { get; set; }
         public bool MuteMe { get; set; }
@@ -27,5 +30,16 @@
         public bool Deleted { get; set; }
         public bool AddedMe { get; set; }
         public bool AddedTarget { get; set; }
+
+        public int CompareTo(object obj)
+        {
+            LinkedUser p = obj as LinkedUser;
+            if (this.UserIDTarget == p.UserIDTarget)
+                return 0;
+            else if (this.UserIDTarget < p.UserIDTarget)
+                return -1;
+            else
+                return 1;
+        }
     }
 }
