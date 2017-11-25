@@ -3,12 +3,15 @@ package ca.bcit.comp3717.guardian.controller;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import java.util.List;
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.adapter.LinkedAccountAdapter;
@@ -20,6 +23,7 @@ import ca.bcit.comp3717.guardian.util.UserBuilder;
 public class LinkedAccountActivity extends AppCompatActivity {
 
     private User user;
+    private AlertDialog addLinkedUserDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,30 +68,51 @@ public class LinkedAccountActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void addLinkedUser (View view) {
-        // Create custom dialog object
-        final Dialog dialog = new Dialog(LinkedAccountActivity.this);
-        // Include dialog.xml file
-        dialog.setContentView(R.layout.add_linked_user);
-        // Set dialog title
-        dialog.setTitle("Add User");
+//    public void addLinkedUser (View view) {
+//        // Create custom dialog object
+//        final Dialog dialog = new Dialog(LinkedAccountActivity.this);
+//        // Include dialog.xml file
+//        dialog.setContentView(R.layout.add_linked_user);
+//        // Set dialog title
+//        dialog.setTitle("Add User");
+//
+//        dialog.show();
+//        Button addUser = (Button) dialog.findViewById(R.id.sendRequestBtn);
+//        addUser.setOnClickListener(new Button.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                addUser(dialog);
+//            }
+//        });
+//
+//    }
 
-        dialog.show();
-        Button addUser = (Button) dialog.findViewById(R.id.sendRequestBtn);
-        addUser.setOnClickListener(new Button.OnClickListener() {
+    private void displayAddLinkedUserDialog(View v) {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(LinkedAccountActivity.this);
+        final View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_linked_user, null);
 
+        final EditText etTargetEmail = dialogView.findViewById(R.id.editText_dialogAddLinkedUser_email);
+        Button btnCancel = dialogView.findViewById(R.id.button_dialogAddLinkedUser_cancel);
+        Button btnAdd = dialogView.findViewById(R.id.button_dialogAddLinkedUser_add);
+
+        mBuilder.setView(dialogView);
+        addLinkedUserDialog = mBuilder.create();
+        addLinkedUserDialog.show();
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addUser(dialog);
+                addLinkedUserDialog.dismiss();
             }
         });
 
-    }
-
-    private void addUser(Dialog d) {
-        EditText targetUserName = (EditText) d.findViewById(R.id.targetUsername);
-        Intent i = getIntent();
-        String currentUserId = i.getStringExtra("Userid");
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                new AddLinkedUserTask(etTargetEmail.getText().toString()).execute();
+            }
+        });
     }
 
     private void displayLinkedUsers(List<LinkedUser> linkedUsersList) {
@@ -109,6 +134,24 @@ public class LinkedAccountActivity extends AppCompatActivity {
         protected void onPostExecute(List<LinkedUser> linkedUsersList) {
             super.onPostExecute(linkedUsersList);
             displayLinkedUsers(linkedUsersList);
+        }
+    }
+
+    private class AddLinkedUserTask extends AsyncTask<Void, Void, Void> {
+        private String targetUserEmail;
+
+        public AddLinkedUserTask(String targetUserEmail) {
+            this.targetUserEmail = targetUserEmail;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
         }
     }
 

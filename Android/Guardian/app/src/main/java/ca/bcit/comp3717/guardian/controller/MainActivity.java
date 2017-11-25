@@ -390,7 +390,6 @@ public class MainActivity extends Activity {
     }
 
     private class LogoutUserTask extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected Void doInBackground(Void... voidArgs) {
             HttpHandler.UserController.logoutByEmail(user.getEmail(), user.getPassword());

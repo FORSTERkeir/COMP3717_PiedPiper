@@ -28,4 +28,10 @@
     <string name="textView_linkedAccount_Alert">Alert</string>
     <string name="textView_linkedAccount_Mute">Mute</string>
     <string name="textView_linkedAccount_Delete">Delete</string>
+
+    <!-- dialog_add_linked_user -->
+    <string name="textView_dialogAddLinkedUser_email">Email</string>
+    <string name="editText_dialogAddLinkedUser_email">targetuser@email.com</string>
+    <string name="button_dialogAddLinkedUser_cancel">Cancel</string>
+    <string name="button_dialogAddLinkedUser_add">Add</string>
 </resources>
