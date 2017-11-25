@@ -47,7 +47,7 @@ public class UserValidation {
         return true;
     }
 
-    public static boolean createUserAccountValidation(String jsonResponse) {
+    public static boolean validateCreateUserAccountResponse(String jsonResponse) {
         try {
             JSONObject obj = new JSONObject(jsonResponse);
             if (obj.getString("Message").equalsIgnoreCase("The request is processed.")) {
@@ -61,7 +61,7 @@ public class UserValidation {
         return false;
     }
 
-    public static boolean validateUserLogin(String jsonResponse) {
+    public static boolean validateUserLoginResponse(String jsonResponse) {
         if (jsonResponse.length() > 0) {
             try {
                 JSONObject jsonObj = new JSONObject(jsonResponse);
@@ -78,7 +78,7 @@ public class UserValidation {
         return true;
     }
 
-    public static boolean validateUserLogout(String jsonResponse) {
+    public static boolean validateUserLogoutResponse(String jsonResponse) {
         if (jsonResponse.length() > 0) {
             try {
                 JSONObject jsonObj = new JSONObject(jsonResponse);

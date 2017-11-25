@@ -48,7 +48,7 @@ public class HttpHandler {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
                     String response = HttpHandler.convertStreamToString(in);
 
-                    if (UserValidation.createUserAccountValidation(response)) {
+                    if (UserValidation.validateCreateUserAccountResponse(response)) {
                         user = new User();
                         user.setUserName(userName);
                         user.setEmail(email);
@@ -141,7 +141,7 @@ public class HttpHandler {
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
                     String response = HttpHandler.convertStreamToString(in);
-                    boolean loginSuccess = UserValidation.validateUserLogout(response);
+                    boolean loginSuccess = UserValidation.validateUserLogoutResponse(response);
 
                     if (loginSuccess) {
                         user = HttpHandler.convertResponseToUser(response);
@@ -168,7 +168,7 @@ public class HttpHandler {
 
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
-                    boolean logoutSuccess = UserValidation.validateUserLogout(HttpHandler.convertStreamToString(in));
+                    boolean logoutSuccess = UserValidation.validateUserLogoutResponse(HttpHandler.convertStreamToString(in));
 
                     if (logoutSuccess) {
                         Log.i(TAG, "logoutByEmail() response: successfully logged out " + email);
