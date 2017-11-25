@@ -15,19 +15,35 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
+
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
+import ca.bcit.comp3717.guardian.api.MyHandler;
+import ca.bcit.comp3717.guardian.api.NotificationSettings;
+import ca.bcit.comp3717.guardian.api.RegistrationIntentService;
 import ca.bcit.comp3717.guardian.model.EmergencyBuilding;
 import ca.bcit.comp3717.guardian.model.User;
 import ca.bcit.comp3717.guardian.util.UserBuilder;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.microsoft.windowsazure.notifications.NotificationsManager;
+
+import android.content.Intent;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
@@ -38,6 +54,12 @@ public class MainActivity extends Activity {
     private String TAG = MapsActivity.class.getSimpleName();
     ArrayList<EmergencyBuilding> locationList;
     private User user;
+
+    // firebase
+    public static MainActivity mainActivity;
+    public static Boolean isVisible = false;
+    private static final String TAG_MAIN = "MainActivity";
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +72,23 @@ public class MainActivity extends Activity {
                     MY_PERMISSIONS_REQUEST_CALL_PHONE);
         }
 
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        // firebase
+        mainActivity = this;
+        NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, MyHandler.class);
+        registerWithNotificationHubs();
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
 
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Guardians.ttf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
 
-        Button tx = (Button)findViewById(R.id.mapBtn);
+        Button tx = (Button) findViewById(R.id.mapBtn);
         tx.setTypeface(custom_font);
-        tx = (Button)findViewById(R.id.linkAccBtn);
+        tx = (Button) findViewById(R.id.linkAccBtn);
         tx.setTypeface(custom_font);
-        tx = (Button)findViewById(R.id.userAccBtn);
+        tx = (Button) findViewById(R.id.userAccBtn);
         tx.setTypeface(custom_font);
-        tx = (Button)findViewById(R.id.logoutBtn);
+        tx = (Button) findViewById(R.id.logoutBtn);
         tx.setTypeface(custom_font);
 
         if (savedInstanceState == null) {
@@ -90,11 +117,35 @@ public class MainActivity extends Activity {
         user.setPhone(savedInstanceState.getString("phoneNumber"));
     }
 
-    public void alert (View view) {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isVisible = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isVisible = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isVisible = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isVisible = false;
+    }
+
+    public void alert(View view) {
         new GetLocations().execute();
     }
 
-    public void map (View view) {
+    public void map(View view) {
         Intent i = new Intent(this, MapsActivity.class);
         i.putExtra("userId", user.getId());
         i.putExtra("userName", user.getUserName());
@@ -105,7 +156,7 @@ public class MainActivity extends Activity {
         startActivity(i);
     }
 
-    public void userAcc (View view) {
+    public void userAcc(View view) {
         Intent i = new Intent(this, UserAccountActivity.class);
         i.putExtra("userId", user.getId());
         i.putExtra("userName", user.getUserName());
@@ -155,8 +206,7 @@ public class MainActivity extends Activity {
                                     numbers[2] = item.getPhone();
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             Toast.makeText(getApplicationContext(), "Location null", Toast.LENGTH_LONG).show();
                             for (int i = 0; i < locationList.size(); i++) {
                                 EmergencyBuilding item = locationList.get(i);
@@ -219,7 +269,7 @@ public class MainActivity extends Activity {
         startActivity(callIntent);
     }
 
-    public void linkAcc (View view) {
+    public void linkAcc(View view) {
         Intent i = new Intent(this, LinkedAccountActivity.class);
         i.putExtra("userId", user.getId());
         i.putExtra("userName", user.getUserName());
@@ -245,7 +295,7 @@ public class MainActivity extends Activity {
         startActivity(callIntent);
     }
 
-    public void logout (View view) {
+    public void logout(View view) {
         new LogoutUserTask().execute();
     }
 
@@ -401,6 +451,53 @@ public class MainActivity extends Activity {
             super.onPostExecute(args);
             goToLandingActivity();
         }
+    }
+
+    // firebase
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+                Log.i(TAG_MAIN, "This device is supported by Google Play Services.");
+                ToastNotify("This device is supported by Google Play Services.");
+            } else {
+                Log.i(TAG_MAIN, "This device is not supported by Google Play Services.");
+                ToastNotify("This device is not supported by Google Play Services.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    // firebase
+    public void registerWithNotificationHubs()
+    {
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with FCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+    }
+
+    // firebase
+    public void ToastNotify(final String notificationMessage) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, notificationMessage, Toast.LENGTH_LONG).show();
+                TextView helloText = (TextView) findViewById(R.id.text_hello);
+                helloText.setText(notificationMessage);
+            }
+        });
     }
 }
 
