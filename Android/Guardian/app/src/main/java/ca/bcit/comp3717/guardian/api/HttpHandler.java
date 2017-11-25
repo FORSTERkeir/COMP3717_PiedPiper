@@ -6,6 +6,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import ca.bcit.comp3717.guardian.model.LinkedUser;
 import ca.bcit.comp3717.guardian.model.User;
 import ca.bcit.comp3717.guardian.util.UserValidation;
@@ -23,7 +25,9 @@ import ca.bcit.comp3717.guardian.util.UserValidation;
 public class HttpHandler {
 
     private static String TAG = HttpHandler.class.getSimpleName();
-    public HttpHandler() {}
+
+    public HttpHandler() {
+    }
 
     public static class UserController {
 
@@ -33,6 +37,7 @@ public class HttpHandler {
         private static final String URL_DeleteUserByEmail = "http://guardiannewwestapi.azurewebsites.net/user/delete";
         private static final String URL_LoginUserByEmail = "http://guardiannewwestapi.azurewebsites.net/user/login";
         private static final String URL_LogoutUserByEmail = "http://guardiannewwestapi.azurewebsites.net/user/logout";
+        private static final String URL_RefreshToken = "http://guardiannewwestapi.azurewebsites.net/token/refresh";
 
         public static User createUser(String userName, String password, String email, String phone) {
             User user = null;
@@ -180,6 +185,35 @@ public class HttpHandler {
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.e(TAG, "ERROR in logoutByEmail(): " + e.getMessage());
+            }
+        }
+
+        public static void refreshToken(String email, String password, int id, String token) {
+            try {
+                HttpURLConnection conn = openConnection(URL_RefreshToken);
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Authorization", getB64Auth(email, password));
+                conn.setRequestProperty("UserID", String.valueOf(id));
+                conn.setRequestProperty("Token", token);
+                conn.setRequestMethod("POST");
+
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "refreshToken() response code: " + conn.getResponseCode());
+
+                } else {
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    boolean refreshSuccess = UserValidation.validateTokenRefresh(HttpHandler.convertStreamToString(in));
+
+                    if (refreshSuccess) {
+                        Log.i(TAG, "refreshToken() response: successfully refreshed token " + token);
+                    } else {
+                        Log.i(TAG, "refreshToken() response: failed to refresh token " + token);
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "ERROR in refreshToken(): " + e.getMessage());
             }
         }
     }

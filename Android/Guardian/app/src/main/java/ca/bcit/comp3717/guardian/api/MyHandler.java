@@ -20,6 +20,10 @@ public class MyHandler extends NotificationsHandler {
     NotificationCompat.Builder builder;
     Context ctx;
 
+    /**
+     * NOTE TO FRONT END:
+     * This is where you handle received message.
+     */
     @Override
     public void onReceive(Context context, Bundle bundle) {
         ctx = context;

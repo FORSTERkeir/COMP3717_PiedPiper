@@ -55,11 +55,12 @@ public class MainActivity extends Activity {
     ArrayList<EmergencyBuilding> locationList;
     private User user;
 
-    // firebase
+    // firebase ------------------------------------------------------------------------------------
     public static MainActivity mainActivity;
     public static Boolean isVisible = false;
     private static final String TAG_MAIN = "MainActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    // firebase ------------------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +73,11 @@ public class MainActivity extends Activity {
                     MY_PERMISSIONS_REQUEST_CALL_PHONE);
         }
 
-        // firebase
+        // firebase --------------------------------------------------------------------------------
         mainActivity = this;
         NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, MyHandler.class);
         registerWithNotificationHubs();
+        // firebase --------------------------------------------------------------------------------
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
@@ -120,25 +122,25 @@ public class MainActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        isVisible = true;
+        isVisible = true; // firebase
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        isVisible = false;
+        isVisible = false; // firebase
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        isVisible = true;
+        isVisible = true; // firebase
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        isVisible = false;
+        isVisible = false; // firebase
     }
 
     public void alert(View view) {
@@ -306,7 +308,6 @@ public class MainActivity extends Activity {
         callIntent.setData(Uri.parse("tel:" + btn.getText()));
         startActivity(callIntent);
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -494,8 +495,6 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 Toast.makeText(MainActivity.this, notificationMessage, Toast.LENGTH_LONG).show();
-                TextView helloText = (TextView) findViewById(R.id.text_hello);
-                helloText.setText(notificationMessage);
             }
         });
     }

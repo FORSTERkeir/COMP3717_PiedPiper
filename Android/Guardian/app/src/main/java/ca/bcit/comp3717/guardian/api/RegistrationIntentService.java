@@ -3,16 +3,21 @@ package ca.bcit.comp3717.guardian.api;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.microsoft.windowsazure.messaging.NotificationHub;
 
 import ca.bcit.comp3717.guardian.controller.MainActivity;
+import ca.bcit.comp3717.guardian.model.User;
+import ca.bcit.comp3717.guardian.util.UserBuilder;
 
 public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
+    private User user;
 
     private NotificationHub hub;
 
@@ -35,7 +40,7 @@ public class RegistrationIntentService extends IntentService {
             // Storing the registration id that indicates whether the generated token has been
             // sent to your server. If it is not stored, send the token to your server,
             // otherwise your server should have already received the token.
-            if (((regID=sharedPreferences.getString("registrationID", null)) == null)){
+            if (((regID = sharedPreferences.getString("registrationID", null)) == null)) {
 
                 NotificationHub hub = new NotificationHub(NotificationSettings.HubName,
                         NotificationSettings.HubListenConnectionString, this);
@@ -49,12 +54,12 @@ public class RegistrationIntentService extends IntentService {
                 resultString = "New NH Registration Successfully - RegId : " + regID;
                 Log.d(TAG, resultString);
 
-                sharedPreferences.edit().putString("registrationID", regID ).apply();
-                sharedPreferences.edit().putString("FCMtoken", FCM_token ).apply();
+                sharedPreferences.edit().putString("registrationID", regID).apply();
+                sharedPreferences.edit().putString("FCMtoken", FCM_token).apply();
             }
 
             // Check if the token may have been compromised and needs refreshing.
-            else if ((storedToken=sharedPreferences.getString("FCMtoken", "")) != FCM_token) {
+            else if ((storedToken = sharedPreferences.getString("FCMtoken", "")) != FCM_token) {
 
                 NotificationHub hub = new NotificationHub(NotificationSettings.HubName,
                         NotificationSettings.HubListenConnectionString, this);
@@ -65,25 +70,42 @@ public class RegistrationIntentService extends IntentService {
                 // Refer to : https://azure.microsoft.com/en-us/documentation/articles/notification-hubs-routing-tag-expressions/
                 // regID = hub.register(token, "tag1,tag2").getRegistrationId();
 
+                sendRegistrationToServer(regID);
                 resultString = "New NH Registration Successfully - RegId : " + regID;
                 Log.d(TAG, resultString);
 
-                sharedPreferences.edit().putString("registrationID", regID ).apply();
-                sharedPreferences.edit().putString("FCMtoken", FCM_token ).apply();
-            }
-
-            else {
+                sharedPreferences.edit().putString("registrationID", regID).apply();
+                sharedPreferences.edit().putString("FCMtoken", FCM_token).apply();
+            } else {
                 resultString = "Previously Registered Successfully - RegId : " + regID;
             }
         } catch (Exception e) {
-            Log.e(TAG, resultString="Failed to complete registration", e);
+            Log.e(TAG, resultString = "Failed to complete registration", e);
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
         }
 
         // Notify UI that registration has completed.
         if (MainActivity.isVisible) {
-            MainActivity.mainActivity.ToastNotify(resultString);
+            // MainActivity.mainActivity.ToastNotify(resultString);
+        }
+    }
+
+    public void sendRegistrationToServer(String token) {
+        user = UserBuilder.constructUserFromIntent(MainActivity.mainActivity.getIntent());
+        new RefreshTokenTask().execute(token);
+    }
+
+    private class RefreshTokenTask extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... strArgs) {
+            HttpHandler.UserController.refreshToken(user.getEmail(), user.getPassword(), user.getId(), strArgs[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void args) {
+            super.onPostExecute(args);
         }
     }
 }
