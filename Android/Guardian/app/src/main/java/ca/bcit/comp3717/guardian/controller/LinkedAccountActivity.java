@@ -97,18 +97,9 @@ public class LinkedAccountActivity extends AppCompatActivity {
                     LinkedAccountActivity.this, R.layout.listview_5column, R.drawable.ic_close_black_24dp, linkedUsersList);
             listView.setAdapter(adapter);
         }
-
-        // go to the item details activity for the clicked item
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                displayEditItemDialog(position);
-//            }
-//        });
     }
 
     private class GetLinkedUsersTask extends AsyncTask<Void, Void, List<LinkedUser>> {
-
         @Override
         protected List<LinkedUser> doInBackground(Void... voidArgs) {
             return HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());

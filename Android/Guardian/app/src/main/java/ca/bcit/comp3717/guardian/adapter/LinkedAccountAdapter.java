@@ -45,14 +45,14 @@ public class LinkedAccountAdapter extends ArrayAdapter<LinkedUser> {
 
         LinkedUser linkedUser = linkedUsersList.get(position);
 
-        textViewUsername.setText(String.valueOf(linkedUser.getUserIdTarget()));
-        if (linkedUser.isAlertMe()) {
-            textViewStatus.setText("Alert");
+        textViewUsername.setText(linkedUser.getNameTarget());
+        textViewStatus.setText("Normal");
 
-        } else {
-            textViewStatus.setText("Normal");
-            textViewStatus.setTextColor(Color.red(R.color.teal));
-        }
+//        if (linkedUser.hasAlertFlag()) {
+//            textViewStatus.setText("Alert");
+//            textViewStatus.setTextColor(ContextCompat.getColor(context, R.color.darkRed));
+//        }
+
         checkboxAlert.setChecked(linkedUser.isAlertMe());
         checkboxMute.setChecked(linkedUser.isMuteTarget());
         imageViewDelete.setImageResource(this.deleteIconResource);
@@ -64,7 +64,6 @@ public class LinkedAccountAdapter extends ArrayAdapter<LinkedUser> {
     }
 
     private class MyCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
-
         TextView textViewStatus;
 
         public MyCheckedChangeListener(TextView textViewStatus) {
@@ -76,17 +75,9 @@ public class LinkedAccountAdapter extends ArrayAdapter<LinkedUser> {
             switch(buttonView.getId()) {
 
                 case R.id.checkbox_listView5column_alert:
-                    this.textViewStatus.setText(isChecked ? "Alert" : "Normal");
-                    this.textViewStatus.setTextColor(isChecked ?
-                            ContextCompat.getColor(context, R.color.darkRed) :
-                            ContextCompat.getColor(context, R.color.teal));
                     break;
 
                 case R.id.checkbox_listView5column_mute:
-                    this.textViewStatus.setText(isChecked ? "Mute" : "Normal");
-                    this.textViewStatus.setTextColor(isChecked ?
-                            ContextCompat.getColor(context, R.color.colorPrimary) :
-                            ContextCompat.getColor(context, R.color.teal));
                     break;
 
                 default:

@@ -330,6 +330,7 @@ public class HttpHandler {
 
                 linkedUser.setUserIdMe(jsonObjLinkedUser.getInt("UserIDMe"));
                 linkedUser.setUserIdTarget(jsonObjLinkedUser.getInt("UserIDTarget"));
+                linkedUser.setNameTarget(jsonObjLinkedUser.getString("NameTarget"));
                 linkedUser.setAlertMe(jsonObjLinkedUser.getBoolean("AlertMe"));
                 linkedUser.setAlertTarget(jsonObjLinkedUser.getBoolean("AlertTarget"));
                 linkedUser.setMuteMe(jsonObjLinkedUser.getBoolean("MuteMe"));

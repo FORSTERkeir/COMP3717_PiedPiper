@@ -5,6 +5,7 @@ public class LinkedUser {
 
     private int userIdMe;
     private int userIdTarget;
+    private String nameTarget;
     private boolean alertMe;
     private boolean alertTarget;
     private boolean muteMe;
@@ -15,12 +16,13 @@ public class LinkedUser {
 
     public LinkedUser() {}
 
-    public LinkedUser(int userIdMe, int userIdTarget, boolean alertMe, boolean alertTarget,
+    public LinkedUser(int userIdMe, int userIdTarget, String nameTarget, boolean alertMe, boolean alertTarget,
                       boolean muteMe, boolean muteTarget, boolean deleted, boolean addedMe,
                       boolean addedTarget) {
 
         this.userIdMe = userIdMe;
         this.userIdTarget = userIdTarget;
+        this.nameTarget = nameTarget;
         this.alertMe = alertMe;
         this.alertTarget = alertTarget;
         this.muteMe = muteMe;
@@ -28,6 +30,14 @@ public class LinkedUser {
         this.deleted = deleted;
         this.addedMe = addedMe;
         this.addedTarget = addedTarget;
+    }
+
+    public String getNameTarget() {
+        return nameTarget;
+    }
+
+    public void setNameTarget(String nameTarget) {
+        this.nameTarget = nameTarget;
     }
 
     public int getUserIdMe() {

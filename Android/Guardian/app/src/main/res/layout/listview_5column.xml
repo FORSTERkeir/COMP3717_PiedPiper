@@ -27,7 +27,7 @@
             android:layout_weight="19"
             android:gravity="center_vertical"
             android:text="TextView"
-            android:textColor="@android:color/holo_red_dark"
+            android:textColor="@color/teal"
             android:textStyle="bold" />
 
         <CheckBox
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="13"
             android:checked="false"
-            app:buttonTint="@android:color/holo_red_dark" />
+            app:buttonTint="@color/teal" />
 
         <CheckBox
             android:id="@+id/checkbox_listView5column_mute"
