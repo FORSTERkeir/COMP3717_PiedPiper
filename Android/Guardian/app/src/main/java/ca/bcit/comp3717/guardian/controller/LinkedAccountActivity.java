@@ -1,17 +1,25 @@
 package ca.bcit.comp3717.guardian.controller;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import ca.bcit.comp3717.guardian.R;
-import ca.bcit.comp3717.guardian.adapter.LinkedAccountAdapter;
+import ca.bcit.comp3717.guardian.adapter.LinkedUsersAdapter;
+import ca.bcit.comp3717.guardian.adapter.LinkedUserRequestsAdapter;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.model.LinkedUser;
 import ca.bcit.comp3717.guardian.model.User;
@@ -20,6 +28,8 @@ import ca.bcit.comp3717.guardian.util.UserBuilder;
 public class LinkedAccountActivity extends AppCompatActivity {
 
     private User user;
+    private AlertDialog addLinkedUserDialog;
+//    private List<LinkedUser> linkedUsersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +39,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             user = UserBuilder.constructUserFromIntent(getIntent());
             new GetLinkedUsersTask().execute();
+            setFloatingActionButtonListener();
         }
     }
 
@@ -64,38 +75,102 @@ public class LinkedAccountActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void addLinkedUser (View view) {
-        // Create custom dialog object
-        final Dialog dialog = new Dialog(LinkedAccountActivity.this);
-        // Include dialog.xml file
-        dialog.setContentView(R.layout.add_linked_user);
-        // Set dialog title
-        dialog.setTitle("Add User");
-
-        dialog.show();
-        Button addUser = (Button) dialog.findViewById(R.id.sendRequestBtn);
-        addUser.setOnClickListener(new Button.OnClickListener() {
-
+    private void setFloatingActionButtonListener() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.FAB_linkedAccountActivity_add);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addUser(dialog);
+                displayAddLinkedUserDialog();
+            }
+        });
+    }
+
+    public void displayAddLinkedUserDialog() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(LinkedAccountActivity.this);
+        final View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_linked_user, null);
+
+        final EditText etTargetEmail = dialogView.findViewById(R.id.editText_dialogAddLinkedUser_email);
+        Button btnCancel = dialogView.findViewById(R.id.button_dialogAddLinkedUser_cancel);
+        Button btnAdd = dialogView.findViewById(R.id.button_dialogAddLinkedUser_add);
+
+        mBuilder.setView(dialogView);
+        addLinkedUserDialog = mBuilder.create();
+        addLinkedUserDialog.show();
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addLinkedUserDialog.dismiss();
             }
         });
 
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                new AddLinkedUserTask(etTargetEmail.getText().toString()).execute();
+            }
+        });
     }
 
-    private void addUser(Dialog d) {
-        EditText targetUserName = (EditText) d.findViewById(R.id.targetUsername);
-        Intent i = getIntent();
-        String currentUserId = i.getStringExtra("Userid");
+    private List<LinkedUser> constructLinkedUserRequestsGivenLinkedUserList(List<LinkedUser> linkedUsersList) {
+        List<LinkedUser> linkRequests = new ArrayList<>();
+
+        for (LinkedUser lu : linkedUsersList) {
+            if (!lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
+                linkRequests.add(lu);
+            }
+        }
+        return linkRequests.size() == 0 ? null : linkRequests;
+    }
+
+    private List<LinkedUser> constructLinkedUsersGivenLinkedUserList(List<LinkedUser> linkedUsersList) {
+        List<LinkedUser> linkedUsers = new ArrayList<>();
+
+        for (LinkedUser lu : linkedUsersList) {
+            if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
+                linkedUsers.add(lu);
+            }
+        }
+        return linkedUsers.size() == 0 ? null : linkedUsers;
     }
 
     private void displayLinkedUsers(List<LinkedUser> linkedUsersList) {
         if (linkedUsersList != null) {
-            ListView listView = (ListView) findViewById(R.id.listView_linkedAccount);
-            LinkedAccountAdapter adapter = new LinkedAccountAdapter(
-                    LinkedAccountActivity.this, R.layout.listview_5column, R.drawable.ic_close_black_24dp, linkedUsersList);
-            listView.setAdapter(adapter);
+            List<LinkedUser> linkedUserRequests = constructLinkedUserRequestsGivenLinkedUserList(linkedUsersList);
+            List<LinkedUser> linkedUsers = constructLinkedUsersGivenLinkedUserList(linkedUsersList);
+
+            if (linkedUserRequests != null) {
+                Collections.sort(linkedUserRequests);
+
+                LinearLayout llLinkedUserRequests = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUserRequests);
+                llLinkedUserRequests.setVisibility(View.VISIBLE);
+
+                ListView linkedUserRequestsListView = (ListView) findViewById(R.id.listView_linkedAccount_linkedUserRequests);
+                LinkedUserRequestsAdapter linkedUserRequestsAdapter = new LinkedUserRequestsAdapter(
+                        LinkedAccountActivity.this, R.layout.listview_3column, linkedUserRequests);
+                linkedUserRequestsListView.setAdapter(linkedUserRequestsAdapter);
+
+                // adjust the list view height to half
+                if (linkedUserRequests.size() > 7) {
+                    LinearLayout llBody = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_body);
+                    llLinkedUserRequests.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, llBody.getHeight() / 2));
+                }
+            }
+
+            if (linkedUsers != null) {
+                Collections.sort(linkedUsers);
+
+                LinearLayout llLinkedUsers = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUsers);
+                llLinkedUsers.setVisibility(View.VISIBLE);
+                TextView tvNoLinkedUsers = (TextView) findViewById(R.id.textView_linkedAccount_noLinkedUsers);
+                tvNoLinkedUsers.setVisibility(View.GONE);
+
+                ListView linkedUsersListView = (ListView) findViewById(R.id.listView_linkedAccount_linkedUsers);
+
+                LinkedUsersAdapter linkedUsersAdapter = new LinkedUsersAdapter(
+                        LinkedAccountActivity.this, R.layout.listview_5column, R.drawable.ic_delete_red, linkedUsers);
+                linkedUsersListView.setAdapter(linkedUsersAdapter);
+            }
         }
     }
 
@@ -109,6 +184,24 @@ public class LinkedAccountActivity extends AppCompatActivity {
         protected void onPostExecute(List<LinkedUser> linkedUsersList) {
             super.onPostExecute(linkedUsersList);
             displayLinkedUsers(linkedUsersList);
+        }
+    }
+
+    private class AddLinkedUserTask extends AsyncTask<Void, Void, Void> {
+        private String targetUserEmail;
+
+        public AddLinkedUserTask(String targetUserEmail) {
+            this.targetUserEmail = targetUserEmail;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
         }
     }
 
