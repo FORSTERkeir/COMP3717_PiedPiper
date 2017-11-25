@@ -88,7 +88,11 @@ public class LinkedAccountActivity extends AppCompatActivity {
 //
 //    }
 
-    private void displayAddLinkedUserDialog(View v) {
+    public void test(View view) {
+        String test = "";
+    }
+
+    private void displayAddLinkedUserDialog(View view) {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(LinkedAccountActivity.this);
         final View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_linked_user, null);
 
