@@ -31,27 +31,28 @@ namespace Models
                     con.Open();
                     using (SqlCommand cmd = con.CreateCommand())
                     {
-                        ArrayList colums = new ArrayList();
-                        ArrayList conditions = new ArrayList();
-                        string statement = string.Empty;
+                        // query linked user list
+                        ArrayList columsS1 = new ArrayList();
+                        ArrayList conditionsS1 = new ArrayList();
+                        string statement1 = string.Empty;
 
-                        colums.Add(LinkedUser.LinkedUser.COL_ID);
-                        colums.Add(LinkedUser.LinkedUser.COL_USERID1);
-                        colums.Add(LinkedUser.LinkedUser.COL_USERID2);
-                        colums.Add(LinkedUser.LinkedUser.COL_ALERT1);
-                        colums.Add(LinkedUser.LinkedUser.COL_ALERT2);
-                        colums.Add(LinkedUser.LinkedUser.COL_MUTE1);
-                        colums.Add(LinkedUser.LinkedUser.COL_MUTE2);
-                        colums.Add(LinkedUser.LinkedUser.COL_DELETED);
-                        colums.Add(LinkedUser.LinkedUser.COL_ADDED1);
-                        colums.Add(LinkedUser.LinkedUser.COL_ADDED2);
-                        conditions.Add(LinkedUser.LinkedUser.COL_USERID1 + " = " + id);
-                        conditions.Add(QueryGenerator.KW_OR);
-                        conditions.Add(LinkedUser.LinkedUser.COL_USERID2 + " = " + id);
-                        statement = QueryGenerator.GenerateSqlSelect(colums, LinkedUser.LinkedUser.TABLE, conditions);
+                        columsS1.Add(LinkedUser.LinkedUser.COL_ID);
+                        columsS1.Add(LinkedUser.LinkedUser.COL_USERID1);
+                        columsS1.Add(LinkedUser.LinkedUser.COL_USERID2);
+                        columsS1.Add(LinkedUser.LinkedUser.COL_ALERT1);
+                        columsS1.Add(LinkedUser.LinkedUser.COL_ALERT2);
+                        columsS1.Add(LinkedUser.LinkedUser.COL_MUTE1);
+                        columsS1.Add(LinkedUser.LinkedUser.COL_MUTE2);
+                        columsS1.Add(LinkedUser.LinkedUser.COL_DELETED);
+                        columsS1.Add(LinkedUser.LinkedUser.COL_ADDED1);
+                        columsS1.Add(LinkedUser.LinkedUser.COL_ADDED2);
+                        conditionsS1.Add(LinkedUser.LinkedUser.COL_USERID1 + "=" + id);
+                        conditionsS1.Add(QueryGenerator.KW_OR);
+                        conditionsS1.Add(LinkedUser.LinkedUser.COL_USERID2 + "=" + id);
+                        statement1 = QueryGenerator.GenerateSqlSelect(columsS1, LinkedUser.LinkedUser.TABLE, conditionsS1);
 
                         cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = statement;
+                        cmd.CommandText = statement1;
 
                         using (SqlDataReader dr = cmd.ExecuteReader())
                         {
@@ -103,10 +104,60 @@ namespace Models
                                     lu.AddedMe = dr.GetBoolean(i);
                                 }
 
-
                                 linkedUsers.Add(lu);
                             }
                             dr.Close();
+                        }
+                        linkedUsers.Sort();
+
+                        // query linked user name
+                        ArrayList columsS2 = new ArrayList();
+                        ArrayList conditionsS2 = new ArrayList();
+                        ArrayList ordersS2 = new ArrayList();
+                        string statement2 = string.Empty;
+
+                        columsS2.Add(Models.User.User.COL_ID);
+                        columsS2.Add(Models.User.User.COL_DELETED);
+                        columsS2.Add(Models.User.User.COL_USERNAME);
+                        for (int i = 0; i < linkedUsers.Count; ++i)
+                        {
+                            if (i > 0)
+                            {
+                                conditionsS2.Add(QueryGenerator.KW_OR);
+                            }
+                            conditionsS2.Add(Models.User.User.COL_ID + "=" + ((LinkedUser.LinkedUser)linkedUsers[i]).UserIDTarget);
+                        }
+                        ordersS2.Add(Models.User.User.COL_ID);
+                        statement2 = QueryGenerator.GenerateSqlSelect(columsS2, Models.User.User.TABLE, conditionsS2, ordersS2, QueryGenerator.KW_ASC);
+
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = statement2;
+
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        {
+                            int i = 0;
+
+                            while (dr.Read())
+                            {
+                                if (((LinkedUser.LinkedUser)linkedUsers[i]).UserIDTarget == dr.GetInt32(0)
+                                    && !dr.GetBoolean(1))
+                                {
+                                    ((LinkedUser.LinkedUser)linkedUsers[i]).NameTarget = dr.GetString(2);
+                                }
+                                else
+                                {
+                                    ((LinkedUser.LinkedUser)linkedUsers[i]).NameTarget = string.Empty;
+                                }
+                                i++;
+                            }
+                            dr.Close();
+                        }
+                        for (int i = linkedUsers.Count - 1; i >= 0; --i)
+                        {
+                            if (((LinkedUser.LinkedUser)linkedUsers[i]).NameTarget.Length == 0)
+                            {
+                                linkedUsers.RemoveAt(i);
+                            }
                         }
                     }
                     con.Close();
@@ -370,6 +421,95 @@ namespace Models
                         valuesS3.Add("1"); // Added1
                         valuesS3.Add("0"); // Added2
                         s3 = QueryGenerator.GenerateSqlInsert(valuesS3, LinkedUser.LinkedUser.TABLE);
+
+                        string statement;
+                        statement = QueryGenerator.GenerateSqlIfElseIfElse(conditions1, conditions2, s1, s2, s3);
+
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = statement.ToString();
+                        cmd.ExecuteNonQuery();
+                    }
+                    con.Close();
+                }
+            }
+            catch
+            {
+                //return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest, false));
+                return ResponseMessage(JsonContent.ReturnMessage("The request is invalid.", ""));
+            }
+
+            //return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, true));
+            return ResponseMessage(JsonContent.ReturnMessage("The request is processed.", ""));
+        }
+
+        [HttpPost]
+        [AcceptVerbs("GET", "POST")]
+        [Route("~/linkeduser/remove")]
+        public IHttpActionResult RemoveLinkedUser([FromBody] object data)
+        {
+            try
+            {
+                var headers = Request.Headers;
+                string idMe = headers.GetValues(Models.User.User.COL_ID).First();
+                string idTarget = headers.GetValues(LinkedUser.LinkedUser.PARAM_TARGET).First();
+
+                using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
+                {
+                    con.Open();
+                    using (SqlCommand cmd = con.CreateCommand())
+                    {
+                        // conditions 1
+                        ArrayList conditions1 = new ArrayList();
+                        string c1;
+                        ArrayList columnsC1 = new ArrayList();
+                        ArrayList conditionsC1 = new ArrayList();
+                        columnsC1.Add(LinkedUser.LinkedUser.COL_ID);
+                        conditionsC1.Add(LinkedUser.LinkedUser.COL_USERID1 + "=" + idMe
+                            + QueryGenerator.SPACE + QueryGenerator.KW_AND + QueryGenerator.SPACE
+                            + LinkedUser.LinkedUser.COL_USERID2 + "=" + idTarget);
+                        c1 = QueryGenerator.GenerateSqlSelect(columnsC1, LinkedUser.LinkedUser.TABLE, conditionsC1
+                            , null, QueryGenerator.KW_ASC, 1);
+                        c1 = QueryGenerator.KW_EXISTS + QueryGenerator.SPACE + QueryGenerator.ParenthesisString(c1);
+                        conditions1.Add(c1);
+
+                        // conditions 2
+                        ArrayList conditions2 = new ArrayList();
+                        string c2;
+                        ArrayList columnsC2 = new ArrayList();
+                        ArrayList conditionsC2 = new ArrayList();
+                        columnsC2.Add(LinkedUser.LinkedUser.COL_ID);
+                        conditionsC2.Add(LinkedUser.LinkedUser.COL_USERID1 + "=" + idTarget
+                            + QueryGenerator.SPACE + QueryGenerator.KW_AND + QueryGenerator.SPACE
+                            + LinkedUser.LinkedUser.COL_USERID2 + "=" + idMe);
+                        c2 = QueryGenerator.GenerateSqlSelect(columnsC2, LinkedUser.LinkedUser.TABLE, conditionsC2
+                            , null, QueryGenerator.KW_ASC, 1);
+                        c2 = QueryGenerator.KW_EXISTS + QueryGenerator.SPACE + QueryGenerator.ParenthesisString(c2);
+                        conditions2.Add(c2);
+
+                        // statement 1
+                        ArrayList assignS1 = new ArrayList();
+                        ArrayList conditionS1 = new ArrayList();
+                        string s1;
+                        assignS1.Add(LinkedUser.LinkedUser.COL_ADDED1 + "=0");
+                        assignS1.Add(LinkedUser.LinkedUser.COL_DELETED + "=1");
+                        conditionS1.Add(LinkedUser.LinkedUser.COL_USERID1 + "=" + idMe
+                            + QueryGenerator.SPACE + QueryGenerator.KW_AND + QueryGenerator.SPACE
+                            + LinkedUser.LinkedUser.COL_USERID2 + "=" + idTarget);
+                        s1 = QueryGenerator.GenerateSqlUpdate(LinkedUser.LinkedUser.TABLE, assignS1, conditionS1);
+
+                        // statement 2
+                        ArrayList assignS2 = new ArrayList();
+                        ArrayList conditionS2 = new ArrayList();
+                        string s2;
+                        assignS2.Add(LinkedUser.LinkedUser.COL_ADDED2 + "=0");
+                        assignS2.Add(LinkedUser.LinkedUser.COL_DELETED + "=1");
+                        conditionS2.Add(LinkedUser.LinkedUser.COL_USERID1 + "=" + idTarget
+                            + QueryGenerator.SPACE + QueryGenerator.KW_AND + QueryGenerator.SPACE
+                            + LinkedUser.LinkedUser.COL_USERID2 + "=" + idMe);
+                        s2 = QueryGenerator.GenerateSqlUpdate(LinkedUser.LinkedUser.TABLE, assignS2, conditionS2);
+
+                        // statement 3
+                        string s3 = QueryGenerator.KW_DONOTHING;
 
                         string statement;
                         statement = QueryGenerator.GenerateSqlIfElseIfElse(conditions1, conditions2, s1, s2, s3);

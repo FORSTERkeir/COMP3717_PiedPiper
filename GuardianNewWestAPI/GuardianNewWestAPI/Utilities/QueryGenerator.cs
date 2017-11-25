@@ -26,6 +26,7 @@ namespace Utilities.QueryGenerator
         public const string KW_ELSE = "ELSE";
         public const string KW_ELSEIF = "ELSE IF";
         public const string KW_EXISTS = "EXISTS";
+        public const string KW_DONOTHING = "PRINT ''";
         public const string SPACE = " ";
         public const string EQUALS = " = ";
         public const string COMMA = ", ";
