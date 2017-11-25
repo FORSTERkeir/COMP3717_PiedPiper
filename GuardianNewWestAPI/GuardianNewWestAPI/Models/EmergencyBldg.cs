@@ -1,4 +1,4 @@
-﻿namespace Models.EmergencyBldg
+﻿namespace GuardianNewWestAPI.Models
 {
     public class EmergencyBldg
     {

@@ -1,33 +1,23 @@
-﻿using Swashbuckle.Swagger.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System;
 using System.Web.Http;
 using System.Data.SqlClient;
 using System.Data;
 using System.Collections;
-using Utilities.QueryGenerator;
-using Utilities.JsonContent;
+using GuardianNewWestAPI.Models;
+using GuardianNewWestAPI.Utilities;
 
-namespace Models
+namespace GuardianNewWestAPI.Controllers
 {
     public class EmergencyBldgController : ApiController
     {
         [HttpGet]
         //[BasicAuthentication]
         [AcceptVerbs("GET")]
-        [SwaggerResponse(HttpStatusCode.OK,
-            Description = "OK",
-            Type = typeof(IEnumerable<EmergencyBldg.EmergencyBldg>))]
-        [SwaggerResponse(HttpStatusCode.NotFound,
-            Description = "Emergency building not found",
-            Type = typeof(IEnumerable<EmergencyBldg.EmergencyBldg>))]
-        [SwaggerOperation("GetEmergencyBldgAll")]
         [Route("~/emergencybldg/get/all")]
         public IHttpActionResult GetEmergencyBldgAll()
         {
             ArrayList buildings = new ArrayList();
-            EmergencyBldg.EmergencyBldg bldg;
+            EmergencyBldg bldg;
 
             try
             {
@@ -40,19 +30,19 @@ namespace Models
                         ArrayList conditions = new ArrayList();
                         string statement = string.Empty;
 
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_ID);
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_CATEGORY);
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_BLDGID);
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_BLDGNAME);
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_STRNUM);
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_STRNAME);
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_MAPREF);
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_LAT);
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_LNG);
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_PHONE);
-                        colums.Add(EmergencyBldg.EmergencyBldg.COL_LOCNAME);
+                        colums.Add(EmergencyBldg.COL_ID);
+                        colums.Add(EmergencyBldg.COL_CATEGORY);
+                        colums.Add(EmergencyBldg.COL_BLDGID);
+                        colums.Add(EmergencyBldg.COL_BLDGNAME);
+                        colums.Add(EmergencyBldg.COL_STRNUM);
+                        colums.Add(EmergencyBldg.COL_STRNAME);
+                        colums.Add(EmergencyBldg.COL_MAPREF);
+                        colums.Add(EmergencyBldg.COL_LAT);
+                        colums.Add(EmergencyBldg.COL_LNG);
+                        colums.Add(EmergencyBldg.COL_PHONE);
+                        colums.Add(EmergencyBldg.COL_LOCNAME);
                         statement = QueryGenerator.GenerateSqlSelect(colums,
-                            EmergencyBldg.EmergencyBldg.TABLE, conditions);
+                            EmergencyBldg.TABLE, conditions);
 
                         cmd.CommandType = CommandType.Text;
                         cmd.CommandText = statement;
@@ -61,7 +51,7 @@ namespace Models
                         {
                             while (dr.Read())
                             {
-                                bldg = new EmergencyBldg.EmergencyBldg();
+                                bldg = new EmergencyBldg();
                                 int i = 0;
                                 bldg.ID = dr.GetInt32(i);
                                 i++;

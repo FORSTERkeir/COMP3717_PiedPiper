@@ -18,3 +18,9 @@ C:\Users\cosmo\Documents\Workspace\Visual Studio 2017\source\repos\project_web01
 C:\Users\cosmo\Documents\Workspace\Visual Studio 2017\source\repos\project_web01\Guardian\GuardianNewWestAPI\GuardianNewWestAPI\obj\Release\GuardianNewWestAPI.csproj.CoreCompileInputs.cache
 C:\Users\cosmo\Documents\Workspace\Visual Studio 2017\source\repos\project_web01\Guardian\GuardianNewWestAPI\GuardianNewWestAPI\obj\Release\GuardianNewWestAPI.dll
 C:\Users\cosmo\Documents\Workspace\Visual Studio 2017\source\repos\project_web01\Guardian\GuardianNewWestAPI\GuardianNewWestAPI\obj\Release\GuardianNewWestAPI.pdb
+C:\Users\cosmo\Documents\Workspace\Visual Studio 2017\source\repos\project_web01\Guardian\GuardianNewWestAPI\GuardianNewWestAPI\bin\Microsoft.Azure.NotificationHubs.dll
+C:\Users\cosmo\Documents\Workspace\Visual Studio 2017\source\repos\project_web01\Guardian\GuardianNewWestAPI\GuardianNewWestAPI\bin\Microsoft.IdentityModel.Logging.dll
+C:\Users\cosmo\Documents\Workspace\Visual Studio 2017\source\repos\project_web01\Guardian\GuardianNewWestAPI\GuardianNewWestAPI\bin\Microsoft.IdentityModel.Tokens.dll
+C:\Users\cosmo\Documents\Workspace\Visual Studio 2017\source\repos\project_web01\Guardian\GuardianNewWestAPI\GuardianNewWestAPI\bin\Microsoft.Azure.NotificationHubs.xml
+C:\Users\cosmo\Documents\Workspace\Visual Studio 2017\source\repos\project_web01\Guardian\GuardianNewWestAPI\GuardianNewWestAPI\bin\Microsoft.IdentityModel.Logging.xml
+C:\Users\cosmo\Documents\Workspace\Visual Studio 2017\source\repos\project_web01\Guardian\GuardianNewWestAPI\GuardianNewWestAPI\bin\Microsoft.IdentityModel.Tokens.xml

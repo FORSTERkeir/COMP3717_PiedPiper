@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Security.Principal;
-using Models.User;
+using GuardianNewWestAPI.Models;
 
-namespace Filters.ApiIdentityModel
+namespace GuardianNewWestAPI.Filters
 {
     public class ApiIdentity : IIdentity
     {

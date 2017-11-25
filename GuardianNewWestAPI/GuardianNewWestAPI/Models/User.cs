@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Models.User
+namespace GuardianNewWestAPI.Models
 {
     public class User
     {
@@ -14,6 +14,7 @@ namespace Models.User
         public const string COL_LASTLOGIN = "LastLogin";
         public const string COL_STATUS = "StatusTypeID";
         public const string COL_DELETED = "Del";
+        public const string COL_TOKEN = "Token";
 
         public int ID { get; set; }
         public string UserName { get; set; }

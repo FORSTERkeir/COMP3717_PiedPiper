@@ -5,11 +5,10 @@ using System.Data.SqlClient;
 using System.Security.Principal;
 using System.Text;
 using System.Web;
-using Models.User;
-using Utilities.QueryGenerator;
-using Filters.ApiIdentityModel;
+using GuardianNewWestAPI.Models;
+using GuardianNewWestAPI.Utilities;
 
-namespace Filters.BasicAuthenticationAttribute
+namespace GuardianNewWestAPI.Filters
 {
     public class BasicAuthenticationAttribute : System.Web.Http.Filters.ActionFilterAttribute
     {
