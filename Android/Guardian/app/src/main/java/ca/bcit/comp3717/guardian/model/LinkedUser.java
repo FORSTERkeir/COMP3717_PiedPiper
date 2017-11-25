@@ -1,7 +1,6 @@
 package ca.bcit.comp3717.guardian.model;
 
-
-public class LinkedUser {
+public class LinkedUser implements Comparable<LinkedUser> {
 
     private int userIdMe;
     private int userIdTarget;
@@ -110,5 +109,10 @@ public class LinkedUser {
 
     public void setAddedTarget(boolean addedTarget) {
         this.addedTarget = addedTarget;
+    }
+
+    @Override
+    public int compareTo(LinkedUser lu) {
+        return this.getNameTarget().toLowerCase().compareTo(lu.getNameTarget().toLowerCase());
     }
 }

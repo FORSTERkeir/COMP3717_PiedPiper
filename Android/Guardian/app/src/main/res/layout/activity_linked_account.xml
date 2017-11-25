@@ -18,19 +18,19 @@
         android:text="@string/back" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addBtn"
+        android:id="@+id/FAB_linkedAccountActivity_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="13dp"
         android:layout_marginEnd="16dp"
-        android:onClick="displayAddLinkedUserDialog"
+        app:backgroundTint="@color/teal"
         app:fabSize="mini"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        app:srcCompat="@drawable/ic_plus_white" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayout_linkedAccount_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
@@ -39,58 +39,112 @@
         android:layout_marginStart="10dp"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView_linkedAccount_noLinkedUsers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/backBtn"
-            android:orientation="horizontal"
-            android:weightSum="100">
+            android:text="@string/textView_linkedAccount_noLinkedUsers"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout_linkedAccount_linkedUserRequests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:visibility="gone">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="40"
-                android:text="@string/textView_linkedAccount_username"
-                android:textColor="@color/black" />
+                android:text="@string/textView_linkedAccount_linkedUserRequests"
+                android:textColor="@color/teal"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="0dp"
+            <ListView
+                android:id="@+id/listView_linkedAccount_linkedUserRequests"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="21"
-                android:text="@string/textView_linkedAccount_Status"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="13"
-                android:text="@string/textView_linkedAccount_Alert"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="13"
-                android:text="@string/textView_linkedAccount_Mute"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="13"
-                android:text="@string/textView_linkedAccount_Delete"
-                android:textColor="@color/black" />
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/linearLayout"></ListView>
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/listView_linkedAccount"
+        <LinearLayout
+            android:id="@+id/linearLayout_linkedAccount_linkedUsers"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/linearLayout">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        </ListView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/textView_linkedAccount_linkedUsers"
+                android:textColor="@color/teal"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/backBtn"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="40"
+                    android:text="@string/textView_linkedAccount_username"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="21"
+                    android:text="@string/textView_linkedAccount_Status"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="13"
+                    android:text="@string/textView_linkedAccount_Alert"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="13"
+                    android:text="@string/textView_linkedAccount_Mute"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="13"
+                    android:text="@string/textView_linkedAccount_Delete"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/listView_linkedAccount_linkedUsers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/linearLayout">
+
+            </ListView>
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -15,15 +15,15 @@ import java.util.List;
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.model.LinkedUser;
 
-public class LinkedAccountAdapter extends ArrayAdapter<LinkedUser> {
+public class LinkedUsersAdapter extends ArrayAdapter<LinkedUser> {
 
     private Context context;
     private List<LinkedUser> linkedUsersList;
     private int layoutResource;
     private int deleteIconResource;
 
-    public LinkedAccountAdapter(Context context, int layoutResource, int deleteIconResource,
-                                List<LinkedUser> linkedUsersList) {
+    public LinkedUsersAdapter(Context context, int layoutResource, int deleteIconResource,
+                              List<LinkedUser> linkedUsersList) {
 
         super(context, 0, linkedUsersList);
         this.context = context;
@@ -87,7 +87,6 @@ public class LinkedAccountAdapter extends ArrayAdapter<LinkedUser> {
     }
 
     private class MyClickHandler implements ImageView.OnClickListener {
-
         private ImageView imageViewDelete;
 
         public MyClickHandler(ImageView imageViewDelete) {

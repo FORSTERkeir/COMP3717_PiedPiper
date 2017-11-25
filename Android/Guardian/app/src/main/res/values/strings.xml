@@ -23,15 +23,21 @@
     <string name="add">+</string>
 
     <!-- activity_linked_account -->
+    <string name="textView_linkedAccount_noLinkedUsers">You Have 0 Linked Users</string>
+    <string name="textView_linkedAccount_linkedUserRequests">Link Requests</string>
+    <string name="textView_linkedAccount_linkedUsers">Linked Users</string>
     <string name="textView_linkedAccount_username">Username</string>
+    <string name="textView_linkedAccount_accept">Accept</string>
+    <string name="textView_linkedAccount_delete">Delete</string>
     <string name="textView_linkedAccount_Status">Status</string>
     <string name="textView_linkedAccount_Alert">Alert</string>
     <string name="textView_linkedAccount_Mute">Mute</string>
     <string name="textView_linkedAccount_Delete">Delete</string>
 
     <!-- dialog_add_linked_user -->
+    <string name="textView_dialogAddLinkedUser_title">Link to Another User</string>
     <string name="textView_dialogAddLinkedUser_email">Email</string>
-    <string name="editText_dialogAddLinkedUser_email">targetuser@email.com</string>
+    <string name="editText_dialogAddLinkedUser_email">linkeduser@email.com</string>
     <string name="button_dialogAddLinkedUser_cancel">Cancel</string>
-    <string name="button_dialogAddLinkedUser_add">Add</string>
+    <string name="button_dialogAddLinkedUser_add">Send Request</string>
 </resources>

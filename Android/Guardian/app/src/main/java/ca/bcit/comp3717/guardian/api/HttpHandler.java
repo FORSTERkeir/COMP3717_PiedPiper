@@ -185,7 +185,6 @@ public class HttpHandler {
     }
 
     public static class LinkedUserController {
-
         private static final String URL_GetLinkedUsersById = "http://guardiannewwestapi.azurewebsites.net/linkeduser/get/all";
 
         public static List<LinkedUser> getLinkedUsersById(String email, String password, int userId) {
