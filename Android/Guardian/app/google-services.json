@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "56313236051",
+    "firebase_url": "https://guardiannewwestnotification.firebaseio.com",
+    "project_id": "guardiannewwestnotification",
+    "storage_bucket": "guardiannewwestnotification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56313236051:android:ea07c2c02faff08e",
+        "android_client_info": {
+          "package_name": "ca.bcit.comp3717.guardian"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56313236051-t2n3fu0pl72ufr54qbnc1f2473u31i00.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBfqWypqEgIwLrZOq4peT2hzSSElHwSto"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
