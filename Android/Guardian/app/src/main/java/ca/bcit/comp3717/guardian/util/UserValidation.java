@@ -94,4 +94,21 @@ public class UserValidation {
         }
         return true;
     }
+
+    public static boolean validateTokenRefresh(String jsonResponse) {
+        if (jsonResponse.length() > 0) {
+            try {
+                JSONObject jsonObj = new JSONObject(jsonResponse);
+                String message = jsonObj.getString("Message");
+
+                if (message.equals("The request is invalid.")) {
+                    return false;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
 }

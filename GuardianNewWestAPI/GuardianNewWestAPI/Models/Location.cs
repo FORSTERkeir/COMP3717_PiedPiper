@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Models.Location
+namespace GuardianNewWestAPI.Models
 {
     public class Location
     {

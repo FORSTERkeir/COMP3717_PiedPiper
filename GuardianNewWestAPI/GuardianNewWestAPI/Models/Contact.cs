@@ -1,5 +1,5 @@
 ﻿
-namespace ContactList.Models
+namespace GuardianNewWestAPI.Models
 {
     public class Contact
     {

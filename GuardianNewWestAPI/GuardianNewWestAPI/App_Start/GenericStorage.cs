@@ -1,12 +1,10 @@
-﻿using ContactList.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
+using GuardianNewWestAPI.Models;
 
 namespace ContactList
 {
@@ -25,6 +23,11 @@ namespace ContactList
             {
                 _filePath = webAppsHome + "\\site\\wwwroot\\";
             }
+        }
+
+        internal Task Save(Contact[] contact, string fILENAME)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Save(IEnumerable<Contact> target, string filename)

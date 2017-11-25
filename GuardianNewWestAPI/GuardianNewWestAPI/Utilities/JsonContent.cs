@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace Utilities.JsonContent
+namespace GuardianNewWestAPI.Utilities
 {
     public class JsonContent : HttpContent
     {

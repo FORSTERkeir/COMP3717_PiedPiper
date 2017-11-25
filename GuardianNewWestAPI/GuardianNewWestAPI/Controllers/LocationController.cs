@@ -1,17 +1,14 @@
-﻿using Swashbuckle.Swagger.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System;
 using System.Web.Http;
 using System.Data.SqlClient;
 using System.Data;
 using System.Collections;
-using Utilities.QueryGenerator;
-using Utilities.JsonContent;
-using Filters.BasicAuthenticationAttribute;
 using System.Linq;
+using GuardianNewWestAPI.Models;
+using GuardianNewWestAPI.Utilities;
+using GuardianNewWestAPI.Filters;
 
-namespace Models
+namespace GuardianNewWestAPI.Controllers
 {
     public class LocationController : ApiController
     {
@@ -21,12 +18,12 @@ namespace Models
         [Route("~/location/get")]
         public IHttpActionResult GetLocationById([FromBody] object data)
         {
-            Location.Location location = new Location.Location();
+            Location location = new Location();
 
             try
             {
                 var headers = Request.Headers;
-                string id = headers.GetValues(Models.User.User.COL_ID).First();
+                string id = headers.GetValues(Models.User.COL_ID).First();
 
                 using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
                 {
@@ -38,15 +35,15 @@ namespace Models
                         ArrayList orders = new ArrayList();
                         string statement = string.Empty;
 
-                        colums.Add(Location.Location.COL_ID);
-                        colums.Add(Location.Location.COL_USERID);
-                        colums.Add(Location.Location.COL_LAT);
-                        colums.Add(Location.Location.COL_LNG);
-                        colums.Add(Location.Location.COL_ALERTTIME);
-                        conditions.Add(Location.Location.COL_USERID + "=" + id);
-                        orders.Add(Location.Location.COL_ALERTTIME);
+                        colums.Add(Location.COL_ID);
+                        colums.Add(Location.COL_USERID);
+                        colums.Add(Location.COL_LAT);
+                        colums.Add(Location.COL_LNG);
+                        colums.Add(Location.COL_ALERTTIME);
+                        conditions.Add(Location.COL_USERID + "=" + id);
+                        orders.Add(Location.COL_ALERTTIME);
                         statement = QueryGenerator.GenerateSqlSelect(colums,
-                                                                     Location.Location.TABLE,
+                                                                     Location.TABLE,
                                                                      conditions,
                                                                      orders,
                                                                      QueryGenerator.KW_DSC,
@@ -94,10 +91,10 @@ namespace Models
             try
             {
                 var headers = Request.Headers;
-                string id = headers.GetValues(Models.User.User.COL_ID).First();
-                string lat = headers.GetValues(Location.Location.COL_LAT).First();
-                string lng = headers.GetValues(Location.Location.COL_LNG).First();
-                string time = headers.GetValues(Location.Location.COL_ALERTTIME).First();
+                string id = headers.GetValues(Models.User.COL_ID).First();
+                string lat = headers.GetValues(Location.COL_LAT).First();
+                string lng = headers.GetValues(Location.COL_LNG).First();
+                string time = headers.GetValues(Location.COL_ALERTTIME).First();
 
                 using (SqlConnection con = new SqlConnection(QueryGenerator.ConnectionString()))
                 {
@@ -112,7 +109,7 @@ namespace Models
                         values.Add(lat);
                         values.Add(lng);
                         values.Add(QueryGenerator.QuoteString(time));
-                        statement = QueryGenerator.GenerateSqlInsert(values, Location.Location.TABLE);
+                        statement = QueryGenerator.GenerateSqlInsert(values, Location.TABLE);
 
                         cmd.CommandType = CommandType.Text;
                         cmd.CommandText = statement;

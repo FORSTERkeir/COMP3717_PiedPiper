@@ -4,8 +4,8 @@ using System.Configuration;
 using System.Data;
 using System.Text;
 
-namespace Utilities.QueryGenerator
-{
+namespace GuardianNewWestAPI.Utilities
+{ 
     public static class QueryGenerator
     {
         public const string KW_SELECT = "SELECT";

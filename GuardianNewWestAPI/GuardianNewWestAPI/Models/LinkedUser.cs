@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Models.LinkedUser
+namespace GuardianNewWestAPI.Models
 {
     public class LinkedUser : IComparable
     {

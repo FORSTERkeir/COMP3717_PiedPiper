@@ -9,12 +9,6 @@
     android:weightSum="1"
     android:background="@color/background">
 
-    <TextView
-        android:id="@+id/text_hello"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
-
     <ImageButton
         android:id="@+id/alert"
         android:layout_width="203dp"
