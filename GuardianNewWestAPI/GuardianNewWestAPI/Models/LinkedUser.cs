@@ -30,6 +30,7 @@ namespace GuardianNewWestAPI.Models
         public bool Deleted { get; set; }
         public bool AddedMe { get; set; }
         public bool AddedTarget { get; set; }
+        public int StatusTarget { get; set; }
 
         public int CompareTo(object obj)
         {

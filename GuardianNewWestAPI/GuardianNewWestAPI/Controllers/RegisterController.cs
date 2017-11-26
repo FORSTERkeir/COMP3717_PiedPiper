@@ -84,7 +84,7 @@ namespace GuardianNewWestAPI.Controllers
 
             // add check if user is allowed to add these tags
             registration.Tags = new HashSet<string>(deviceUpdate.Tags);
-            registration.Tags.Add("username:" + username);
+            registration.Tags.Add("email:" + username);
 
             try
             {

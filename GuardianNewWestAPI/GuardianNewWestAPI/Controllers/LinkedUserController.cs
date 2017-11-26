@@ -119,6 +119,7 @@ namespace GuardianNewWestAPI.Controllers
                         columsS2.Add(Models.User.COL_ID);
                         columsS2.Add(Models.User.COL_DELETED);
                         columsS2.Add(Models.User.COL_USERNAME);
+                        columsS2.Add(Models.User.COL_STATUS);
                         for (int i = 0; i < linkedUsers.Count; ++i)
                         {
                             if (i > 0)
@@ -143,6 +144,7 @@ namespace GuardianNewWestAPI.Controllers
                                     && !dr.GetBoolean(1))
                                 {
                                     ((LinkedUser)linkedUsers[i]).NameTarget = dr.GetString(2);
+                                    ((LinkedUser)linkedUsers[i]).StatusTarget = dr.GetInt32(3);
                                 }
                                 else
                                 {

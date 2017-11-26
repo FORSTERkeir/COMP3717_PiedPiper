@@ -11,11 +11,25 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+
+import android.content.Context;
+
+import java.util.HashSet;
+
+import org.apache.http.client.ClientProtocolException;
+
+import java.io.IOException;
+
+import org.apache.http.HttpStatus;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -31,6 +45,7 @@ import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.api.MyHandler;
 import ca.bcit.comp3717.guardian.api.NotificationSettings;
+import ca.bcit.comp3717.guardian.api.RegisterClient;
 import ca.bcit.comp3717.guardian.api.RegistrationIntentService;
 import ca.bcit.comp3717.guardian.model.EmergencyBuilding;
 import ca.bcit.comp3717.guardian.model.User;
@@ -60,6 +75,11 @@ public class MainActivity extends Activity {
     public static Boolean isVisible = false;
     private static final String TAG_MAIN = "MainActivity";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    // ver2
+    //private NotificationHub hub;
+    private RegisterClient registerClient;
+    private static final String BACKEND_ENDPOINT = "http://guardiannewwestapi.azurewebsites.net";
+    private GoogleCloudMessaging gcm;
     // firebase ------------------------------------------------------------------------------------
 
     @Override
@@ -72,12 +92,6 @@ public class MainActivity extends Activity {
                     new String[]{Manifest.permission.CALL_PHONE},
                     MY_PERMISSIONS_REQUEST_CALL_PHONE);
         }
-
-        // firebase --------------------------------------------------------------------------------
-        mainActivity = this;
-        NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, MyHandler.class);
-        registerWithNotificationHubs();
-        // firebase --------------------------------------------------------------------------------
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
@@ -96,6 +110,19 @@ public class MainActivity extends Activity {
         if (savedInstanceState == null) {
             user = UserBuilder.constructUserFromIntent(getIntent());
         }
+
+        // firebase --------------------------------------------------------------------------------
+        mainActivity = this;
+        NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, MyHandler.class);
+        //registerWithNotificationHubs();
+        gcm = GoogleCloudMessaging.getInstance(this);
+        registerClient = new RegisterClient(this, BACKEND_ENDPOINT);
+        try {
+            login();
+        } catch (UnsupportedEncodingException e) {
+            Log.d(TAG, e.toString());
+        }
+        // firebase --------------------------------------------------------------------------------
     }
 
     @Override
@@ -455,6 +482,7 @@ public class MainActivity extends Activity {
     }
 
     // firebase
+
     /**
      * Check the device to make sure it has the Google Play Services APK. If
      * it doesn't, display a dialog that allows users to download the APK from
@@ -480,14 +508,14 @@ public class MainActivity extends Activity {
     }
 
     // firebase
-    public void registerWithNotificationHubs()
-    {
-        if (checkPlayServices()) {
-            // Start IntentService to register this application with FCM.
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            startService(intent);
-        }
-    }
+//    public void registerWithNotificationHubs()
+//    {
+//        if (checkPlayServices()) {
+//            // Start IntentService to register this application with FCM.
+//            Intent intent = new Intent(this, RegistrationIntentService.class);
+//            startService(intent);
+//        }
+//    }
 
     // firebase
     public void ToastNotify(final String notificationMessage) {
@@ -497,6 +525,39 @@ public class MainActivity extends Activity {
                 Toast.makeText(MainActivity.this, notificationMessage, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    // firebase
+    public void login() throws UnsupportedEncodingException {
+        this.registerClient.setAuthorizationHeader(getAuthorizationHeader());
+
+        final Context context = this;
+        new AsyncTask<Object, Object, Object>() {
+            @Override
+            protected Object doInBackground(Object... params) {
+                try {
+                    String regid = gcm.register(NotificationSettings.SenderId);
+                    registerClient.register(regid, new HashSet<String>());
+                } catch (Exception e) {
+                    Log.d(TAG, "Failed to register: " + e.getMessage());
+                    return e;
+                }
+                return null;
+            }
+
+            protected void onPostExecute(Object result) {
+                Toast.makeText(context, "Logged in and registered.",
+                        Toast.LENGTH_LONG).show();
+            }
+        }.execute(null, null, null);
+    }
+
+    private String getAuthorizationHeader() throws UnsupportedEncodingException {
+        String username = user.getEmail();
+        String password = user.getPassword();
+        String basicAuthHeader = username + ":" + password;
+        basicAuthHeader = Base64.encodeToString(basicAuthHeader.getBytes("UTF-8"), Base64.NO_WRAP);
+        return basicAuthHeader;
     }
 }
 
