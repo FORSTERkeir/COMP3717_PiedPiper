@@ -34,6 +34,7 @@ import ca.bcit.comp3717.guardian.api.NotificationSettings;
 import ca.bcit.comp3717.guardian.api.RegistrationIntentService;
 import ca.bcit.comp3717.guardian.model.EmergencyBuilding;
 import ca.bcit.comp3717.guardian.model.User;
+import ca.bcit.comp3717.guardian.util.DialogBuilder;
 import ca.bcit.comp3717.guardian.util.UserBuilder;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -54,6 +55,7 @@ public class MainActivity extends Activity {
     private String TAG = MapsActivity.class.getSimpleName();
     ArrayList<EmergencyBuilding> locationList;
     private User user;
+    private Dialog loadingDialog;
 
     // firebase ------------------------------------------------------------------------------------
     public static MainActivity mainActivity;
@@ -95,6 +97,7 @@ public class MainActivity extends Activity {
 
         if (savedInstanceState == null) {
             user = UserBuilder.constructUserFromIntent(getIntent());
+            loadingDialog = DialogBuilder.constructLoadingDialog(MainActivity.this, R.layout.dialog_loading);
         }
     }
 
@@ -442,6 +445,11 @@ public class MainActivity extends Activity {
 
     private class LogoutUserTask extends AsyncTask<Void, Void, Void> {
         @Override
+        protected void onPreExecute() {
+            loadingDialog.show();
+        }
+
+        @Override
         protected Void doInBackground(Void... voidArgs) {
             HttpHandler.UserController.logoutByEmail(user.getEmail(), user.getPassword());
             return null;
@@ -450,6 +458,7 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(Void args) {
             super.onPostExecute(args);
+            loadingDialog.dismiss();
             goToLandingActivity();
         }
     }
@@ -483,7 +492,7 @@ public class MainActivity extends Activity {
     public void registerWithNotificationHubs()
     {
         if (checkPlayServices()) {
-            // Start IntentService to register this application with FCM.
+            // Start IntentService to displayRegisterUserDialog this application with FCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);
             startService(intent);
         }

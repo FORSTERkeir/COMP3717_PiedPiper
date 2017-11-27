@@ -1,12 +1,15 @@
 package ca.bcit.comp3717.guardian.controller;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,12 +19,15 @@ import android.widget.Toast;
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.model.User;
+import ca.bcit.comp3717.guardian.util.DialogBuilder;
 import ca.bcit.comp3717.guardian.util.UserValidation;
 
 public class LandingActivity extends AppCompatActivity {
 
     private String TAG = LandingActivity.class.getSimpleName();
-    private Dialog registerDialog;
+    private AlertDialog registerDialog;
+    private AlertDialog alertDialog;
+    private Dialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,64 +38,90 @@ public class LandingActivity extends AppCompatActivity {
         tx.setTypeface(custom_font);
         tx = (TextView)findViewById(R.id.button_landingActivity_login);
         tx.setTypeface(custom_font);
+        loadingDialog = DialogBuilder.constructLoadingDialog(LandingActivity.this,
+                R.layout.dialog_loading);
     }
 
-    public void register(View view){
-        // Create custom dialog object
-        registerDialog = new Dialog(LandingActivity.this);
-        // Include dialog.xml file
-        registerDialog.setContentView(R.layout.register_layout);
-        // Set dialog title
-        registerDialog.setTitle("Register");
+    public void displayRegisterUserDialog(View view){
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(LandingActivity.this);
+        final View dialogView = LayoutInflater.from(LandingActivity.this).inflate(R.layout.dialog_register_user, null);
 
+        Button btnRegister = dialogView.findViewById(R.id.button_dialogRegisterUser_register);
+        mBuilder.setView(dialogView);
+
+        registerDialog = mBuilder.create();
         registerDialog.show();
 
-        Button register = (Button) registerDialog.findViewById(R.id.button_dialog_register_register);
-        register.setOnClickListener(new Button.OnClickListener() {
-
+        btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerRequest(registerDialog);
+                registerUserRequest(registerDialog);
             }
         });
     }
 
-    private void registerRequest(Dialog d) {
-        EditText userName = (EditText) d.findViewById(R.id.editText_dialog_register_userName);
-        EditText email = (EditText) d.findViewById(R.id.editText_dialog_register_email);
-        EditText phone = (EditText) d.findViewById(R.id.editText_dialog_register_phone);
-        EditText password = (EditText) d.findViewById(R.id.editText_dialog_register_password);
+    private void registerUserRequest(Dialog d) {
+        EditText userName = d.findViewById(R.id.editText_dialogRegisterUser_userName);
+        EditText phone = d.findViewById(R.id.editText_dialogRegisterUser_phone);
+        EditText email = d.findViewById(R.id.editText_dialogRegisterUser_email);
+        EditText password = d.findViewById(R.id.editText_dialogRegisterUser_password);
+        boolean validUsername = UserValidation.validateRegisterInputUsername(userName);
+        boolean validPhone = UserValidation.validateRegisterInputPhone(phone);
+        boolean validEmail = UserValidation.validateRegisterInputEmail(email);
+        boolean validPassword = UserValidation.validateRegisterInputPassword(password);
 
-        if (UserValidation.validateRegisterUserInputs(userName, email, phone, password)) {
+        if (validUsername && validPhone && validEmail && validPassword) {
             new RegisterUserTask(userName.getText().toString(), password.getText().toString(),
                     email.getText().toString(), phone.getText().toString()).execute();
+        } else {
+            String msg = UserValidation.constructInvalidRegisterUserInputMessage(validUsername,
+                    validPhone, validEmail, validPassword);
+            alertDialog = DialogBuilder.constructAlertDialog(LandingActivity.this,
+                    "Invalid Fields", msg);
+            alertDialog.show();
+            Log.e(TAG, "Invalid Fields. " + msg);
         }
     }
 
-    private void registerResponse(User user) {
-        if (user != null) {
+    private void registerUserResponse(User user) {
+        if (user == null) {
+            alertDialog = DialogBuilder.constructAlertDialog(LandingActivity.this,
+                    "Invalid Username", "Username ia already taken.");
+            Log.e(TAG, "Invalid Username. Username ia already taken.");
+
+        } else {
             new LoginUserTask(user.getEmail(), user.getPassword()).execute();
             registerDialog.dismiss();
-        } else {
-            Log.e(TAG, "That username is already taken.");
         }
     }
 
-    public void loginRequest(View v) {
-        EditText userName = (EditText) findViewById(R.id.editText_landingActivity_email);
+    public void loginUserRequest(View v) {
+        EditText email = (EditText) findViewById(R.id.editText_landingActivity_email);
         EditText password = (EditText) findViewById(R.id.editText_landingActivity_password);
+        boolean validEmail = UserValidation.validateLoginInputEmail(email);
+        boolean validPassword = UserValidation.validateLoginInputPassword(password);
 
-        if (UserValidation.validateLoginUserInputs(userName, password)) {
-            new LoginUserTask(userName.getText().toString(), password.getText().toString()).execute();
+        if (validEmail && validPassword) {
+            new LoginUserTask(email.getText().toString(), password.getText().toString()).execute();
+
+        } else {
+            String msg = UserValidation.constructInvalidLoginUserInputMessage(validEmail, validPassword);
+            alertDialog = DialogBuilder.constructAlertDialog(LandingActivity.this,
+                    "Invalid Login", msg);
+            alertDialog.show();
+            Log.e(TAG, "Invalid login. " + msg);
         }
     }
 
-    private void loginResponse(User user) {
-        if (user != null) {
-            goToMainActivity(user);
+    private void loginUserResponse(User user) {
+        if (user == null) {
+            alertDialog = DialogBuilder.constructAlertDialog(LandingActivity.this,
+                    "Invalid Login", "Email or password is incorrect");
+            alertDialog.show();
+            Log.e(TAG, "Invalid login. Email or password is incorrect or account does not exist");
 
         } else {
-            Log.e(TAG, "Username or password is incorrect or account does not exist");
+            goToMainActivity(user);
         }
     }
 
@@ -115,6 +147,12 @@ public class LandingActivity extends AppCompatActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingDialog.show();
+        }
+
+        @Override
         protected User doInBackground(Void... voidArgs) {
             return HttpHandler.UserController.loginByEmail(this.email, this.password);
         }
@@ -122,7 +160,8 @@ public class LandingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(User user) {
             super.onPostExecute(user);
-            loginResponse(user);
+            loginUserResponse(user);
+            loadingDialog.dismiss();
         }
     }
 
@@ -140,6 +179,12 @@ public class LandingActivity extends AppCompatActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingDialog.show();
+        }
+
+        @Override
         protected User doInBackground(Void... voidArgs) {
             return HttpHandler.UserController.createUser(this.userName, this.password, this.email, this.phone);
         }
@@ -147,7 +192,8 @@ public class LandingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(User user) {
             super.onPostExecute(user);
-            registerResponse(user);
+            registerUserResponse(user);
+            loadingDialog.dismiss();
         }
     }
 }

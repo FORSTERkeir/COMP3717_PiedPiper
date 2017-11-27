@@ -1,11 +1,15 @@
 package ca.bcit.comp3717.guardian.controller;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DialogTitle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,13 +27,18 @@ import ca.bcit.comp3717.guardian.adapter.LinkedUserRequestsAdapter;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.model.LinkedUser;
 import ca.bcit.comp3717.guardian.model.User;
+import ca.bcit.comp3717.guardian.util.DialogBuilder;
 import ca.bcit.comp3717.guardian.util.UserBuilder;
+import ca.bcit.comp3717.guardian.util.UserValidation;
 
 public class LinkedAccountActivity extends AppCompatActivity {
 
     private User user;
+    private List<LinkedUser> linkedUsersList;
+    private Dialog loadingDialog;
     private AlertDialog addLinkedUserDialog;
-//    private List<LinkedUser> linkedUsersList;
+    private AlertDialog alertDialog;
+    private String TAG = LinkedAccountActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +47,8 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             user = UserBuilder.constructUserFromIntent(getIntent());
+            loadingDialog = DialogBuilder.constructLoadingDialog(LinkedAccountActivity.this,
+                    R.layout.dialog_loading);
             new GetLinkedUsersTask().execute();
             setFloatingActionButtonListener();
         }
@@ -51,6 +62,10 @@ public class LinkedAccountActivity extends AppCompatActivity {
         outState.putString("email", user.getEmail());
         outState.putString("password", user.getPassword());
         outState.putString("phoneNumber", user.getPhone());
+    }
+
+    public static void testMethod() {
+
     }
 
     @Override
@@ -91,7 +106,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
         final EditText etTargetEmail = dialogView.findViewById(R.id.editText_dialogAddLinkedUser_email);
         Button btnCancel = dialogView.findViewById(R.id.button_dialogAddLinkedUser_cancel);
-        Button btnAdd = dialogView.findViewById(R.id.button_dialogAddLinkedUser_add);
+        Button btnSendRequest = dialogView.findViewById(R.id.button_dialogAddLinkedUser_sendRequest);
 
         mBuilder.setView(dialogView);
         addLinkedUserDialog = mBuilder.create();
@@ -104,18 +119,46 @@ public class LinkedAccountActivity extends AppCompatActivity {
             }
         });
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+        btnSendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new AddLinkedUserTask(etTargetEmail.getText().toString()).execute();
+                addLinkedUserRequest(addLinkedUserDialog, etTargetEmail);
             }
         });
     }
 
-    private List<LinkedUser> constructLinkedUserRequestsGivenLinkedUserList(List<LinkedUser> linkedUsersList) {
+    private void addLinkedUserRequest(Dialog d, EditText email) {
+        boolean validEmail = UserValidation.validateAddLinkedUserInputEmail(email);
+
+        if (validEmail) {
+            addLinkedUserDialog.dismiss();
+            new AddLinkedUserTask(email.getText().toString()).execute();
+
+        } else {
+            alertDialog = DialogBuilder.constructAlertDialog(LinkedAccountActivity.this,
+                    "Invalid Email!", "Email must not be blank.");
+            alertDialog.show();
+            Log.e(TAG, "Invalid Email! Email must not be blank.");
+        }
+    }
+
+    private void addLinkedUserResponse(boolean addSuccess) {
+        if (addSuccess) {
+            displayLinkedUsers(linkedUsersList);
+
+        } else {
+            addLinkedUserDialog.show();
+            alertDialog = DialogBuilder.constructAlertDialog(LinkedAccountActivity.this,
+                    "No User Found!", "Cannot find a user with that email.");
+            alertDialog.show();
+            Log.e(TAG, "No User Found! Cannot find a user with that email.");
+        }
+    }
+
+    private List<LinkedUser> constructLinkedUserRequestsGivenLinkedUserList(List<LinkedUser> luList) {
         List<LinkedUser> linkRequests = new ArrayList<>();
 
-        for (LinkedUser lu : linkedUsersList) {
+        for (LinkedUser lu : luList) {
             if (!lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
                 linkRequests.add(lu);
             }
@@ -123,10 +166,10 @@ public class LinkedAccountActivity extends AppCompatActivity {
         return linkRequests.size() == 0 ? null : linkRequests;
     }
 
-    private List<LinkedUser> constructLinkedUsersGivenLinkedUserList(List<LinkedUser> linkedUsersList) {
+    private List<LinkedUser> constructLinkedUsersGivenLinkedUserList(List<LinkedUser> luList) {
         List<LinkedUser> linkedUsers = new ArrayList<>();
 
-        for (LinkedUser lu : linkedUsersList) {
+        for (LinkedUser lu : luList) {
             if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
                 linkedUsers.add(lu);
             }
@@ -134,12 +177,16 @@ public class LinkedAccountActivity extends AppCompatActivity {
         return linkedUsers.size() == 0 ? null : linkedUsers;
     }
 
-    private void displayLinkedUsers(List<LinkedUser> linkedUsersList) {
-        if (linkedUsersList != null) {
-            List<LinkedUser> linkedUserRequests = constructLinkedUserRequestsGivenLinkedUserList(linkedUsersList);
-            List<LinkedUser> linkedUsers = constructLinkedUsersGivenLinkedUserList(linkedUsersList);
+    private void displayLinkedUsers(List<LinkedUser> luList) {
+        if (luList != null) {
+            List<LinkedUser> linkedUserRequests = constructLinkedUserRequestsGivenLinkedUserList(luList);
+            List<LinkedUser> linkedUsers = constructLinkedUsersGivenLinkedUserList(luList);
 
-            if (linkedUserRequests != null) {
+            if (linkedUserRequests == null) {
+                LinearLayout llLinkedUserRequests = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUserRequests);
+                llLinkedUserRequests.setVisibility(View.GONE);
+
+            } else {
                 Collections.sort(linkedUserRequests);
 
                 LinearLayout llLinkedUserRequests = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUserRequests);
@@ -157,7 +204,14 @@ public class LinkedAccountActivity extends AppCompatActivity {
                 }
             }
 
-            if (linkedUsers != null) {
+            if (linkedUsers == null) {
+                LinearLayout llLinkedUsers = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUsers);
+                llLinkedUsers.setVisibility(View.GONE);
+
+                TextView tvNoLinkedUsers = (TextView) findViewById(R.id.textView_linkedAccount_noLinkedUsers);
+                tvNoLinkedUsers.setVisibility(View.VISIBLE);
+
+            } else {
                 Collections.sort(linkedUsers);
 
                 LinearLayout llLinkedUsers = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUsers);
@@ -175,34 +229,57 @@ public class LinkedAccountActivity extends AppCompatActivity {
     }
 
     private class GetLinkedUsersTask extends AsyncTask<Void, Void, List<LinkedUser>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingDialog.show();
+        }
+
         @Override
         protected List<LinkedUser> doInBackground(Void... voidArgs) {
             return HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
         }
 
         @Override
-        protected void onPostExecute(List<LinkedUser> linkedUsersList) {
-            super.onPostExecute(linkedUsersList);
-            displayLinkedUsers(linkedUsersList);
+        protected void onPostExecute(List<LinkedUser> luList) {
+            super.onPostExecute(luList);
+            linkedUsersList = luList;
+            displayLinkedUsers(luList);
+            loadingDialog.dismiss();
         }
     }
 
-    private class AddLinkedUserTask extends AsyncTask<Void, Void, Void> {
-        private String targetUserEmail;
+    private class AddLinkedUserTask extends AsyncTask<Void, Void, Boolean> {
+        private String targetEmail;
 
-        public AddLinkedUserTask(String targetUserEmail) {
-            this.targetUserEmail = targetUserEmail;
+        public AddLinkedUserTask(String targetEmail) {
+            this.targetEmail = targetEmail;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            return null;
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingDialog.show();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected Boolean doInBackground(Void... params) {
+            User targetUser = HttpHandler.UserController.getUserByEmail(user.getEmail(),
+                    user.getPassword(), this.targetEmail);
+
+            if (targetUser != null) {
+                return HttpHandler.LinkedUserController.addLinkedUser(user.getEmail(), user.getPassword(),
+                        user.getId(), targetUser.getId());
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean addSuccess) {
+            super.onPostExecute(addSuccess);
+            addLinkedUserResponse(addSuccess);
+            loadingDialog.dismiss();
         }
     }
-
 }

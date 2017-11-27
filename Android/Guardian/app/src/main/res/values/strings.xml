@@ -22,6 +22,15 @@
     <string name="email">Email Address</string>
     <string name="add">+</string>
 
+    <!-- dialog_register_user -->
+    <string name="textView_dialogRegisterUser_userName">Username</string>
+    <string name="hint_dialogRegisterUser_userName">username</string>
+    <string name="textView_dialogRegisterUser_phone">Phone</string>
+    <string name="hint_dialogRegisterUser_phone">6049999999</string>
+    <string name="textView_dialogRegisterUser_email">Email</string>
+    <string name="hint_dialogRegisterUser_email">myemail@emailaddress.com</string>
+    <string name="textView_dialogRegisterUser_password">Password</string>
+
     <!-- activity_linked_account -->
     <string name="textView_linkedAccount_noLinkedUsers">You Have 0 Linked Users</string>
     <string name="textView_linkedAccount_linkedUserRequests">Link Requests</string>
@@ -39,5 +48,8 @@
     <string name="textView_dialogAddLinkedUser_email">Email</string>
     <string name="editText_dialogAddLinkedUser_email">linkeduser@email.com</string>
     <string name="button_dialogAddLinkedUser_cancel">Cancel</string>
-    <string name="button_dialogAddLinkedUser_add">Send Request</string>
+    <string name="button_dialogAddLinkedUser_sendRequest">Send Request</string>
+
+    <!-- dialog_alert -->
+    <string name="button_dialogAlert_ok">Ok</string>
 </resources>

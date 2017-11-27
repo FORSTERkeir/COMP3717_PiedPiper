@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
 import ca.bcit.comp3717.guardian.R;
+import ca.bcit.comp3717.guardian.controller.LinkedAccountActivity;
 import ca.bcit.comp3717.guardian.model.LinkedUser;
 
 public class LinkedUsersAdapter extends ArrayAdapter<LinkedUser> {

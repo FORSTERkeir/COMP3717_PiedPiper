@@ -58,13 +58,13 @@
             android:textColor="@android:color/white" />
 
         <Button
-            android:id="@+id/button_dialogAddLinkedUser_add"
+            android:id="@+id/button_dialogAddLinkedUser_sendRequest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="50"
             android:background="@color/teal"
-            android:text="@string/button_dialogAddLinkedUser_add"
+            android:text="@string/button_dialogAddLinkedUser_sendRequest"
             android:textColor="@android:color/white" />
     </LinearLayout>
 

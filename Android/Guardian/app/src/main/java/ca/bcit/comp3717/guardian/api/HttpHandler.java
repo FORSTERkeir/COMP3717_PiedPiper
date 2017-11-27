@@ -52,8 +52,9 @@ public class HttpHandler {
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
                     String response = HttpHandler.convertStreamToString(in);
+                    boolean createSuccess = UserValidation.validateCreateUserAccountResponse(response);
 
-                    if (UserValidation.validateCreateUserAccountResponse(response)) {
+                    if (createSuccess) {
                         user = new User();
                         user.setUserName(userName);
                         user.setEmail(email);
@@ -66,12 +67,12 @@ public class HttpHandler {
             return user;
         }
 
-        public static User getUserByEmail(String email, String password) {
+        public static User getUserByEmail(String email, String password, String targetEmail) {
             User user = null;
 
             try {
                 HttpURLConnection conn = openConnection(URL_GetUserByEmail);
-                HttpHandler.setConnRequestProperties(conn, email, password);
+                HttpHandler.setConnRequestProperties(conn, email, password, targetEmail);
 
                 if (conn.getResponseCode() != 200) {
                     Log.e(TAG, "getUserByEmail() response code: " + conn.getResponseCode());
@@ -79,7 +80,11 @@ public class HttpHandler {
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
                     String response = HttpHandler.convertStreamToString(in);
-                    user = HttpHandler.convertResponseToUser(response);
+                    boolean getUserSuccess = UserValidation.validateGetUserByEmailResponse(response);
+
+                    if (getUserSuccess) {
+                        user = HttpHandler.convertResponseToUser(response);
+                    }
                 }
 
             } catch (IOException e) {
@@ -146,7 +151,7 @@ public class HttpHandler {
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
                     String response = HttpHandler.convertStreamToString(in);
-                    boolean loginSuccess = UserValidation.validateUserLogoutResponse(response);
+                    boolean loginSuccess = UserValidation.validateUserLoginResponse(response);
 
                     if (loginSuccess) {
                         user = HttpHandler.convertResponseToUser(response);
@@ -162,8 +167,6 @@ public class HttpHandler {
         }
 
         public static void logoutByEmail(String email, String password) {
-            User user = null;
-
             try {
                 HttpURLConnection conn = openConnection(URL_LogoutUserByEmail);
                 HttpHandler.setConnRequestProperties(conn, email, password);
@@ -173,12 +176,10 @@ public class HttpHandler {
 
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
-                    boolean logoutSuccess = UserValidation.validateUserLogoutResponse(HttpHandler.convertStreamToString(in));
+                    boolean logoutFail = UserValidation.validateUserLogoutResponse(HttpHandler.convertStreamToString(in));
 
-                    if (logoutSuccess) {
-                        Log.i(TAG, "logoutByEmail() response: successfully logged out " + email);
-                    } else {
-                        Log.i(TAG, "logoutByEmail() response: failed to logout " + email);
+                    if (logoutFail) {
+                        Log.e(TAG, "logoutByEmail() response: failed to logout " + email);
                     }
                 }
 
@@ -220,6 +221,7 @@ public class HttpHandler {
 
     public static class LinkedUserController {
         private static final String URL_GetLinkedUsersById = "http://guardiannewwestapi.azurewebsites.net/linkeduser/get/all";
+        private static final String URL_AddLinkedUser = "http://guardiannewwestapi.azurewebsites.net/linkeduser/add";
 
         public static List<LinkedUser> getLinkedUsersById(String email, String password, int userId) {
             List<LinkedUser> linkedUsersList = null;
@@ -243,6 +245,31 @@ public class HttpHandler {
             }
             return linkedUsersList;
         }
+
+        public static boolean addLinkedUser(String email, String password, int userId, int targetId) {
+            try {
+                HttpURLConnection conn = openConnection(URL_AddLinkedUser);
+                HttpHandler.setConnRequestProperties(conn, email, password, userId, targetId);
+
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "addLinkedUser() response code: " + conn.getResponseCode());
+
+                } else {
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                    boolean addSuccess = UserValidation.validateAddLinkedUserResponse(response);
+
+                    if (addSuccess) {
+                        return true;
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "ERROR in addLinkedUser(): " + e.getMessage());
+            }
+            return false;
+        }
     }
 
     private static HttpURLConnection openConnection(String urlString) throws IOException {
@@ -251,6 +278,7 @@ public class HttpHandler {
         return conn;
     }
 
+    // LoginByEmail, LogoutByEmail
     private static void setConnRequestProperties(HttpURLConnection conn, String email,
                                                  String password) {
         try {
@@ -264,12 +292,13 @@ public class HttpHandler {
         }
     }
 
+    // GetUserByEmail
     private static void setConnRequestProperties(HttpURLConnection conn, String email,
-                                                 String password, int userId) {
+                                                 String password, String targetEmail) {
         try {
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Authorization", getB64Auth(email, password));
-            conn.setRequestProperty("UserId", userId + "");
+            conn.setRequestProperty("Email", targetEmail);
             conn.setRequestMethod("POST");
 
         } catch (ProtocolException e) {
@@ -277,6 +306,36 @@ public class HttpHandler {
         }
     }
 
+    // AddLinkedUser, RemoveLinkedUser
+    private static void setConnRequestProperties(HttpURLConnection conn, String email,
+                                                 String password, int userId, int targetId) {
+        try {
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", getB64Auth(email, password));
+            conn.setRequestProperty("UserID", String.valueOf(userId));
+            conn.setRequestProperty("TargetID", String.valueOf(targetId));
+            conn.setRequestMethod("POST");
+
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // GetUserById, GetLinkedUsersById
+    private static void setConnRequestProperties(HttpURLConnection conn, String email,
+                                                 String password, int userId) {
+        try {
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", getB64Auth(email, password));
+            conn.setRequestProperty("UserId", String.valueOf(userId));
+            conn.setRequestMethod("POST");
+
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // CreateUser
     private static void setConnRequestProperties(HttpURLConnection conn, String email,
                                                  String password, String userName, String phone) {
         try {

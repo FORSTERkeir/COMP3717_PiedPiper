@@ -49,7 +49,7 @@ public class RegistrationIntentService extends IntentService {
 
                 // If you want to use tags...
                 // Refer to : https://azure.microsoft.com/en-us/documentation/articles/notification-hubs-routing-tag-expressions/
-                // regID = hub.register(token, "tag1,tag2").getRegistrationId();
+                // regID = hub.displayRegisterUserDialog(token, "tag1,tag2").getRegistrationId();
 
                 resultString = "New NH Registration Successfully - RegId : " + regID;
                 Log.d(TAG, resultString);
@@ -68,7 +68,7 @@ public class RegistrationIntentService extends IntentService {
 
                 // If you want to use tags...
                 // Refer to : https://azure.microsoft.com/en-us/documentation/articles/notification-hubs-routing-tag-expressions/
-                // regID = hub.register(token, "tag1,tag2").getRegistrationId();
+                // regID = hub.displayRegisterUserDialog(token, "tag1,tag2").getRegistrationId();
 
                 sendRegistrationToServer(regID);
                 resultString = "New NH Registration Successfully - RegId : " + regID;
