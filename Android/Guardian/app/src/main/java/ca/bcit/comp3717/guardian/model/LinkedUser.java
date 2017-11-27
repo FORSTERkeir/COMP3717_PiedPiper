@@ -12,24 +12,9 @@ public class LinkedUser implements Comparable<LinkedUser> {
     private boolean deleted;
     private boolean addedMe;
     private boolean addedTarget;
+    private int statusTarget;
 
     public LinkedUser() {}
-
-    public LinkedUser(int userIdMe, int userIdTarget, String nameTarget, boolean alertMe, boolean alertTarget,
-                      boolean muteMe, boolean muteTarget, boolean deleted, boolean addedMe,
-                      boolean addedTarget) {
-
-        this.userIdMe = userIdMe;
-        this.userIdTarget = userIdTarget;
-        this.nameTarget = nameTarget;
-        this.alertMe = alertMe;
-        this.alertTarget = alertTarget;
-        this.muteMe = muteMe;
-        this.muteTarget = muteTarget;
-        this.deleted = deleted;
-        this.addedMe = addedMe;
-        this.addedTarget = addedTarget;
-    }
 
     public String getNameTarget() {
         return nameTarget;
@@ -109,6 +94,14 @@ public class LinkedUser implements Comparable<LinkedUser> {
 
     public void setAddedTarget(boolean addedTarget) {
         this.addedTarget = addedTarget;
+    }
+
+    public int getStatusTarget() {
+        return statusTarget;
+    }
+
+    public void setStatusTarget(int statusTarget) {
+        this.statusTarget = statusTarget;
     }
 
     @Override

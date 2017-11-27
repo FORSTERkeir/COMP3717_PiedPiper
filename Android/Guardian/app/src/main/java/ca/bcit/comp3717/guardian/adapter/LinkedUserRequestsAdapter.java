@@ -40,8 +40,8 @@ public class LinkedUserRequestsAdapter extends ArrayAdapter<LinkedUser> {
 
         textViewUsername.setText(linkedUser.getNameTarget());
 
-        btnConfirm.setOnClickListener(new MyButtonClickHandler(btnConfirm, linkedUser));
-        btnDelete.setOnClickListener(new MyButtonClickHandler(btnDelete, linkedUser));
+//        btnConfirm.setOnClickListener(new MyButtonClickHandler(btnConfirm, linkedUser));
+//        btnDelete.setOnClickListener(new MyButtonClickHandler(btnDelete, linkedUser));
         return view;
     }
 

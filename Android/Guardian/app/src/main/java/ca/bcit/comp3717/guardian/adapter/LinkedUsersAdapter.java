@@ -47,20 +47,23 @@ public class LinkedUsersAdapter extends ArrayAdapter<LinkedUser> {
         LinkedUser linkedUser = linkedUsersList.get(position);
 
         textViewUsername.setText(linkedUser.getNameTarget());
-        textViewStatus.setText("Normal");
 
-//        if (linkedUser.hasAlertFlag()) {
-//            textViewStatus.setText("Alert");
-//            textViewStatus.setTextColor(ContextCompat.getColor(context, R.color.darkRed));
-//        }
+        if (linkedUser.getStatusTarget() == 5) {
+            textViewStatus.setText("Normal");
+            textViewStatus.setTextColor(ContextCompat.getColor(context, R.color.teal));
+
+        } else {
+            textViewStatus.setText("Alert");
+            textViewStatus.setTextColor(ContextCompat.getColor(context, R.color.darkRed));
+        }
 
         checkboxAlert.setChecked(linkedUser.isAlertMe());
-        checkboxMute.setChecked(linkedUser.isMuteTarget());
+        checkboxMute.setChecked(linkedUser.isMuteMe());
         imageViewDelete.setImageResource(this.deleteIconResource);
 
-        checkboxAlert.setOnCheckedChangeListener(new MyCheckedChangeListener(textViewStatus));
-        checkboxMute.setOnCheckedChangeListener(new MyCheckedChangeListener(textViewStatus));
-        imageViewDelete.setOnClickListener(new MyClickHandler(imageViewDelete));
+//        checkboxAlert.setOnCheckedChangeListener(new MyCheckedChangeListener(textViewStatus));
+//        checkboxMute.setOnCheckedChangeListener(new MyCheckedChangeListener(textViewStatus));
+//        imageViewDelete.setOnClickListener(new MyClickHandler(imageViewDelete));
         return view;
     }
 

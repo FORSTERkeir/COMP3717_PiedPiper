@@ -430,6 +430,7 @@ public class HttpHandler {
                 linkedUser.setDeleted(jsonObjLinkedUser.getBoolean("Deleted"));
                 linkedUser.setAddedMe(jsonObjLinkedUser.getBoolean("AddedMe"));
                 linkedUser.setAddedTarget(jsonObjLinkedUser.getBoolean("AddedTarget"));
+                linkedUser.setStatusTarget(jsonObjLinkedUser.getInt("StatusTarget"));
 
                 linkedUserList.add(linkedUser);
             }

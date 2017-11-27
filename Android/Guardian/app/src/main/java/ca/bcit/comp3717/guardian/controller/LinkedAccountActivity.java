@@ -1,23 +1,22 @@
 package ca.bcit.comp3717.guardian.controller;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DialogTitle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -144,7 +143,8 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
     private void addLinkedUserResponse(boolean addSuccess) {
         if (addSuccess) {
-            displayLinkedUsers(linkedUsersList);
+            new GetLinkedUsersTask().execute();
+            Toast.makeText(LinkedAccountActivity.this, "Request sent", Toast.LENGTH_SHORT).show();
 
         } else {
             addLinkedUserDialog.show();
@@ -177,7 +177,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
         return linkedUsers.size() == 0 ? null : linkedUsers;
     }
 
-    private void displayLinkedUsers(List<LinkedUser> luList) {
+    private void displayLinkedUserLists(List<LinkedUser> luList) {
         if (luList != null) {
             List<LinkedUser> linkedUserRequests = constructLinkedUserRequestsGivenLinkedUserList(luList);
             List<LinkedUser> linkedUsers = constructLinkedUsersGivenLinkedUserList(luList);
@@ -187,21 +187,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
                 llLinkedUserRequests.setVisibility(View.GONE);
 
             } else {
-                Collections.sort(linkedUserRequests);
-
-                LinearLayout llLinkedUserRequests = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUserRequests);
-                llLinkedUserRequests.setVisibility(View.VISIBLE);
-
-                ListView linkedUserRequestsListView = (ListView) findViewById(R.id.listView_linkedAccount_linkedUserRequests);
-                LinkedUserRequestsAdapter linkedUserRequestsAdapter = new LinkedUserRequestsAdapter(
-                        LinkedAccountActivity.this, R.layout.listview_3column, linkedUserRequests);
-                linkedUserRequestsListView.setAdapter(linkedUserRequestsAdapter);
-
-                // adjust the list view height to half
-                if (linkedUserRequests.size() > 7) {
-                    LinearLayout llBody = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_body);
-                    llLinkedUserRequests.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, llBody.getHeight() / 2));
-                }
+                displayLinkedUserRequests(linkedUserRequests);
             }
 
             if (linkedUsers == null) {
@@ -212,24 +198,56 @@ public class LinkedAccountActivity extends AppCompatActivity {
                 tvNoLinkedUsers.setVisibility(View.VISIBLE);
 
             } else {
-                Collections.sort(linkedUsers);
-
-                LinearLayout llLinkedUsers = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUsers);
-                llLinkedUsers.setVisibility(View.VISIBLE);
-                TextView tvNoLinkedUsers = (TextView) findViewById(R.id.textView_linkedAccount_noLinkedUsers);
-                tvNoLinkedUsers.setVisibility(View.GONE);
-
-                ListView linkedUsersListView = (ListView) findViewById(R.id.listView_linkedAccount_linkedUsers);
-
-                LinkedUsersAdapter linkedUsersAdapter = new LinkedUsersAdapter(
-                        LinkedAccountActivity.this, R.layout.listview_5column, R.drawable.ic_delete_red, linkedUsers);
-                linkedUsersListView.setAdapter(linkedUsersAdapter);
+                displayLinkedUsers(linkedUsers);
             }
         }
     }
 
-    private class GetLinkedUsersTask extends AsyncTask<Void, Void, List<LinkedUser>> {
+    private void displayLinkedUserRequests(List<LinkedUser> linkedUserRequests) {
+        Collections.sort(linkedUserRequests);
 
+        LinearLayout llLinkedUserRequests = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUserRequests);
+        llLinkedUserRequests.setVisibility(View.VISIBLE);
+
+        ListView linkedUserRequestsListView = (ListView) findViewById(R.id.listView_linkedAccount_linkedUserRequests);
+        LinkedUserRequestsAdapter linkedUserRequestsAdapter = new LinkedUserRequestsAdapter(
+                LinkedAccountActivity.this, R.layout.listview_3column, linkedUserRequests);
+        linkedUserRequestsListView.setAdapter(linkedUserRequestsAdapter);
+
+        // adjust the list view height to half
+        if (linkedUserRequests.size() > 7) {
+            LinearLayout llBody = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_body);
+            llLinkedUserRequests.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, llBody.getHeight() / 2));
+        }
+    }
+
+    private void displayLinkedUsers(List<LinkedUser> linkedUsers) {
+        Collections.sort(linkedUsers);
+
+        LinearLayout llLinkedUsers = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUsers);
+        llLinkedUsers.setVisibility(View.VISIBLE);
+        TextView tvNoLinkedUsers = (TextView) findViewById(R.id.textView_linkedAccount_noLinkedUsers);
+        tvNoLinkedUsers.setVisibility(View.GONE);
+
+        ListView linkedUsersListView = (ListView) findViewById(R.id.listView_linkedAccount_linkedUsers);
+
+        LinkedUsersAdapter linkedUsersAdapter = new LinkedUsersAdapter(
+                LinkedAccountActivity.this, R.layout.listview_5column, R.drawable.ic_delete_red, linkedUsers);
+        linkedUsersListView.setAdapter(linkedUsersAdapter);
+
+        linkedUsersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e(TAG, "parent: " + parent.toString());
+                Log.e(TAG, "view: " + view.toString());
+                Log.e(TAG, "position: " + position);
+                Log.e(TAG, "id: " + id);
+            }
+        });
+    }
+
+    private class GetLinkedUsersTask extends AsyncTask<Void, Void, List<LinkedUser>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -245,7 +263,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
         protected void onPostExecute(List<LinkedUser> luList) {
             super.onPostExecute(luList);
             linkedUsersList = luList;
-            displayLinkedUsers(luList);
+            displayLinkedUserLists(luList);
             loadingDialog.dismiss();
         }
     }
