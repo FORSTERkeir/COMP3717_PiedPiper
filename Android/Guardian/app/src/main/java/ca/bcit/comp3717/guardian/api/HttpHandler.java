@@ -222,6 +222,9 @@ public class HttpHandler {
     public static class LinkedUserController {
         private static final String URL_GetLinkedUsersById = "http://guardiannewwestapi.azurewebsites.net/linkeduser/get/all";
         private static final String URL_AddLinkedUser = "http://guardiannewwestapi.azurewebsites.net/linkeduser/add";
+        private static final String URL_RemoveLinkedUser = "http://guardiannewwestapi.azurewebsites.net/linkeduser/remove";
+        private static final String URL_SetLinkedUserAlert = "http://guardiannewwestapi.azurewebsites.net/linkeduser/alert";
+        private static final String URL_SetLinkedUserMute = "http://guardiannewwestapi.azurewebsites.net/linkeduser/mute";
 
         public static List<LinkedUser> getLinkedUsersById(String email, String password, int userId) {
             List<LinkedUser> linkedUsersList = null;
@@ -270,6 +273,83 @@ public class HttpHandler {
             }
             return false;
         }
+
+        public static boolean removeLinkedUser(String email, String password, int userId, int targetId) {
+            try {
+                HttpURLConnection conn = openConnection(URL_RemoveLinkedUser);
+                HttpHandler.setConnRequestProperties(conn, email, password, userId, targetId);
+
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "removeLinkedUser() response code: " + conn.getResponseCode());
+
+                } else {
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                    boolean removeSuccess = UserValidation.validateRemoveLinkedUserResponse(response);
+
+                    if (removeSuccess) {
+                        return true;
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "ERROR in removeLinkedUser(): " + e.getMessage());
+            }
+            return false;
+        }
+
+        public static boolean setLinkedUserAlert(String email, String password, int userId,
+                                                 int targetId, boolean alert) {
+            try {
+                HttpURLConnection conn = openConnection(URL_SetLinkedUserAlert);
+                HttpHandler.setConnRequestProperties(conn, email, password, userId, targetId, alert, "Alert");
+
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "setLinkedUserAlert() response code: " + conn.getResponseCode());
+
+                } else {
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                    boolean setAlertSuccess = UserValidation.validateSetLinkedUserAlertResponse(response);
+
+                    if (setAlertSuccess) {
+                        return true;
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "ERROR in setLinkedUserAlert(): " + e.getMessage());
+            }
+            return false;
+        }
+
+        public static boolean setLinkedUserMute(String email, String password, int userId,
+                                                 int targetId, boolean mute) {
+            try {
+                HttpURLConnection conn = openConnection(URL_SetLinkedUserMute);
+                HttpHandler.setConnRequestProperties(conn, email, password, userId, targetId, mute, "Mute");
+
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "setLinkedUserMute() response code: " + conn.getResponseCode());
+
+                } else {
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                    boolean setMuteSuccess = UserValidation.validateSetLinkedUserMuteResponse(response);
+
+                    if (setMuteSuccess) {
+                        return true;
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "ERROR in setLinkedUserMute(): " + e.getMessage());
+            }
+            return false;
+        }
     }
 
     private static HttpURLConnection openConnection(String urlString) throws IOException {
@@ -314,6 +394,23 @@ public class HttpHandler {
             conn.setRequestProperty("Authorization", getB64Auth(email, password));
             conn.setRequestProperty("UserID", String.valueOf(userId));
             conn.setRequestProperty("TargetID", String.valueOf(targetId));
+            conn.setRequestMethod("POST");
+
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // SetLinkedUserAlert, SetLinkedUserMute
+    private static void setConnRequestProperties(HttpURLConnection conn, String email,
+                                                 String password, int userId, int targetId,
+                                                 boolean on, String column) {
+        try {
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", getB64Auth(email, password));
+            conn.setRequestProperty("UserID", String.valueOf(userId));
+            conn.setRequestProperty("TargetID", String.valueOf(targetId));
+            conn.setRequestProperty(column, String.valueOf(on));
             conn.setRequestMethod("POST");
 
         } catch (ProtocolException e) {

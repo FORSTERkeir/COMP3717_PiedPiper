@@ -13,6 +13,9 @@ public class LinkedUser implements Comparable<LinkedUser> {
     private boolean addedMe;
     private boolean addedTarget;
     private int statusTarget;
+    private boolean confirmedByGui;
+    private boolean muteModifiedByGui;
+    private boolean alertModifiedByGui;
 
     public LinkedUser() {}
 
@@ -102,6 +105,30 @@ public class LinkedUser implements Comparable<LinkedUser> {
 
     public void setStatusTarget(int statusTarget) {
         this.statusTarget = statusTarget;
+    }
+
+    public boolean isConfirmedByGui() {
+        return confirmedByGui;
+    }
+
+    public void setConfirmedByGui(boolean confirmedByGui) {
+        this.confirmedByGui = confirmedByGui;
+    }
+
+    public boolean isMuteModifiedByGui() {
+        return muteModifiedByGui;
+    }
+
+    public void setMuteModifiedByGui(boolean muteModifiedByGui) {
+        this.muteModifiedByGui = muteModifiedByGui;
+    }
+
+    public boolean isAlertModifiedByGui() {
+        return alertModifiedByGui;
+    }
+
+    public void setAlertModifiedByGui(boolean alertModifiedByGui) {
+        this.alertModifiedByGui = alertModifiedByGui;
     }
 
     @Override

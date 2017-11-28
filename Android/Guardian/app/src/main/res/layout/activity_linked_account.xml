@@ -18,14 +18,28 @@
         android:text="@string/back" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/FAB_linkedAccountActivity_add"
-        android:layout_width="match_parent"
+        android:id="@+id/FAB_linkedAccountActivity_save"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_toStartOf="@+id/FAB_linkedAccountActivity_add"
+        android:onClick="saveChanges"
+        app:backgroundTint="@color/green"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_save_white" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/FAB_linkedAccountActivity_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="13dp"
-        android:layout_marginEnd="16dp"
-        app:backgroundTint="@color/teal"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:onClick="displayAddLinkedUserDialog"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:fabSize="mini"
         app:srcCompat="@drawable/ic_plus_white" />
 
@@ -45,7 +59,8 @@
             android:layout_height="wrap_content"
             android:text="@string/textView_linkedAccount_noLinkedUsers"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="gone" />
 
 
         <LinearLayout
@@ -60,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/textView_linkedAccount_linkedUserRequests"
-                android:textColor="@color/teal"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -83,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/textView_linkedAccount_linkedUsers"
-                android:textColor="@color/teal"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -145,7 +160,5 @@
 
             </ListView>
         </LinearLayout>
-
     </LinearLayout>
-
 </RelativeLayout>

@@ -193,6 +193,57 @@ public class UserValidation {
         return true;
     }
 
+    public static boolean validateRemoveLinkedUserResponse(String jsonResponse) {
+        if (jsonResponse.length() > 0) {
+            try {
+                JSONObject jsonObj = new JSONObject(jsonResponse);
+                String message = jsonObj.getString("Message");
+
+                if (message.equals("The request is invalid.")) {
+                    return false;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    public static boolean validateSetLinkedUserAlertResponse(String jsonResponse) {
+        if (jsonResponse.length() > 0) {
+            try {
+                JSONObject jsonObj = new JSONObject(jsonResponse);
+                String message = jsonObj.getString("Message");
+
+                if (message.equals("The request is invalid.")) {
+                    return false;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    public static boolean validateSetLinkedUserMuteResponse(String jsonResponse) {
+        if (jsonResponse.length() > 0) {
+            try {
+                JSONObject jsonObj = new JSONObject(jsonResponse);
+                String message = jsonObj.getString("Message");
+
+                if (message.equals("The request is invalid.")) {
+                    return false;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
     public static boolean validateGetUserByEmailResponse(String jsonResponse) {
         if (jsonResponse.length() > 0) {
             try {
