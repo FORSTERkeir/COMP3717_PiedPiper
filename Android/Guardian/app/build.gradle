@@ -17,7 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    useLibrary  'org.apache.http.legacy'
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
@@ -25,22 +25,26 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    //compile 'com.microsoft.azure:azure-notifications-handler:1.0.1@jar'
+    // firebase
+    // firebase
+    // firebase
+    // firebase
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.google.guava:guava:18.0'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.microsoft.azure:azure-mobile-android:3.2.0@aar'
-    //compile 'com.microsoft.azure:azure-notifications-handler:1.0.1@jar'
     compile 'com.googlecode.json-simple:json-simple:1.1'
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
-    compile "com.google.android.gms:play-services-location:11.0.4"
-    compile 'com.google.android.gms:play-services-gcm:11.0.4' // firebase
-    compile 'com.microsoft.azure:notification-hubs-android-sdk:0.4@aar' // firebase
-    compile 'com.microsoft.azure:azure-notifications-handler:1.0.1@aar' // firebase
-    compile 'com.google.firebase:firebase-messaging:11.0.4' // firebase
-    testCompile 'junit:junit:4.12'
+    compile 'com.google.android.gms:play-services-location:11.0.4'
+    compile 'com.google.android.gms:play-services-gcm:11.0.4'
+    compile 'com.microsoft.azure:notification-hubs-android-sdk:0.4@aar'
+    compile 'com.microsoft.azure:azure-notifications-handler:1.0.1@aar'
+    compile 'com.google.firebase:firebase-messaging:11.0.4'
     compile 'com.android.support:design:26.3.1'
+    testCompile 'junit:junit:4.12'
 }
 
 // firebase
