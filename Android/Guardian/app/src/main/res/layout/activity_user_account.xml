@@ -19,53 +19,73 @@
         android:id="@+id/usernameText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#0099ff"
         android:gravity="center_horizontal|center_vertical"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
         android:text="@string/username"
-        android:textSize="30sp"/>
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/usernameInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#ffffff"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Edward Snowden"
         android:gravity="center_horizontal|center_vertical"
-        android:textSize="30sp"/>
+        android:inputType="textPersonName"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Edward Snowden"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/emailText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/email"
+        android:layout_marginTop="30dp"
+        android:background="#0099ff"
         android:gravity="center_horizontal|center_vertical"
-        android:textSize="30sp"/>
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:text="@string/email"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/emailInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#ffffff"
         android:ems="10"
-        android:inputType="textEmailAddress"
-        android:text="esnowden@nsa.gov"
         android:gravity="center_horizontal|center_vertical"
-        android:textSize="30sp"/>
+        android:inputType="textEmailAddress"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="esnowden@nsa.gov"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/phoneText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/phone"
+        android:layout_marginTop="30dp"
+        android:background="#0099ff"
         android:gravity="center_horizontal|center_vertical"
-        android:textSize="30sp"/>
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:text="@string/phone"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/phoneInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#ffffff"
         android:ems="10"
-        android:inputType="phone"
-        android:text="888-123-4567"
         android:gravity="center_horizontal|center_vertical"
-        android:textSize="30sp"/>
+        android:inputType="phone"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="888-123-4567"
+        android:textSize="30sp" />
 </LinearLayout>
