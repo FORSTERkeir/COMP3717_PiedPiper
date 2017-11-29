@@ -52,8 +52,6 @@ public class NotificationHandler extends NotificationsHandler {
         String msgContent = msg.split(" ")[1];
         boolean isAlert = msgContent.equalsIgnoreCase(NOTIFICATION_CONTENT_ALERT);
 
-        MainActivity.mainActivity.ToastNotify(msgContent);
-
         Uri soundAlarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         Uri soundNotify = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ctx);
