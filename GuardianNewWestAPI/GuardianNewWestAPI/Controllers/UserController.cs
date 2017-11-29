@@ -317,10 +317,10 @@ namespace GuardianNewWestAPI.Controllers
                     con.Close();
                 }
             }
-            catch
+            catch (Exception e)
             {
                 //return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest, false));
-                return ResponseMessage(JsonContent.ReturnMessage("The request is invalid.", ""));
+                return ResponseMessage(JsonContent.ReturnMessage("The request is invalid.", e.ToString()));
             }
 
             //return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, true));
