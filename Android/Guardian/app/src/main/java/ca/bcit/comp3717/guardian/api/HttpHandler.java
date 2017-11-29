@@ -233,6 +233,14 @@ public class HttpHandler {
                 conn.setRequestProperty("lat", String.valueOf(lat));
                 conn.setRequestProperty("lng", String.valueOf(lng));
                 conn.setRequestMethod("POST");
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "send alert() response code: " + conn.getResponseCode());
+
+                } else {
+
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                }
 
             } catch (ProtocolException e) {
                 e.printStackTrace();
@@ -240,16 +248,55 @@ public class HttpHandler {
                 e.printStackTrace();
             }
         }
-        public static void setConnUnalertProperties(String email, String password, int userId) {
-            final String URL_UnalertUser = "http://guardiannewwestapi.azurewebsites.net/unalert ";
+    public static void setConnUnalertProperties(String email, String password, int userId) {
+        final String URL_UnalertUser = "http://guardiannewwestapi.azurewebsites.net/unalert ";
+
+        try {
+            HttpURLConnection conn = openConnection(URL_UnalertUser);
+
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", getB64Auth(email, password));
+            conn.setRequestProperty("userid", String.valueOf(userId));
+            conn.setRequestMethod("POST");
+            if (conn.getResponseCode() != 200) {
+                Log.e(TAG, "send alert() response code: " + conn.getResponseCode());
+
+            } else {
+
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                String response = HttpHandler.convertStreamToString(in);
+            }
+
+
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+        public static void getUserLocation(String email, String password, int userId) {
+            final String URL_LocationUser = "http://guardiannewwestapi.azurewebsites.net/location/get ";
+            //Location location;
 
             try {
-                HttpURLConnection conn = openConnection(URL_UnalertUser);
+                HttpURLConnection conn = openConnection(URL_LocationUser);
 
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("Authorization", getB64Auth(email, password));
                 conn.setRequestProperty("userid", String.valueOf(userId));
                 conn.setRequestMethod("POST");
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "send alert() response code: " + conn.getResponseCode());
+
+                } else {
+
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                    //location = HttpHandler.convertResponseToUser(response);
+
+                }
+
 
             } catch (ProtocolException e) {
                 e.printStackTrace();
@@ -258,7 +305,7 @@ public class HttpHandler {
             }
         }
 
-    }
+}
 
     public static class LinkedUserController {
         private static final String URL_GetLinkedUsersById = "http://guardiannewwestapi.azurewebsites.net/linkeduser/get/all";

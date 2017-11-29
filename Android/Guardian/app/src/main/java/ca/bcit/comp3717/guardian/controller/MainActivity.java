@@ -79,6 +79,8 @@ public class MainActivity extends Activity {
     private RegisterClient registerClient;
     private static final String BACKEND_ENDPOINT = "http://guardiannewwestapi.azurewebsites.net";
     private GoogleCloudMessaging gcm;
+    double lat = 0;
+    double lng = 0;
     // firebase ------------------------------------------------------------------------------------
 
     @Override
@@ -192,7 +194,7 @@ public class MainActivity extends Activity {
         i.putExtra("email", user.getEmail());
         i.putExtra("password", user.getPassword());
         i.putExtra("phoneNumber", user.getPhone());
-
+        i.putExtra("loginByAlert", true);
         startActivity(i);
     }
 
@@ -238,13 +240,15 @@ public class MainActivity extends Activity {
                                 alertNotification = true;
                                 ImageButton im = (ImageButton) findViewById(R.id.alert);
                                 im.setImageResource(R.drawable.alertbtn);
-                                HttpHandler.UserController.setConnAlertProperties(user.getEmail(), user.getPassword(), user.getId(), location.getLatitude(), location.getLongitude());
+                                lat = location.getLatitude();
+                                lng = location.getLongitude();
+                                new sendAlert().execute();
                             }
                             else {
                                 alertNotification = false;
                                 ImageButton im = (ImageButton) findViewById(R.id.alert);
                                 im.setImageResource(R.drawable.noalertbtn);
-                                HttpHandler.UserController.setConnUnalertProperties(user.getEmail(), user.getPassword(), user.getId());
+                                new unsendAlert().execute();
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Location null", Toast.LENGTH_LONG).show();
@@ -492,6 +496,44 @@ public class MainActivity extends Activity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             showAlertDialog();
+        }
+    }
+    private class sendAlert extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            HttpHandler.UserController.setConnAlertProperties(user.getEmail(), user.getPassword(), user.getId(), lat, lng);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+        }
+    }
+    private class unsendAlert extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            HttpHandler.UserController.setConnUnalertProperties(user.getEmail(), user.getPassword(), user.getId());
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
         }
     }
 

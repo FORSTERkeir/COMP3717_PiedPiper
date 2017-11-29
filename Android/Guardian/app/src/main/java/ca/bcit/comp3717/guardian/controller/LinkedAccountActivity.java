@@ -569,14 +569,15 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+            LinkedUser linkedUser = getItem(position);
             LayoutInflater layoutInflater = LayoutInflater.from(this.context);
             View view = layoutInflater.inflate(this.layoutResource, null, false);
-            LinkedUser linkedUser = getItem(position);
 
             TextView userName = view.findViewById(R.id.textView_listView3column_username);
             Button confirm = view.findViewById(R.id.button_listView3column_confirm);
             Button delete = view.findViewById(R.id.button_listView3column_delete);
 
+            userName.setText(linkedUser.getNameTarget());
             confirm.setOnClickListener(new MyButtonClickHandler(linkedUser));
             delete.setOnClickListener(new MyButtonClickHandler(linkedUser));
             return view;
@@ -706,6 +707,8 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+            LinkedUser linkedUser = getItem(position);
+
             LayoutInflater layoutInflater = LayoutInflater.from(this.context);
             View view = layoutInflater.inflate(this.layoutResource, null, false);
 
@@ -715,8 +718,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
             CheckBox checkboxMute = view.findViewById(R.id.checkbox_listView5column_mute);
             ImageView imageViewDelete = view.findViewById(R.id.imageView_listView5column_delete);
 
-            LinkedUser linkedUser = getItem(position);
-
+            userName.setText(linkedUser.getNameTarget());
             if (linkedUser.getStatusTarget() == 5) {
                 status.setText("Normal");
                 status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.teal));
