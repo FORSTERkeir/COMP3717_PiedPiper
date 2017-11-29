@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Guardian</string>
     <string name="login">Log In</string>
-    <string name="passwordHint">Password</string>
-    <string name="emailHint">example@example.com</string>
+    <string name="passwordHint">password</string>
+    <string name="emailHint">email</string>
     <string name="regQues">Don\'t have an account? Register </string>
     <string name="clickText">here</string>
     <string name="guardian">Guardian</string>
@@ -24,11 +24,8 @@
 
     <!-- dialog_register_user -->
     <string name="textView_dialogRegisterUser_userName">Username</string>
-    <string name="hint_dialogRegisterUser_userName">username</string>
     <string name="textView_dialogRegisterUser_phone">Phone</string>
-    <string name="hint_dialogRegisterUser_phone">6049999999</string>
     <string name="textView_dialogRegisterUser_email">Email</string>
-    <string name="hint_dialogRegisterUser_email">myemail@emailaddress.com</string>
     <string name="textView_dialogRegisterUser_password">Password</string>
 
     <!-- activity_linked_account -->

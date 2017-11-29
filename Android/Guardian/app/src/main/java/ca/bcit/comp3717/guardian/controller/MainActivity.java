@@ -450,16 +450,18 @@ public class MainActivity extends Activity {
                     }
                     List<LinkedUser> luList = HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
 
-                    for (LinkedUser lu : luList) {
-                        if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
-                            linkedUsersDisplayList.add(lu);
+                    if (luList != null) {
+                        for (LinkedUser lu : luList) {
+                            if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
+                                linkedUsersDisplayList.add(lu);
+                            }
                         }
-                    }
-                    if (linkedUsersDisplayList.size() > 0) {
-                        LinkedUser lu = linkedUsersDisplayList.get(0);
-                        int userId = lu.getUserIdTarget();
+                        if (linkedUsersDisplayList.size() > 0) {
+                            LinkedUser lu = linkedUsersDisplayList.get(0);
+                            int userId = lu.getUserIdTarget();
 
-                        targetUser = HttpHandler.UserController.getUserById(user.getEmail(), user.getPassword(), userId);
+                            targetUser = HttpHandler.UserController.getUserById(user.getEmail(), user.getPassword(), userId);
+                        }
                     }
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());

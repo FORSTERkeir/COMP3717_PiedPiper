@@ -27,8 +27,7 @@
                 android:id="@+id/editText_dialogRegisterUser_userName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/hint_dialogRegisterUser_userName" />
+                android:ems="10" />
         </LinearLayout>
 
         <LinearLayout
@@ -49,7 +48,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/hint_dialogRegisterUser_phone"
                 android:inputType="phone" />
         </LinearLayout>
 
@@ -71,7 +69,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/hint_dialogRegisterUser_email"
                 android:inputType="textEmailAddress" />
         </LinearLayout>
 

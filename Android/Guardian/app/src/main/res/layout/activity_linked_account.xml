@@ -46,7 +46,7 @@
     <LinearLayout
         android:id="@+id/linearLayout_linkedAccount_body"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/backBtn"
         android:layout_marginEnd="10dp"
@@ -116,6 +116,7 @@
                     android:layout_weight="40"
                     android:text="@string/textView_linkedAccount_username"
                     android:textColor="@color/black"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -124,6 +125,7 @@
                     android:layout_weight="21"
                     android:text="@string/textView_linkedAccount_Status"
                     android:textColor="@color/black"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -132,6 +134,7 @@
                     android:layout_weight="13"
                     android:text="@string/textView_linkedAccount_Alert"
                     android:textColor="@color/black"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -140,6 +143,7 @@
                     android:layout_weight="13"
                     android:text="@string/textView_linkedAccount_Mute"
                     android:textColor="@color/black"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -148,6 +152,7 @@
                     android:layout_weight="13"
                     android:text="@string/textView_linkedAccount_Delete"
                     android:textColor="@color/black"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
