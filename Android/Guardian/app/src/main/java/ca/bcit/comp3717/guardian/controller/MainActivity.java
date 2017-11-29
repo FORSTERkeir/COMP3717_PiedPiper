@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
@@ -267,6 +268,16 @@ public class MainActivity extends Activity {
         dialog.setContentView(R.layout.alert_layout);
         // Set dialog title
         dialog.setTitle("Alert");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
+
+        TextView tx = (TextView) findViewById(R.id.guardianText);
+        tx.setTypeface(custom_font);
+        tx = (TextView) findViewById(R.id.fireText);
+        tx.setTypeface(custom_font);
+        tx = (TextView) findViewById(R.id.policeText);
+        tx.setTypeface(custom_font);
+        tx = (TextView) findViewById(R.id.hospitalText);
+        tx.setTypeface(custom_font);
         Button fire = (Button) dialog.findViewById(R.id.fireBtn);
         fire.setText("" + numbers[0]);
         Button hospital = (Button) dialog.findViewById(R.id.hospitalBtn);
