@@ -557,52 +557,83 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
     private class LinkedUserRequestsAdapter extends ArrayAdapter<LinkedUser> {
         private int layoutResource;
+        private Context context;
 
         public LinkedUserRequestsAdapter(Context context, int layoutResource,
                                          List<LinkedUser> linkedUserRequests) {
 
             super(context, 0, linkedUserRequests);
             this.layoutResource = layoutResource;
+            this.context = context;
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder;
+            LayoutInflater layoutInflater = LayoutInflater.from(this.context);
+            View view = layoutInflater.inflate(this.layoutResource, null, false);
             LinkedUser linkedUser = getItem(position);
 
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                // If there's no view to re-use, inflate a brand new view for row
-                viewHolder = new ViewHolder();
+            TextView userName = view.findViewById(R.id.textView_listView3column_username);
+            Button confirm = view.findViewById(R.id.button_listView3column_confirm);
+            Button delete = view.findViewById(R.id.button_listView3column_delete);
 
-                convertView = LayoutInflater.from(LinkedAccountActivity.this).inflate(layoutResource, null, false);
-                viewHolder.userName = convertView.findViewById(R.id.textView_listView3column_username);
-                viewHolder.confirm = convertView.findViewById(R.id.button_listView3column_confirm);
-                viewHolder.delete = convertView.findViewById(R.id.button_listView3column_delete);
+            confirm.setOnClickListener(new MyButtonClickHandler(linkedUser));
+            delete.setOnClickListener(new MyButtonClickHandler(linkedUser));
+            return view;
 
-                // Set click handlers
-                viewHolder.confirm.setOnClickListener(null);
-                viewHolder.delete.setOnClickListener(null);
-                viewHolder.confirm.setOnClickListener(new MyButtonClickHandler(linkedUser));
-                viewHolder.delete.setOnClickListener(new MyButtonClickHandler(linkedUser));
 
-                // Cache the viewHolder object inside the fresh view
-                convertView.setTag(viewHolder);
 
-            // View is being recycled, retrieve the viewHolder object from tag
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
 
-                // Set click handlers
-                viewHolder.confirm.setOnClickListener(null);
-                viewHolder.delete.setOnClickListener(null);
-                viewHolder.confirm.setOnClickListener(new MyButtonClickHandler(linkedUser));
-                viewHolder.delete.setOnClickListener(new MyButtonClickHandler(linkedUser));
-            }
-            // Populate the data from the data object via the viewHolder object into the template view
-            viewHolder.userName.setText(linkedUser.getNameTarget());
 
-            return convertView;
+
+
+
+
+
+
+
+
+
+
+
+
+
+//            ViewHolder viewHolder;
+//            LinkedUser linkedUser = getItem(position);
+//
+//            // Check if an existing view is being reused, otherwise inflate the view
+//            if (convertView == null) {
+//                // If there's no view to re-use, inflate a brand new view for row
+//                viewHolder = new ViewHolder();
+//
+//                convertView = LayoutInflater.from(LinkedAccountActivity.this).inflate(layoutResource, null, false);
+//                viewHolder.userName = convertView.findViewById(R.id.textView_listView3column_username);
+//                viewHolder.confirm = convertView.findViewById(R.id.button_listView3column_confirm);
+//                viewHolder.delete = convertView.findViewById(R.id.button_listView3column_delete);
+//
+//                // Set click handlers
+//                viewHolder.confirm.setOnClickListener(null);
+//                viewHolder.delete.setOnClickListener(null);
+//                viewHolder.confirm.setOnClickListener(new MyButtonClickHandler(linkedUser));
+//                viewHolder.delete.setOnClickListener(new MyButtonClickHandler(linkedUser));
+//
+//                // Cache the viewHolder object inside the fresh view
+//                convertView.setTag(viewHolder);
+//
+//            // View is being recycled, retrieve the viewHolder object from tag
+//            } else {
+//                viewHolder = (ViewHolder) convertView.getTag();
+//
+//                // Set click handlers
+//                viewHolder.confirm.setOnClickListener(null);
+//                viewHolder.delete.setOnClickListener(null);
+//                viewHolder.confirm.setOnClickListener(new MyButtonClickHandler(linkedUser));
+//                viewHolder.delete.setOnClickListener(new MyButtonClickHandler(linkedUser));
+//            }
+//            // Populate the data from the data object via the viewHolder object into the template view
+//            viewHolder.userName.setText(linkedUser.getNameTarget());
+//
+//            return convertView;
         }
 
         private class MyButtonClickHandler implements ImageView.OnClickListener {
@@ -662,6 +693,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
     private class LinkedUsersAdapter extends ArrayAdapter<LinkedUser> {
         private int deleteIconResource;
         private int layoutResource;
+        private Context context;
 
         public LinkedUsersAdapter(Context context, int layoutResource, int deleteIconResource,
                                   List<LinkedUser> luList) {
@@ -669,57 +701,95 @@ public class LinkedAccountActivity extends AppCompatActivity {
             super(context, layoutResource, luList);
             this.layoutResource = layoutResource;
             this.deleteIconResource = deleteIconResource;
+            this.context = context;
         }
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder;
+            LayoutInflater layoutInflater = LayoutInflater.from(this.context);
+            View view = layoutInflater.inflate(this.layoutResource, null, false);
+
+            TextView userName = view.findViewById(R.id.textView_listView5column_username);
+            TextView status = view.findViewById(R.id.textView_listView5column_status);
+            CheckBox checkboxAlert = view.findViewById(R.id.checkbox_listView5column_alert);
+            CheckBox checkboxMute = view.findViewById(R.id.checkbox_listView5column_mute);
+            ImageView imageViewDelete = view.findViewById(R.id.imageView_listView5column_delete);
+
             LinkedUser linkedUser = getItem(position);
 
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                // If there's no view to re-use, inflate a brand new view for row
-                viewHolder = new ViewHolder();
-                convertView = LayoutInflater.from(LinkedAccountActivity.this).inflate(this.layoutResource, parent, false);
-
-                viewHolder.userName = convertView.findViewById(R.id.textView_listView5column_username);
-                viewHolder.status = convertView.findViewById(R.id.textView_listView5column_status);
-                viewHolder.checkboxAlert = convertView.findViewById(R.id.checkbox_listView5column_alert);
-                viewHolder.checkboxMute = convertView.findViewById(R.id.checkbox_listView5column_mute);
-                viewHolder.imageViewDelete = convertView.findViewById(R.id.imageView_listView5column_delete);
-
-                // Cache the viewHolder object inside the fresh view
-                convertView.setTag(viewHolder);
-
-            // View is being recycled, retrieve the viewHolder object from tag
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            // Populate the data from the data object via the viewHolder object into the template view
-            viewHolder.userName.setText(linkedUser.getNameTarget());
-
             if (linkedUser.getStatusTarget() == 5) {
-                viewHolder.status.setText("Normal");
-                viewHolder.status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.teal));
+                status.setText("Normal");
+                status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.teal));
 
             } else {
-                viewHolder.status.setText("Alert");
-                viewHolder.status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.darkRed));
+                status.setText("Alert");
+                status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.darkRed));
             }
 
             if (linkedUser.isAlertMe()) {
-                viewHolder.checkboxAlert.setChecked(linkedUser.isAlertMe());
+                checkboxAlert.setChecked(linkedUser.isAlertMe());
             }
 
             if (linkedUser.isMuteMe()) {
-                viewHolder.checkboxMute.setChecked(linkedUser.isMuteMe());
+                checkboxMute.setChecked(linkedUser.isMuteMe());
             }
-            // Set click handlers
-            viewHolder.checkboxAlert.setOnCheckedChangeListener(new MyAlertCheckedChangeListener(linkedUser, linkedUser.isAlertMe()));
-            viewHolder.checkboxMute.setOnCheckedChangeListener(new MyMuteCheckedChangeListener(linkedUser, linkedUser.isMuteMe()));
-            viewHolder.imageViewDelete.setOnClickListener(new MyClickHandler(linkedUser));
-            viewHolder.imageViewDelete.setImageResource(this.deleteIconResource);
-            return convertView;
+            checkboxAlert.setOnCheckedChangeListener(new MyAlertCheckedChangeListener(linkedUser, linkedUser.isAlertMe()));
+            checkboxMute.setOnCheckedChangeListener(new MyMuteCheckedChangeListener(linkedUser, linkedUser.isMuteMe()));
+            imageViewDelete.setOnClickListener(new MyClickHandler(linkedUser));
+            imageViewDelete.setImageResource(this.deleteIconResource);
+            return view;
+
+
+
+
+
+//            ViewHolder viewHolder;
+//            LinkedUser linkedUser = getItem(position);
+//
+//            // Check if an existing view is being reused, otherwise inflate the view
+//            if (convertView == null) {
+//                // If there's no view to re-use, inflate a brand new view for row
+//                viewHolder = new ViewHolder();
+//                convertView = LayoutInflater.from(LinkedAccountActivity.this).inflate(this.layoutResource, parent, false);
+//
+//                viewHolder.userName = convertView.findViewById(R.id.textView_listView5column_username);
+//                viewHolder.status = convertView.findViewById(R.id.textView_listView5column_status);
+//                viewHolder.checkboxAlert = convertView.findViewById(R.id.checkbox_listView5column_alert);
+//                viewHolder.checkboxMute = convertView.findViewById(R.id.checkbox_listView5column_mute);
+//                viewHolder.imageViewDelete = convertView.findViewById(R.id.imageView_listView5column_delete);
+//
+//                // Cache the viewHolder object inside the fresh view
+//                convertView.setTag(viewHolder);
+//
+//            // View is being recycled, retrieve the viewHolder object from tag
+//            } else {
+//                viewHolder = (ViewHolder) convertView.getTag();
+//            }
+//            // Populate the data from the data object via the viewHolder object into the template view
+//            viewHolder.userName.setText(linkedUser.getNameTarget());
+//
+//            if (linkedUser.getStatusTarget() == 5) {
+//                viewHolder.status.setText("Normal");
+//                viewHolder.status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.teal));
+//
+//            } else {
+//                viewHolder.status.setText("Alert");
+//                viewHolder.status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.darkRed));
+//            }
+//
+//            if (linkedUser.isAlertMe()) {
+//                viewHolder.checkboxAlert.setChecked(linkedUser.isAlertMe());
+//            }
+//
+//            if (linkedUser.isMuteMe()) {
+//                viewHolder.checkboxMute.setChecked(linkedUser.isMuteMe());
+//            }
+//            // Set click handlers
+//            viewHolder.checkboxAlert.setOnCheckedChangeListener(new MyAlertCheckedChangeListener(linkedUser, linkedUser.isAlertMe()));
+//            viewHolder.checkboxMute.setOnCheckedChangeListener(new MyMuteCheckedChangeListener(linkedUser, linkedUser.isMuteMe()));
+//            viewHolder.imageViewDelete.setOnClickListener(new MyClickHandler(linkedUser));
+//            viewHolder.imageViewDelete.setImageResource(this.deleteIconResource);
+//            return convertView;
         }
 
         private class ViewHolder {

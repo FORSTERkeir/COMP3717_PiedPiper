@@ -477,6 +477,7 @@ public class HttpHandler {
                                                  String password, String userName, String phone) {
         try {
             conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", getB64Auth("", ""));
             conn.setRequestProperty("UserName", userName);
             conn.setRequestProperty("Password", password);
             conn.setRequestProperty("Email", email);

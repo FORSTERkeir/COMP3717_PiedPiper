@@ -234,7 +234,7 @@ public class LandingActivity extends AppCompatActivity {
 
     private class GetUserByEmailTask extends AsyncTask<Void, Void, User> {
         private String email;
-        private String password;
+        private String password; // the actual password
 
         public GetUserByEmailTask(String email, String password) {
             this.email = email;
@@ -249,6 +249,7 @@ public class LandingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(User user) {
             if (user != null && user.isLogin()) {
+                user.setPassword(this.password); // update null password from api call
                 goToMainActivity(user);
             }
             super.onPostExecute(user);
