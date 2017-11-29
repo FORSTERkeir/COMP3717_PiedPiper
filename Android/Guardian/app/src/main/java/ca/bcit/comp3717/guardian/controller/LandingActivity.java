@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.database.DatabaseHelper;
@@ -35,10 +36,10 @@ public class LandingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Guardians.ttf");
-        TextView tx = (TextView)findViewById(R.id.guardianText);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
+        TextView tx = (TextView) findViewById(R.id.guardianText);
         tx.setTypeface(custom_font);
-        tx = (TextView)findViewById(R.id.button_landingActivity_login);
+        tx = (TextView) findViewById(R.id.button_landingActivity_login);
         tx.setTypeface(custom_font);
         loadingDialog = DialogBuilder.constructLoadingDialog(LandingActivity.this,
                 R.layout.dialog_loading);
@@ -65,7 +66,7 @@ public class LandingActivity extends AppCompatActivity {
         }
     }
 
-    public void displayRegisterUserDialog(View view){
+    public void displayRegisterUserDialog(View view) {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(LandingActivity.this);
         final View dialogView = LayoutInflater.from(LandingActivity.this).inflate(R.layout.dialog_register_user, null);
 
@@ -258,7 +259,8 @@ public class LandingActivity extends AppCompatActivity {
     }
 
     private class GetLocalLoginValuesTask extends AsyncTask<Void, Void, User> {
-        public GetLocalLoginValuesTask() {}
+        public GetLocalLoginValuesTask() {
+        }
 
         @Override
         protected User doInBackground(Void... args) {

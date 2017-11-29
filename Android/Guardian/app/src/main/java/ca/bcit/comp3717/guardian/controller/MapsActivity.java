@@ -59,6 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private User user;
     private List<LinkedUser> linkedUsersDisplayList;
     private List<User> targetUsers;
+    private List<ca.bcit.comp3717.guardian.model.Location> locations;
     private SQLiteDatabase db;
 
     @Override
@@ -76,10 +77,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Guardians.ttf");
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
         linkedUsersDisplayList = new ArrayList<>();
         targetUsers = new ArrayList<>();
-        Button tx = (Button)findViewById(R.id.back);
+        locations = new ArrayList<>();
+        Button tx = (Button) findViewById(R.id.back);
         tx.setTypeface(custom_font);
 
         fireFilter = true;
@@ -108,7 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void loadMap(){
+    public void loadMap() {
 
         mapFragment.getMapAsync(this);
     }
@@ -174,16 +176,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(newWest));
         mMap.setMinZoomPreference(12);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
-                // MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+            // MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
         }
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -200,7 +202,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             EmergencyBuilding item = locationList.get(i);
             if ((fireFilter && item.getCategory() == 2) || (hospitalFilter && item.getCategory() == 3) || (policeFilter && item.getCategory() == 4)) {
                 LatLng latLng = new LatLng(Float.parseFloat(item.getLatitutde()), Float.parseFloat(item.getLongitude()));
-                switch(item.getCategory()) {
+                switch (item.getCategory()) {
                     case 2:
                         mMap.addMarker(new MarkerOptions().position(latLng).title(item.getBldgName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker)));
                         break;
@@ -213,15 +215,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         }
-        for (int i = 0; i < targetUsers.size(); i++) {
-            User targetUser = targetUsers.get(i);
-            if (targetUser.getStatus() == 6) {
-                ca.bcit.comp3717.guardian.model.Location location
-                        = HttpHandler.LocationController.getLocationById(user.getEmail(), user.getPassword(), targetUser.getId());
-
-                LatLng latLng = new LatLng(location.getLat(), location.getLng());
-                mMap.addMarker(new MarkerOptions().position(latLng).title(targetUser.getUserName()));
-            }
+        for (int i = 0; i < locations.size(); i++) {
+            LatLng latLng = new LatLng(locations.get(i).getLat(), locations.get(i).getLng());
+            mMap.addMarker(new MarkerOptions().position(latLng).title(locations.get(i).getUserName()));
         }
     }
 
@@ -230,28 +226,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         boolean checked = ((CheckBox) view).isChecked();
 
         // Check which checkbox was clicked
-        switch(view.getId()) {
+        switch (view.getId()) {
             case R.id.fireCheckBox:
                 if (checked) {
                     fireFilter = true;
-                }
-            else {
+                } else {
                     fireFilter = false;
                 }
                 break;
             case R.id.hospitalCheckBox:
                 if (checked) {
                     hospitalFilter = true;
-                }
-            else {
+                } else {
                     hospitalFilter = false;
                 }
                 break;
             case R.id.policeCheckBox:
                 if (checked) {
                     policeFilter = true;
-                }
-                else {
+                } else {
                     policeFilter = false;
                 }
                 break;
@@ -316,7 +309,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     .show();
                         }
                     });
-
                 }
                 List<LinkedUser> luList = HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
 
@@ -331,6 +323,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     targetUsers.add(HttpHandler.UserController.getUserById(user.getEmail(), user.getPassword(), userId));
                 }
+                for (int i = 0; i < targetUsers.size(); i++) {
+                    User targetUser = targetUsers.get(i);
+                    if (targetUser.getStatus() == 6) {
+                        ca.bcit.comp3717.guardian.model.Location location
+                                = HttpHandler.LocationController.getLocationById(user.getEmail(), user.getPassword(), targetUser.getId());
+                        location.setUserName(targetUser.getUserName());
+
+                        locations.add(location);
+                    }
+                }
 
             } else {
                 Log.e(TAG, "Couldn't get json from server.");
@@ -343,7 +345,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .show();
                     }
                 });
-
             }
 
             return null;
@@ -355,14 +356,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             loadMap();
         }
     }
-
-
-
-
-
-
-
-
 
     private void getDatabaseInstance() {
         try {
@@ -433,7 +426,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private class GetLocalLoginValuesTask extends AsyncTask<Void, Void, User> {
-        public GetLocalLoginValuesTask() {}
+        public GetLocalLoginValuesTask() {
+        }
 
         @Override
         protected User doInBackground(Void... args) {

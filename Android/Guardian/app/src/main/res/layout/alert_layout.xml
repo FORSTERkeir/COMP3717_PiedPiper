@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/emerg"
@@ -26,8 +27,8 @@
         android:layout_height="60dp"
         android:background="@drawable/blue_btn"
         android:gravity="center_vertical|center_horizontal"
-        android:text="555-555-5555"
-        android:onClick="callGuardian"/>
+        android:onClick="callGuardian"
+        android:text="555-555-5555" />
 
     <TextView
         android:id="@+id/policeText"
@@ -42,8 +43,8 @@
         android:layout_height="60dp"
         android:background="@drawable/blue_btn"
         android:gravity="center_vertical|center_horizontal"
-        android:text="555-555-5555"
-        android:onClick="callPolice"/>
+        android:onClick="callPolice"
+        android:text="555-555-5555" />
 
     <TextView
         android:id="@+id/fireText"
@@ -58,8 +59,8 @@
         android:layout_height="60dp"
         android:background="@drawable/blue_btn"
         android:gravity="center_vertical|center_horizontal"
-        android:text="555-555-5555"
-        android:onClick="callFire"/>
+        android:onClick="callFire"
+        android:text="555-555-5555" />
 
     <TextView
         android:id="@+id/hospitalText"
@@ -74,6 +75,6 @@
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:background="@drawable/blue_btn"
-        android:text="555-555-5555"
-        android:onClick="callHospital"/>
+        android:onClick="callHospital"
+        android:text="555-555-5555" />
 </LinearLayout>

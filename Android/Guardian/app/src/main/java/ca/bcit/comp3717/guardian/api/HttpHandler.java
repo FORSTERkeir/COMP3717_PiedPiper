@@ -221,7 +221,7 @@ public class HttpHandler {
 
         // GetUserById, GetLinkedUsersById
         public static void setConnAlertProperties(String email, String password, int userId,
-                                                   double lat, double lng) {
+                                                  double lat, double lng) {
             final String URL_AlertUser = "http://guardiannewwestapi.azurewebsites.net/alert";
 
             try {
@@ -248,32 +248,33 @@ public class HttpHandler {
                 e.printStackTrace();
             }
         }
-    public static void setConnUnalertProperties(String email, String password, int userId) {
-        final String URL_UnalertUser = "http://guardiannewwestapi.azurewebsites.net/unalert ";
 
-        try {
-            HttpURLConnection conn = openConnection(URL_UnalertUser);
+        public static void setConnUnalertProperties(String email, String password, int userId) {
+            final String URL_UnalertUser = "http://guardiannewwestapi.azurewebsites.net/unalert ";
 
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", getB64Auth(email, password));
-            conn.setRequestProperty("userid", String.valueOf(userId));
-            conn.setRequestMethod("POST");
-            if (conn.getResponseCode() != 200) {
-                Log.e(TAG, "send alert() response code: " + conn.getResponseCode());
+            try {
+                HttpURLConnection conn = openConnection(URL_UnalertUser);
 
-            } else {
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Authorization", getB64Auth(email, password));
+                conn.setRequestProperty("userid", String.valueOf(userId));
+                conn.setRequestMethod("POST");
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "send alert() response code: " + conn.getResponseCode());
 
-                InputStream in = new BufferedInputStream(conn.getInputStream());
-                String response = HttpHandler.convertStreamToString(in);
+                } else {
+
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                }
+
+
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-    }
 
         public static void getUserLocation(String email, String password, int userId) {
             final String URL_LocationUser = "http://guardiannewwestapi.azurewebsites.net/location/get ";
@@ -305,7 +306,7 @@ public class HttpHandler {
             }
         }
 
-}
+    }
 
     public static class LinkedUserController {
         private static final String URL_GetLinkedUsersById = "http://guardiannewwestapi.azurewebsites.net/linkeduser/get/all";
@@ -414,7 +415,7 @@ public class HttpHandler {
         }
 
         public static boolean setLinkedUserMute(String email, String password, int userId,
-                                                 int targetId, boolean mute) {
+                                                int targetId, boolean mute) {
             try {
                 HttpURLConnection conn = openConnection(URL_SetLinkedUserMute);
                 HttpHandler.setConnRequestProperties(conn, email, password, userId, targetId, mute, "Mute");
@@ -707,7 +708,7 @@ public class HttpHandler {
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e(TAG, "ERROR in convertResponseToLinkedUserList(): " + e.getMessage());
+            Log.e(TAG, "ERROR in convertResponseToLocationList(): " + e.getMessage());
         }
         return linkedUserList;
     }
@@ -717,26 +718,18 @@ public class HttpHandler {
 
         try {
             JSONObject responseObj = new JSONObject(response);
-            JSONArray jsonArrLinkedUsers = responseObj.getJSONArray("location");
+            JSONObject jsonObjLoc = responseObj.getJSONObject("location");
+            location = new Location();
 
-            if (jsonArrLinkedUsers.length() > 0) {
-                location = new Location();
-            }
-
-            for (int i = 0; i < jsonArrLinkedUsers.length(); i++) {
-                JSONObject jsonObjLinkedUser = jsonArrLinkedUsers.getJSONObject(i);
-
-                location.setLocationId(jsonObjLinkedUser.getInt("ID"));
-                location.setUserId(jsonObjLinkedUser.getInt("UserID"));
-                location.setLat(jsonObjLinkedUser.getDouble("Lat"));
-                location.setLng(jsonObjLinkedUser.getDouble("Lng"));
-                location.setAlertTime(jsonObjLinkedUser.getString("AlertTime"));
-                location.setUserName(jsonObjLinkedUser.getString("UserName"));
-            }
+            location.setLocationId(jsonObjLoc.getInt("ID"));
+            location.setUserId(jsonObjLoc.getInt("UserID"));
+            location.setLat(jsonObjLoc.getDouble("Lat"));
+            location.setLng(jsonObjLoc.getDouble("Lng"));
+            location.setAlertTime(jsonObjLoc.getString("AlertTime"));
 
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.e(TAG, "ERROR in convertResponseToLinkedUserList(): " + e.getMessage());
+            Log.e(TAG, "ERROR in convertResponseToLocation(): " + e.getMessage());
         }
         return location;
     }

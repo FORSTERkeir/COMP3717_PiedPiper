@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -213,6 +212,7 @@ public class MainActivity extends Activity {
         i.putExtra("logout", true);
         startActivity(i);
     }
+
     private void showAlertDialog() {
 
         final long numbers[] = new long[4];
@@ -243,8 +243,7 @@ public class MainActivity extends Activity {
                                 lat = location.getLatitude();
                                 lng = location.getLongitude();
                                 new sendAlert().execute();
-                            }
-                            else {
+                            } else {
                                 alertNotification = false;
                                 ImageButton im = (ImageButton) findViewById(R.id.alert);
                                 im.setImageResource(R.drawable.noalertbtn);
@@ -498,6 +497,7 @@ public class MainActivity extends Activity {
             showAlertDialog();
         }
     }
+
     private class sendAlert extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -517,6 +517,7 @@ public class MainActivity extends Activity {
             super.onPostExecute(result);
         }
     }
+
     private class unsendAlert extends AsyncTask<Void, Void, Void> {
 
         @Override

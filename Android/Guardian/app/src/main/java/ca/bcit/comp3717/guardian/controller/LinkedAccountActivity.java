@@ -24,9 +24,11 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.model.LinkedUser;
@@ -89,7 +91,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
         new GetLinkedUsersTask().execute();
     }
 
-    public void back (View view) {
+    public void back(View view) {
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("userId", user.getId());
         i.putExtra("userName", user.getUserName());
@@ -232,14 +234,6 @@ public class LinkedAccountActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-
-
     private void getLinkedUsersResponse(List<LinkedUser> luList) {
         if (luList != null) {
             displayLinkedUserLists(luList);
@@ -371,14 +365,6 @@ public class LinkedAccountActivity extends AppCompatActivity {
             tvNoLinkedUsers.setVisibility(View.GONE);
         }
     }
-
-
-
-
-
-
-
-
 
 
     private class GetLinkedUsersTask extends AsyncTask<Void, Void, List<LinkedUser>> {
@@ -547,14 +533,6 @@ public class LinkedAccountActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-
-
     private class LinkedUserRequestsAdapter extends ArrayAdapter<LinkedUser> {
         private int layoutResource;
         private Context context;
@@ -581,22 +559,6 @@ public class LinkedAccountActivity extends AppCompatActivity {
             confirm.setOnClickListener(new MyButtonClickHandler(linkedUser));
             delete.setOnClickListener(new MyButtonClickHandler(linkedUser));
             return view;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //            ViewHolder viewHolder;
@@ -647,7 +609,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                switch(v.getId()) {
+                switch (v.getId()) {
 
                     case R.id.button_listView3column_confirm:
                         linkedUserRequestsAdapter.remove(this.linkedUser); // Remove from linkedUserRequests gui list
@@ -681,14 +643,6 @@ public class LinkedAccountActivity extends AppCompatActivity {
             Button delete;
         }
     }
-
-
-
-
-
-
-
-
 
 
     private class LinkedUsersAdapter extends ArrayAdapter<LinkedUser> {
@@ -740,9 +694,6 @@ public class LinkedAccountActivity extends AppCompatActivity {
             imageViewDelete.setOnClickListener(new MyClickHandler(linkedUser));
             imageViewDelete.setImageResource(this.deleteIconResource);
             return view;
-
-
-
 
 
 //            ViewHolder viewHolder;
@@ -815,15 +766,15 @@ public class LinkedAccountActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.d(MyAlertCheckedChangeListener.class.getSimpleName(), "Alert ENTERED for ------------------------------> " + linkedUser.getNameTarget());
-               if (!this.initialSetChecked) {
-                   this.linkedUser.setAlertModifiedByGui(!this.linkedUser.isAlertModifiedByGui());
-                   this.linkedUser.setAlertMe(!this.linkedUser.isAlertMe());
-                   Log.d(MyAlertCheckedChangeListener.class.getSimpleName(), "Alert MODIFIED for ------------------------------> " + linkedUser.getNameTarget());
+                if (!this.initialSetChecked) {
+                    this.linkedUser.setAlertModifiedByGui(!this.linkedUser.isAlertModifiedByGui());
+                    this.linkedUser.setAlertMe(!this.linkedUser.isAlertMe());
+                    Log.d(MyAlertCheckedChangeListener.class.getSimpleName(), "Alert MODIFIED for ------------------------------> " + linkedUser.getNameTarget());
 
-               } else {
-                   this.initialSetChecked = false;
-                   Log.d(MyAlertCheckedChangeListener.class.getSimpleName(), "Alert CHECKED for ------------------------------> " + linkedUser.getNameTarget());
-               }
+                } else {
+                    this.initialSetChecked = false;
+                    Log.d(MyAlertCheckedChangeListener.class.getSimpleName(), "Alert CHECKED for ------------------------------> " + linkedUser.getNameTarget());
+                }
             }
         }
 

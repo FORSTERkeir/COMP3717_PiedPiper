@@ -3,18 +3,12 @@ package ca.bcit.comp3717.guardian.controller;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import ca.bcit.comp3717.guardian.R;
-import ca.bcit.comp3717.guardian.api.HttpHandler;
-import ca.bcit.comp3717.guardian.controller.MainActivity;
 import ca.bcit.comp3717.guardian.model.User;
 
 public class UserAccountActivity extends Activity {
@@ -52,7 +46,7 @@ public class UserAccountActivity extends Activity {
 
     }
 
-    public void back (View view) {
+    public void back(View view) {
         Intent i = new Intent(this, MainActivity.class);
         i.putExtra("userId", user.getId());
         i.putExtra("userName", user.getUserName());

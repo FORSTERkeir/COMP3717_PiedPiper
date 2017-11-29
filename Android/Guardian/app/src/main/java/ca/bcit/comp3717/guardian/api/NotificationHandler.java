@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
 
 import ca.bcit.comp3717.guardian.R;
+import ca.bcit.comp3717.guardian.controller.LandingActivity;
 import ca.bcit.comp3717.guardian.controller.MainActivity;
 import ca.bcit.comp3717.guardian.controller.MapsActivity;
 
@@ -23,7 +24,6 @@ public class NotificationHandler extends NotificationsHandler {
     public static final int NOTIFICATION_ID = 1;
     public static final int NOTIFICATION_VIB_LENGTH = 60000; // milliseconds
     private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
     Context ctx;
 
     /**
@@ -41,7 +41,7 @@ public class NotificationHandler extends NotificationsHandler {
     }
 
     private void sendNotification(String msg) {
-        Intent intent = new Intent(ctx, MapsActivity.class);
+        Intent intent = new Intent(ctx, LandingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         mNotificationManager = (NotificationManager)
