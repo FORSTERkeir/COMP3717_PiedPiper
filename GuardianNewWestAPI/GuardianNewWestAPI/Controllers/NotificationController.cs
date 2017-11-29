@@ -239,7 +239,8 @@ namespace GuardianNewWestAPI.Controllers
 
             if (emailsToAlert.Count == 0)
                 return ResponseMessage(JsonContent.ReturnMessage("No linked user is found.", ""));
-            return ResponseMessage(JsonContent.ReturnMessage("Linked users are alerted.", ""));
+            //return ResponseMessage(JsonContent.ReturnMessage("Linked users are alerted.", ""));
+            return Ok(emailsToAlert);
         }
 
         [HttpPost]
@@ -442,7 +443,8 @@ namespace GuardianNewWestAPI.Controllers
 
             if (emailsToAlert.Count == 0)
                 return ResponseMessage(JsonContent.ReturnMessage("No linked user is found.", ""));
-            return ResponseMessage(JsonContent.ReturnMessage("Linked users are unalerted.", ""));
+            //return ResponseMessage(JsonContent.ReturnMessage("Linked users are unalerted.", ""));
+            return Ok(emailsToAlert);
         }
 
         private bool SendNotification(string message, string suffixReceiverTag)

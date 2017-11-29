@@ -92,10 +92,10 @@ namespace GuardianNewWestAPI.Controllers
                     con.Close();
                 }
             }
-            catch
+            catch (Exception e)
             {
                 new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
-                return ResponseMessage(JsonContent.ReturnMessage("The request is invalid.", ""));
+                return ResponseMessage(JsonContent.ReturnMessage("The request is invalid.", e.ToString()));
             }
 
             if (user.ID == 0)
