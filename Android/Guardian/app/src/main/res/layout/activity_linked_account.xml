@@ -46,7 +46,7 @@
     <LinearLayout
         android:id="@+id/linearLayout_linkedAccount_body"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/backBtn"
         android:layout_marginEnd="10dp"

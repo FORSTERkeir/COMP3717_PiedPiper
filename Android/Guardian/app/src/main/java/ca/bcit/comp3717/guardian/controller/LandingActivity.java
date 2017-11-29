@@ -208,7 +208,7 @@ public class LandingActivity extends AppCompatActivity {
 
         public RegisterUserTask(String userName, String password, String email, String phone) {
             this.userName = userName;
-            this.password = password;
+            this.password = password; // the actual password
             this.email = email;
             this.phone = phone;
         }
@@ -227,6 +227,7 @@ public class LandingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(User user) {
             super.onPostExecute(user);
+            user.setPassword(this.password); // update null password from api call
             registerUserResponse(user);
             loadingDialog.dismiss();
         }
