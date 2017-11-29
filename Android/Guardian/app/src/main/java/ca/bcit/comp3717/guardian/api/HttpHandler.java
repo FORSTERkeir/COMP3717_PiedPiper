@@ -292,7 +292,7 @@ public class HttpHandler {
 
                     InputStream in = new BufferedInputStream(conn.getInputStream());
                     String response = HttpHandler.convertStreamToString(in);
-                    location = HttpHandler.convertResponseToUser(response);
+                    //location = HttpHandler.convertResponseToUser(response);
 
                 }
 
