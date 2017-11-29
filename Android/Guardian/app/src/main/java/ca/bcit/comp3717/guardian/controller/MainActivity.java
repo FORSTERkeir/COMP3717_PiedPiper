@@ -251,49 +251,50 @@ public class MainActivity extends Activity {
                         }
                     }
                 });
-        for (int i = 0; i < locationList.size(); i++) {
-            EmergencyBuilding item = locationList.get(i);
-            if (numbers[0] == 0 && item.getCategory() == 2) {
-                numbers[0] = item.getPhone();
+        if (!alertNotification) {
+            for (int i = 0; i < locationList.size(); i++) {
+                EmergencyBuilding item = locationList.get(i);
+                if (numbers[0] == 0 && item.getCategory() == 2) {
+                    numbers[0] = item.getPhone();
+                }
+                if (numbers[1] == 0 && item.getCategory() == 3) {
+                    numbers[1] = item.getPhone();
+                }
+                if (numbers[2] == 0 && item.getCategory() == 4) {
+                    numbers[2] = item.getPhone();
+                }
             }
-            if (numbers[1] == 0 && item.getCategory() == 3) {
-                numbers[1] = item.getPhone();
+            if (linkedUsersDisplayList.size() > 0) {
+                numbers[3] = Long.parseLong(targetUser.getPhone());
             }
-            if (numbers[2] == 0 && item.getCategory() == 4) {
-                numbers[2] = item.getPhone();
-            }
+
+            // Create custom dialog object
+            final Dialog dialog = new Dialog(MainActivity.this);
+            // Include dialog.xml file
+            dialog.setContentView(R.layout.alert_layout);
+            // Set dialog title
+            dialog.setTitle("Alert");
+            Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
+
+            TextView tx = (TextView) dialog.findViewById(R.id.guardianText);
+            tx.setTypeface(custom_font);
+            tx = (TextView) dialog.findViewById(R.id.fireText);
+            tx.setTypeface(custom_font);
+            tx = (TextView) dialog.findViewById(R.id.policeText);
+            tx.setTypeface(custom_font);
+            tx = (TextView) dialog.findViewById(R.id.hospitalText);
+            tx.setTypeface(custom_font);
+            Button fire = (Button) dialog.findViewById(R.id.fireBtn);
+            fire.setText("" + numbers[0]);
+            Button hospital = (Button) dialog.findViewById(R.id.hospitalBtn);
+            hospital.setText("" + numbers[1]);
+            Button police = (Button) dialog.findViewById(R.id.policeBtn);
+            police.setText("" + numbers[2]);
+            Button guardian = (Button) dialog.findViewById(R.id.guardianBtn);
+            guardian.setText("" + numbers[3]);
+
+            dialog.show();
         }
-        if (linkedUsersDisplayList.size() > 0) {
-            numbers[3] = Long.parseLong(targetUser.getPhone());
-        }
-
-        // Create custom dialog object
-        final Dialog dialog = new Dialog(MainActivity.this);
-        // Include dialog.xml file
-        dialog.setContentView(R.layout.alert_layout);
-        // Set dialog title
-        dialog.setTitle("Alert");
-        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
-
-        TextView tx = (TextView) dialog.findViewById(R.id.guardianText);
-        tx.setTypeface(custom_font);
-        tx = (TextView) dialog.findViewById(R.id.fireText);
-        tx.setTypeface(custom_font);
-        tx = (TextView) dialog.findViewById(R.id.policeText);
-        tx.setTypeface(custom_font);
-        tx = (TextView) dialog.findViewById(R.id.hospitalText);
-        tx.setTypeface(custom_font);
-        Button fire = (Button) dialog.findViewById(R.id.fireBtn);
-        fire.setText("" + numbers[0]);
-        Button hospital = (Button) dialog.findViewById(R.id.hospitalBtn);
-        hospital.setText("" + numbers[1]);
-        Button police = (Button) dialog.findViewById(R.id.policeBtn);
-        police.setText("" + numbers[2]);
-        Button guardian = (Button) dialog.findViewById(R.id.guardianBtn);
-        guardian.setText("" + numbers[3]);
-
-        dialog.show();
-
     }
 
     public void callPolice(View v) {
