@@ -194,7 +194,7 @@ public class MainActivity extends Activity {
         i.putExtra("email", user.getEmail());
         i.putExtra("password", user.getPassword());
         i.putExtra("phoneNumber", user.getPhone());
-
+        i.putExtra("loginByAlert", true);
         startActivity(i);
     }
 
