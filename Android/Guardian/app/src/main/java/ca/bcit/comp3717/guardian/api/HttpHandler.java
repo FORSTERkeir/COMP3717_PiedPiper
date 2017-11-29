@@ -239,6 +239,23 @@ public class HttpHandler {
                 e.printStackTrace();
             }
         }
+        public static void setConnUnalertProperties(String email, String password, int userId) {
+            final String URL_AlertUser = "http://guardiannewwestapi.azurewebsites.net/unalert ";
+
+            try {
+                HttpURLConnection conn = openConnection(URL_AlertUser);
+
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Authorization", getB64Auth(email, password));
+                conn.setRequestProperty("userid", String.valueOf(userId));
+                conn.setRequestMethod("POST");
+
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 

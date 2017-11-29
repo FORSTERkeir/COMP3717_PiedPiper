@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -36,6 +37,7 @@ import org.json.JSONObject;
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.model.EmergencyBuilding;
+import ca.bcit.comp3717.guardian.model.LinkedUser;
 import ca.bcit.comp3717.guardian.model.User;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -51,6 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     boolean hospitalFilter;
     boolean policeFilter;
     private User user;
+    private List<LinkedUser> linkedUsersDisplayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -306,5 +309,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             super.onPostExecute(result);
             loadMap();
         }
+    }
+    private class GetLinkedUsersTask extends AsyncTask<Void, Void, List<LinkedUser>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected List<LinkedUser> doInBackground(Void... voidArgs) {
+            return HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
+        }
+
+        @Override
+        protected void onPostExecute(List<LinkedUser> luList) {
+            super.onPostExecute(luList);
+            getLinkedUsersResponse(luList);
+        }
+    }
+    private void getLinkedUsersResponse(List<LinkedUser> luList) {
+        if (luList != null) {
+            displayLinkedUserLists(luList);
+        }
+    }
+    private void displayLinkedUserLists(List<LinkedUser> luList) {
+        if (luList != null) {
+            List<LinkedUser> linkedUsers = constructLinkedUsersGivenLinkedUserList(luList);
+        }
+    }
+    private List<LinkedUser> constructLinkedUsersGivenLinkedUserList(List<LinkedUser> luList) {
+        List<LinkedUser> linkedUsers = new ArrayList<>();
+
+        for (LinkedUser lu : luList) {
+            if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
+                linkedUsers.add(lu);
+            }
+        }
+        return linkedUsers.size() == 0 ? null : linkedUsers;
     }
 }
