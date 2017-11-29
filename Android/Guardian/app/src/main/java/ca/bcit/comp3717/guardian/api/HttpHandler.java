@@ -232,6 +232,14 @@ public class HttpHandler {
                 conn.setRequestProperty("lat", String.valueOf(lat));
                 conn.setRequestProperty("lng", String.valueOf(lng));
                 conn.setRequestMethod("POST");
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "send alert() response code: " + conn.getResponseCode());
+
+                } else {
+
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                }
 
             } catch (ProtocolException e) {
                 e.printStackTrace();
@@ -249,6 +257,15 @@ public class HttpHandler {
                 conn.setRequestProperty("Authorization", getB64Auth(email, password));
                 conn.setRequestProperty("userid", String.valueOf(userId));
                 conn.setRequestMethod("POST");
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "send alert() response code: " + conn.getResponseCode());
+
+                } else {
+
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                }
+
 
             } catch (ProtocolException e) {
                 e.printStackTrace();
