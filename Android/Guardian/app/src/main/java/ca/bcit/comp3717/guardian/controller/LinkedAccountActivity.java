@@ -24,11 +24,9 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.model.LinkedUser;
@@ -50,6 +48,8 @@ public class LinkedAccountActivity extends AppCompatActivity {
     private LinkedUserRequestsAdapter linkedUserRequestsAdapter;
     private LinkedUsersAdapter linkedUsersAdapter;
     private String TAG = LinkedAccountActivity.class.getSimpleName();
+    private static int alertAdapterViewCount = 0;
+    private static int muteAdapterViewCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -533,6 +533,15 @@ public class LinkedAccountActivity extends AppCompatActivity {
     }
 
 
+
+
+
+
+
+
+
+
+
     private class LinkedUserRequestsAdapter extends ArrayAdapter<LinkedUser> {
         private int layoutResource;
         private Context context;
@@ -661,6 +670,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+
             LinkedUser linkedUser = getItem(position);
 
             LayoutInflater layoutInflater = LayoutInflater.from(this.context);
@@ -682,15 +692,11 @@ public class LinkedAccountActivity extends AppCompatActivity {
                 status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.darkRed));
             }
 
-            if (linkedUser.isAlertMe()) {
-                checkboxAlert.setChecked(linkedUser.isAlertMe());
-            }
+            checkboxAlert.setChecked(linkedUser.isAlertMe());
+            checkboxMute.setChecked(linkedUser.isMuteMe());
 
-            if (linkedUser.isMuteMe()) {
-                checkboxMute.setChecked(linkedUser.isMuteMe());
-            }
-            checkboxAlert.setOnCheckedChangeListener(new MyAlertCheckedChangeListener(linkedUser, linkedUser.isAlertMe()));
-            checkboxMute.setOnCheckedChangeListener(new MyMuteCheckedChangeListener(linkedUser, linkedUser.isMuteMe()));
+            checkboxAlert.setOnCheckedChangeListener(new MyAlertCheckedChangeListener(linkedUser));
+            checkboxMute.setOnCheckedChangeListener(new MyMuteCheckedChangeListener(linkedUser));
             imageViewDelete.setOnClickListener(new MyClickHandler(linkedUser));
             imageViewDelete.setImageResource(this.deleteIconResource);
             return view;
@@ -755,24 +761,26 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
         private class MyAlertCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
             private LinkedUser linkedUser;
-            private boolean initialSetChecked;
+            private int counter = 0;
 
-            public MyAlertCheckedChangeListener(LinkedUser linkedUser, boolean initialSetChecked) {
+            public MyAlertCheckedChangeListener(LinkedUser linkedUser) {
                 this.linkedUser = linkedUser;
-                this.initialSetChecked = initialSetChecked;
                 Log.d(MyAlertCheckedChangeListener.class.getSimpleName(), "Alert constructor for: " + linkedUser.getNameTarget());
             }
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                alertAdapterViewCount++;
+                counter++;
                 Log.d(MyAlertCheckedChangeListener.class.getSimpleName(), "Alert ENTERED for ------------------------------> " + linkedUser.getNameTarget());
-                if (!this.initialSetChecked) {
-                    this.linkedUser.setAlertModifiedByGui(!this.linkedUser.isAlertModifiedByGui());
-                    this.linkedUser.setAlertMe(!this.linkedUser.isAlertMe());
+                if (counter % 2 == 1) {
+                    this.linkedUser.setAlertModifiedByGui(true);
+                    this.linkedUser.setAlertMe(isChecked);
                     Log.d(MyAlertCheckedChangeListener.class.getSimpleName(), "Alert MODIFIED for ------------------------------> " + linkedUser.getNameTarget());
 
                 } else {
-                    this.initialSetChecked = false;
+                    this.linkedUser.setAlertModifiedByGui(false);
+                    this.linkedUser.setAlertMe(isChecked);
                     Log.d(MyAlertCheckedChangeListener.class.getSimpleName(), "Alert CHECKED for ------------------------------> " + linkedUser.getNameTarget());
                 }
             }
@@ -780,24 +788,26 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
         private class MyMuteCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
             private LinkedUser linkedUser;
-            private boolean initialSetChecked;
+            private int counter = 0;
 
-            public MyMuteCheckedChangeListener(LinkedUser linkedUser, boolean initialSetChecked) {
+            public MyMuteCheckedChangeListener(LinkedUser linkedUser) {
                 this.linkedUser = linkedUser;
-                this.initialSetChecked = initialSetChecked;
                 Log.d(MyMuteCheckedChangeListener.class.getSimpleName(), "Mute constructor for: " + linkedUser.getNameTarget());
             }
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                muteAdapterViewCount++;
+                counter++;
                 Log.d(MyMuteCheckedChangeListener.class.getSimpleName(), "Mute ENTERED for ------------------------------> " + linkedUser.getNameTarget());
-                if (!this.initialSetChecked) {
-                    this.linkedUser.setMuteModifiedByGui(!this.linkedUser.isMuteModifiedByGui());
-                    this.linkedUser.setMuteMe(!this.linkedUser.isMuteMe());
+                if (this.counter % 2 == 1) {
+                    this.linkedUser.setMuteModifiedByGui(true);
+                    this.linkedUser.setMuteMe(isChecked);
                     Log.d(MyMuteCheckedChangeListener.class.getSimpleName(), "Mute MODIFIED for ------------------------------> " + linkedUser.getNameTarget());
 
                 } else {
-                    this.initialSetChecked = false;
+                    this.linkedUser.setMuteModifiedByGui(false);
+                    this.linkedUser.setMuteMe(isChecked);
                     Log.d(MyMuteCheckedChangeListener.class.getSimpleName(), "Mute CHECKED for ------------------------------> " + linkedUser.getNameTarget());
                 }
             }
