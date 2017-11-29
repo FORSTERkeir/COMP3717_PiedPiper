@@ -683,13 +683,13 @@ public class LinkedAccountActivity extends AppCompatActivity {
             ImageView imageViewDelete = view.findViewById(R.id.imageView_listView5column_delete);
 
             userName.setText(linkedUser.getNameTarget());
-            if (linkedUser.getStatusTarget() == 5) {
-                status.setText("Normal");
-                status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.teal));
-
-            } else {
+            if (linkedUser.getStatusTarget() == 6) {
                 status.setText("Alert");
                 status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.darkRed));
+
+            } else {
+                status.setText("Normal");
+                status.setTextColor(ContextCompat.getColor(LinkedAccountActivity.this, R.color.teal));
             }
 
             checkboxAlert.setChecked(linkedUser.isAlertMe());
