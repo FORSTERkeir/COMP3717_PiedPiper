@@ -472,7 +472,7 @@ namespace GuardianNewWestAPI.Controllers
             string user = headers.GetValues("sender").First();
             string message = headers.GetValues("message").First();
             string token = "email:" + headers.GetValues("tag").First();
-            string notif = "{ \"data\" : {\"message\":\"" + "From " + user + ": " + message + "\"}}";
+            string notif = "{ \"data\" : {\"message\":\"" + message + "\"}}";
 
             try
             {
