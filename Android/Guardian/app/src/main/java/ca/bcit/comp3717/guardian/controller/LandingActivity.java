@@ -70,6 +70,10 @@ public class LandingActivity extends AppCompatActivity {
         final View dialogView = LayoutInflater.from(LandingActivity.this).inflate(R.layout.dialog_register_user, null);
 
         Button btnRegister = dialogView.findViewById(R.id.button_dialogRegisterUser_register);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
+
+        btnRegister.setTypeface(custom_font);
+
         mBuilder.setView(dialogView);
 
         registerDialog = mBuilder.create();

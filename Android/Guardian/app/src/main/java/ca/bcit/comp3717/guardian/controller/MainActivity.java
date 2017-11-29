@@ -93,11 +93,20 @@ public class MainActivity extends Activity {
                     new String[]{Manifest.permission.CALL_PHONE},
                     MY_PERMISSIONS_REQUEST_CALL_PHONE);
         }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
         linkedUsersDisplayList = new ArrayList<>();
-        new GetLinkedUsersTask().execute();
 
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
 
@@ -200,8 +209,8 @@ public class MainActivity extends Activity {
         i.putExtra("logout", true);
         startActivity(i);
     }
-
     private void showAlertDialog() {
+
         final long numbers[] = new long[4];
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -419,6 +428,19 @@ public class MainActivity extends Activity {
                         emergencyBldg.setPhone(phone);
                         locationList.add(emergencyBldg);
                     }
+                    List<LinkedUser> luList = HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
+
+                    for (LinkedUser lu : luList) {
+                        if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
+                            linkedUsersDisplayList.add(lu);
+                        }
+                    }
+                    if (linkedUsersDisplayList.size() > 0) {
+                        LinkedUser lu = linkedUsersDisplayList.get(0);
+                        int userId = lu.getUserIdTarget();
+
+                        targetUser = HttpHandler.UserController.getUserById(user.getEmail(), user.getPassword(), userId);
+                    }
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
                     runOnUiThread(new Runnable() {
@@ -552,36 +574,6 @@ public class MainActivity extends Activity {
         String basicAuthHeader = username + ":" + password;
         basicAuthHeader = Base64.encodeToString(basicAuthHeader.getBytes("UTF-8"), Base64.NO_WRAP);
         return basicAuthHeader;
-    }
-    private class GetLinkedUsersTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voidArgs) {
-            List<LinkedUser> luList = HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
-
-            for (LinkedUser lu : luList) {
-                if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
-                    linkedUsersDisplayList.add(lu);
-                }
-            }
-            if (linkedUsersDisplayList.size() > 0) {
-                LinkedUser lu = linkedUsersDisplayList.get(0);
-                int userId = lu.getUserIdTarget();
-
-                targetUser = HttpHandler.UserController.getUserById(user.getEmail(), user.getPassword(), userId);
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-        }
     }
 }
 

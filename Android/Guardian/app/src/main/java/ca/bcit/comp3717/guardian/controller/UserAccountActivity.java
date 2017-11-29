@@ -41,6 +41,8 @@ public class UserAccountActivity extends Activity {
         tx.setText(user.getPhone());
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
 
+        tx = (Button) findViewById(R.id.backBtn);
+        tx.setTypeface(custom_font);
         tx = (TextView) findViewById(R.id.usernameText);
         tx.setTypeface(custom_font);
         tx = (TextView) findViewById(R.id.phoneText);
