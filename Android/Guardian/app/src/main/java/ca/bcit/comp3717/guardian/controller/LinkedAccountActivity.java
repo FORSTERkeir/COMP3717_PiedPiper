@@ -342,6 +342,7 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
         LinearLayout llLinkedUsers = (LinearLayout) findViewById(R.id.linearLayout_linkedAccount_linkedUsers);
         llLinkedUsers.setVisibility(View.VISIBLE);
+
         TextView tvNoLinkedUsers = (TextView) findViewById(R.id.textView_linkedAccount_noLinkedUsers);
         tvNoLinkedUsers.setVisibility(View.GONE);
 
@@ -661,7 +662,6 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
         public LinkedUsersAdapter(Context context, int layoutResource, int deleteIconResource,
                                   List<LinkedUser> luList) {
-
             super(context, layoutResource, luList);
             this.layoutResource = layoutResource;
             this.deleteIconResource = deleteIconResource;
@@ -670,7 +670,6 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-
             LinkedUser linkedUser = getItem(position);
 
             LayoutInflater layoutInflater = LayoutInflater.from(this.context);
@@ -797,7 +796,6 @@ public class LinkedAccountActivity extends AppCompatActivity {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                muteAdapterViewCount++;
                 counter++;
                 Log.d(MyMuteCheckedChangeListener.class.getSimpleName(), "Mute ENTERED for ------------------------------> " + linkedUser.getNameTarget());
                 if (this.counter % 2 == 1) {
