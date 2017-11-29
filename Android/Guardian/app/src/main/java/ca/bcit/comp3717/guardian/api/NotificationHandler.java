@@ -2,7 +2,6 @@ package ca.bcit.comp3717.guardian.api;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
@@ -16,11 +15,12 @@ import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.controller.MainActivity;
 import ca.bcit.comp3717.guardian.controller.MapsActivity;
 
-public class MyHandler extends NotificationsHandler {
+public class NotificationHandler extends NotificationsHandler {
     public static final String NOTIFICATION_TITLE_ALERT = "Guardian Alert Triggered";
     public static final String NOTIFICATION_TITLE_UNALERT = "Guardian Alert Dismissed";
     public static final String NOTIFICATION_CONTENT_ALERT = "Help!";
     public static final int NOTIFICATION_ID = 1;
+    public static final int NOTIFICATION_VIB_LENGTH = 60000; // milliseconds
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
     Context ctx;
@@ -52,6 +52,8 @@ public class MyHandler extends NotificationsHandler {
         String msgContent = msg.split(" ")[1];
         boolean isAlert = msgContent.equalsIgnoreCase(NOTIFICATION_CONTENT_ALERT);
 
+        MainActivity.mainActivity.ToastNotify(msgContent);
+
         Uri soundAlarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         Uri soundNotify = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ctx);
@@ -60,7 +62,7 @@ public class MyHandler extends NotificationsHandler {
         if (isAlert) {
             mBuilder.setContentTitle(NOTIFICATION_TITLE_ALERT);
             mBuilder.setSound(soundAlarm);
-            mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+            mBuilder.setVibrate(new long[]{0, NOTIFICATION_VIB_LENGTH});
         } else {
             mBuilder.setContentTitle(NOTIFICATION_TITLE_UNALERT);
             mBuilder.setSound(soundNotify);

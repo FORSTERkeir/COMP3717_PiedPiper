@@ -469,10 +469,9 @@ namespace GuardianNewWestAPI.Controllers
         public IHttpActionResult TestNotification([FromBody] object data)
         {
             var headers = Request.Headers;
-            string user = headers.GetValues("sender").First();
             string message = headers.GetValues("message").First();
             string token = "email:" + headers.GetValues("tag").First();
-            string notif = "{ \"data\" : {\"message\":\"" + "From " + user + ": " + message + "\"}}";
+            string notif = "{ \"data\" : {\"message\":\"" + message + "\"}}";
 
             try
             {

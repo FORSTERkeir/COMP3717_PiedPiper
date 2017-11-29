@@ -3,9 +3,6 @@ package ca.bcit.comp3717.guardian.controller;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -14,7 +11,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -27,12 +23,6 @@ import java.io.UnsupportedEncodingException;
 import android.content.Context;
 
 import java.util.HashSet;
-
-import org.apache.http.client.ClientProtocolException;
-
-import java.io.IOException;
-
-import org.apache.http.HttpStatus;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -49,7 +39,7 @@ import java.util.List;
 
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
-import ca.bcit.comp3717.guardian.api.MyHandler;
+import ca.bcit.comp3717.guardian.api.NotificationHandler;
 import ca.bcit.comp3717.guardian.api.NotificationSettings;
 import ca.bcit.comp3717.guardian.api.RegisterClient;
 import ca.bcit.comp3717.guardian.api.RegistrationIntentService;
@@ -62,11 +52,6 @@ import ca.bcit.comp3717.guardian.util.UserBuilder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
-
-import android.content.Intent;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
@@ -127,7 +112,7 @@ public class MainActivity extends Activity {
 
         // firebase --------------------------------------------------------------------------------
         mainActivity = this;
-        NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, MyHandler.class);
+        NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, NotificationHandler.class);
         //registerWithNotificationHubs();
         gcm = GoogleCloudMessaging.getInstance(this);
         registerClient = new RegisterClient(this, BACKEND_ENDPOINT);
