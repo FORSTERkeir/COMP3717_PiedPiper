@@ -240,10 +240,10 @@ public class HttpHandler {
             }
         }
         public static void setConnUnalertProperties(String email, String password, int userId) {
-            final String URL_AlertUser = "http://guardiannewwestapi.azurewebsites.net/unalert ";
+            final String URL_UnalertUser = "http://guardiannewwestapi.azurewebsites.net/unalert ";
 
             try {
-                HttpURLConnection conn = openConnection(URL_AlertUser);
+                HttpURLConnection conn = openConnection(URL_UnalertUser);
 
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("Authorization", getB64Auth(email, password));

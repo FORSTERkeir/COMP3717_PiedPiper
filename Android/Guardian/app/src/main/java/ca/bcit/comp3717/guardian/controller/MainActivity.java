@@ -97,6 +97,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
+            user = UserBuilder.constructUserFromIntent(getIntent());
+            loadingDialog = DialogBuilder.constructLoadingDialog(MainActivity.this, R.layout.dialog_loading);
+        }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -106,6 +110,8 @@ public class MainActivity extends Activity {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
+        linkedUsersDisplayList = new ArrayList<>();
+        //new GetLinkedUsersTask().execute();
 
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
 
@@ -118,10 +124,6 @@ public class MainActivity extends Activity {
         tx = (Button) findViewById(R.id.logoutBtn);
         tx.setTypeface(custom_font);
 
-        if (savedInstanceState == null) {
-            user = UserBuilder.constructUserFromIntent(getIntent());
-            loadingDialog = DialogBuilder.constructLoadingDialog(MainActivity.this, R.layout.dialog_loading);
-        }
 
         // firebase --------------------------------------------------------------------------------
         mainActivity = this;
@@ -260,13 +262,12 @@ public class MainActivity extends Activity {
                 numbers[2] = item.getPhone();
             }
         }
-        if (linkedUsersDisplayList != null) {
+        if (linkedUsersDisplayList.size() > 0) {
             LinkedUser lu = linkedUsersDisplayList.get(0);
             int userId = lu.getUserIdTarget();
             User targetUser = HttpHandler.UserController.getUserById(user.getEmail(), user.getPassword(), userId);
             numbers[3] = Long.parseLong(targetUser.getPhone());
         }
-        new GetLinkedUsersTask().execute();
 
         // Create custom dialog object
         final Dialog dialog = new Dialog(MainActivity.this);
@@ -573,7 +574,6 @@ public class MainActivity extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loadingDialog.show();
         }
 
         @Override
@@ -585,7 +585,6 @@ public class MainActivity extends Activity {
         protected void onPostExecute(List<LinkedUser> luList) {
             super.onPostExecute(luList);
             getLinkedUsersResponse(luList);
-            loadingDialog.dismiss();
         }
     }
     private void getLinkedUsersResponse(List<LinkedUser> luList) {
