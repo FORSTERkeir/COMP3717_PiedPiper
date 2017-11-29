@@ -442,6 +442,7 @@ public class HttpHandler {
 
     public static class LocationController {
         private static final String URL_GetAllLocations = "http://guardiannewwestapi.azurewebsites.net/location/get/all";
+        private static final String URL_GetLocation = "http://guardiannewwestapi.azurewebsites.net/location/get";
 
         public static List<Location> getLocationsById(String email, String password, int userId) {
             List<Location> locationList = null;
@@ -464,6 +465,29 @@ public class HttpHandler {
                 Log.e(TAG, "ERROR in getLocationsById(): " + e.getMessage());
             }
             return locationList;
+        }
+
+        public static Location getLocationById(String email, String password, int userId) {
+            Location loc = null;
+
+            try {
+                HttpURLConnection conn = openConnection(URL_GetLocation);
+                HttpHandler.setConnRequestProperties(conn, email, password, userId);
+
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "getLocationById() response code: " + conn.getResponseCode());
+
+                } else {
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                    loc = HttpHandler.convertResponseToLocation(response);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "ERROR in getLocationById(): " + e.getMessage());
+            }
+            return loc;
         }
     }
 
@@ -686,6 +710,35 @@ public class HttpHandler {
             Log.e(TAG, "ERROR in convertResponseToLinkedUserList(): " + e.getMessage());
         }
         return linkedUserList;
+    }
+
+    private static Location convertResponseToLocation(String response) {
+        Location location = null;
+
+        try {
+            JSONObject responseObj = new JSONObject(response);
+            JSONArray jsonArrLinkedUsers = responseObj.getJSONArray("location");
+
+            if (jsonArrLinkedUsers.length() > 0) {
+                location = new Location();
+            }
+
+            for (int i = 0; i < jsonArrLinkedUsers.length(); i++) {
+                JSONObject jsonObjLinkedUser = jsonArrLinkedUsers.getJSONObject(i);
+
+                location.setLocationId(jsonObjLinkedUser.getInt("ID"));
+                location.setUserId(jsonObjLinkedUser.getInt("UserID"));
+                location.setLat(jsonObjLinkedUser.getDouble("Lat"));
+                location.setLng(jsonObjLinkedUser.getDouble("Lng"));
+                location.setAlertTime(jsonObjLinkedUser.getString("AlertTime"));
+                location.setUserName(jsonObjLinkedUser.getString("UserName"));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(TAG, "ERROR in convertResponseToLinkedUserList(): " + e.getMessage());
+        }
+        return location;
     }
 
     public static String makeServiceCall(String reqUrl, String email, String password) {

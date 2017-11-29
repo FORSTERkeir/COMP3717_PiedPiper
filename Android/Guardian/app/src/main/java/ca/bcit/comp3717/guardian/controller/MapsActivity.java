@@ -216,8 +216,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for (int i = 0; i < targetUsers.size(); i++) {
             User targetUser = targetUsers.get(i);
             if (targetUser.getStatus() == 6) {
-                //LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                //mMap.addMarker(new MarkerOptions().position(latLng).title(targetUser.getUserName()));
+                ca.bcit.comp3717.guardian.model.Location location
+                        = HttpHandler.LocationController.getLocationById(user.getEmail(), user.getPassword(), targetUser.getId());
+
+                LatLng latLng = new LatLng(location.getLat(), location.getLng());
+                mMap.addMarker(new MarkerOptions().position(latLng).title(targetUser.getUserName()));
             }
         }
     }
