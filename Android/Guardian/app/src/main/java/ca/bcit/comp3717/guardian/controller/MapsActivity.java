@@ -54,6 +54,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     boolean policeFilter;
     private User user;
     private List<LinkedUser> linkedUsersDisplayList;
+    private List<User> targetUsers;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
         Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Guardians.ttf");
-
+        linkedUsersDisplayList = new ArrayList<>();
+        targetUsers = new ArrayList<>();
         Button tx = (Button)findViewById(R.id.back);
         tx.setTypeface(custom_font);
 
@@ -192,6 +195,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         }
+        for (int i = 0; i < targetUsers.size(); i++) {
+            User targetUser = targetUsers.get(i);
+            if (targetUser.getStatus() == 6) {
+                //LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                //mMap.addMarker(new MarkerOptions().position(latLng).title(targetUser.getUserName()));
+            }
+        }
     }
 
     public void onCheckboxClicked(View view) {
@@ -287,6 +297,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     });
 
                 }
+                List<LinkedUser> luList = HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
+
+                for (LinkedUser lu : luList) {
+                    if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
+                        linkedUsersDisplayList.add(lu);
+                    }
+                }
+                for (int i = 0; i < linkedUsersDisplayList.size(); i++) {
+                    LinkedUser lu = linkedUsersDisplayList.get(i);
+                    int userId = lu.getUserIdTarget();
+
+                    targetUsers.add(HttpHandler.UserController.getUserById(user.getEmail(), user.getPassword(), userId));
+                }
+
             } else {
                 Log.e(TAG, "Couldn't get json from server.");
                 runOnUiThread(new Runnable() {
@@ -309,42 +333,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             super.onPostExecute(result);
             loadMap();
         }
-    }
-    private class GetLinkedUsersTask extends AsyncTask<Void, Void, List<LinkedUser>> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected List<LinkedUser> doInBackground(Void... voidArgs) {
-            return HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
-        }
-
-        @Override
-        protected void onPostExecute(List<LinkedUser> luList) {
-            super.onPostExecute(luList);
-            getLinkedUsersResponse(luList);
-        }
-    }
-    private void getLinkedUsersResponse(List<LinkedUser> luList) {
-        if (luList != null) {
-            displayLinkedUserLists(luList);
-        }
-    }
-    private void displayLinkedUserLists(List<LinkedUser> luList) {
-        if (luList != null) {
-            List<LinkedUser> linkedUsers = constructLinkedUsersGivenLinkedUserList(luList);
-        }
-    }
-    private List<LinkedUser> constructLinkedUsersGivenLinkedUserList(List<LinkedUser> luList) {
-        List<LinkedUser> linkedUsers = new ArrayList<>();
-
-        for (LinkedUser lu : luList) {
-            if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
-                linkedUsers.add(lu);
-            }
-        }
-        return linkedUsers.size() == 0 ? null : linkedUsers;
     }
 }
