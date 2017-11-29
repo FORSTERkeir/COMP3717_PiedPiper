@@ -197,7 +197,7 @@ public class MainActivity extends Activity {
 
     public void goToLandingActivity() {
         Intent i = new Intent(this, LandingActivity.class);
-        Toast.makeText(this.getBaseContext(), user.getUserName() + " Logged out", Toast.LENGTH_SHORT).show();
+        i.putExtra("logout", true);
         startActivity(i);
     }
 
