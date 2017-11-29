@@ -52,4 +52,8 @@
 
     <!-- dialog_alert -->
     <string name="button_dialogAlert_ok">Ok</string>
+
+    <!-- notification -->
+    <string name="notification_title">Guardian</string>
+
 </resources>
