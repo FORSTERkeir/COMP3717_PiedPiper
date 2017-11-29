@@ -2,10 +2,12 @@ package ca.bcit.comp3717.guardian.controller;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -37,6 +39,17 @@ public class UserAccountActivity extends Activity {
         tx.setText(user.getEmail());
         tx = (TextView) findViewById(R.id.phoneInput);
         tx.setText(user.getPhone());
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
+
+        tx = (Button) findViewById(R.id.backBtn);
+        tx.setTypeface(custom_font);
+        tx = (TextView) findViewById(R.id.usernameText);
+        tx.setTypeface(custom_font);
+        tx = (TextView) findViewById(R.id.phoneText);
+        tx.setTypeface(custom_font);
+        tx = (TextView) findViewById(R.id.emailText);
+        tx.setTypeface(custom_font);
+
     }
 
     public void back (View view) {

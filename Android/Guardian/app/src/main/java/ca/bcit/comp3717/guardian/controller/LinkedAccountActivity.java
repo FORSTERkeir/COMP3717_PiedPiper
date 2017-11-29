@@ -3,6 +3,7 @@ package ca.bcit.comp3717.guardian.controller;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -52,6 +53,11 @@ public class LinkedAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_linked_account);
+
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
+
+        Button tx = (Button) findViewById(R.id.backBtn);
+        tx.setTypeface(custom_font);
 
         if (savedInstanceState == null) {
             user = UserBuilder.constructUserFromIntent(getIntent());
