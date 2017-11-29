@@ -65,6 +65,7 @@ public class MainActivity extends Activity {
     private Dialog loadingDialog;
     private List<LinkedUser> linkedUsersDisplayList;
     boolean alertNotification = false;
+    User targetUser;
 
     // firebase ------------------------------------------------------------------------------------
     public static MainActivity mainActivity;
@@ -96,7 +97,7 @@ public class MainActivity extends Activity {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
         linkedUsersDisplayList = new ArrayList<>();
-        //new GetLinkedUsersTask().execute();
+        new GetLinkedUsersTask().execute();
 
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/Guardians.ttf");
 
@@ -248,9 +249,6 @@ public class MainActivity extends Activity {
             }
         }
         if (linkedUsersDisplayList.size() > 0) {
-            LinkedUser lu = linkedUsersDisplayList.get(0);
-            int userId = lu.getUserIdTarget();
-            User targetUser = HttpHandler.UserController.getUserById(user.getEmail(), user.getPassword(), userId);
             numbers[3] = Long.parseLong(targetUser.getPhone());
         }
 
@@ -555,42 +553,35 @@ public class MainActivity extends Activity {
         basicAuthHeader = Base64.encodeToString(basicAuthHeader.getBytes("UTF-8"), Base64.NO_WRAP);
         return basicAuthHeader;
     }
-    private class GetLinkedUsersTask extends AsyncTask<Void, Void, List<LinkedUser>> {
+    private class GetLinkedUsersTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
         @Override
-        protected List<LinkedUser> doInBackground(Void... voidArgs) {
-            return HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
+        protected Void doInBackground(Void... voidArgs) {
+            List<LinkedUser> luList = HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
+
+            for (LinkedUser lu : luList) {
+                if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
+                    linkedUsersDisplayList.add(lu);
+                }
+            }
+            if (linkedUsersDisplayList.size() > 0) {
+                LinkedUser lu = linkedUsersDisplayList.get(0);
+                int userId = lu.getUserIdTarget();
+
+                targetUser = HttpHandler.UserController.getUserById(user.getEmail(), user.getPassword(), userId);
+            }
+
+            return null;
         }
 
         @Override
-        protected void onPostExecute(List<LinkedUser> luList) {
-            super.onPostExecute(luList);
-            getLinkedUsersResponse(luList);
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
         }
-    }
-    private void getLinkedUsersResponse(List<LinkedUser> luList) {
-        if (luList != null) {
-            displayLinkedUserLists(luList);
-        }
-    }
-    private void displayLinkedUserLists(List<LinkedUser> luList) {
-        if (luList != null) {
-            linkedUsersDisplayList = constructLinkedUsersGivenLinkedUserList(luList);
-        }
-    }
-    private List<LinkedUser> constructLinkedUsersGivenLinkedUserList(List<LinkedUser> luList) {
-        List<LinkedUser> linkedUsers = new ArrayList<>();
-
-        for (LinkedUser lu : luList) {
-            if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
-                linkedUsers.add(lu);
-            }
-        }
-        return linkedUsers.size() == 0 ? null : linkedUsers;
     }
 }
 
