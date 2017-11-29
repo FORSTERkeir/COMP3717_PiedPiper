@@ -15,6 +15,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
@@ -34,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
@@ -42,6 +44,7 @@ import ca.bcit.comp3717.guardian.api.NotificationSettings;
 import ca.bcit.comp3717.guardian.api.RegisterClient;
 import ca.bcit.comp3717.guardian.api.RegistrationIntentService;
 import ca.bcit.comp3717.guardian.model.EmergencyBuilding;
+import ca.bcit.comp3717.guardian.model.LinkedUser;
 import ca.bcit.comp3717.guardian.model.User;
 import ca.bcit.comp3717.guardian.util.DialogBuilder;
 import ca.bcit.comp3717.guardian.util.UserBuilder;
@@ -60,6 +63,8 @@ public class MainActivity extends Activity {
     ArrayList<EmergencyBuilding> locationList;
     private User user;
     private Dialog loadingDialog;
+    private List<LinkedUser> linkedUsersDisplayList;
+    boolean alertNotification = false;
 
     // firebase ------------------------------------------------------------------------------------
     public static MainActivity mainActivity;
@@ -215,47 +220,38 @@ public class MainActivity extends Activity {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            for (int i = 0; i < locationList.size(); i++) {
-                                EmergencyBuilding item = locationList.get(i);
-                                if (numbers[0] == 0 && item.getCategory() == 1) {
-                                    numbers[0] = item.getPhone();
-                                }
-                                if (numbers[1] == 0 && item.getCategory() == 2) {
-                                    numbers[1] = item.getPhone();
-                                }
-                                if (numbers[2] == 0 && item.getCategory() == 3) {
-                                    numbers[2] = item.getPhone();
-                                }
+                            if (alertNotification == false) {
+                                alertNotification = true;
+                                HttpHandler.UserController.setConnAlertProperties(user.getEmail(), user.getPassword(), user.getId(), location.getLatitude(), location.getLongitude());
+                            }
+                            else {
+                                alertNotification = false;
+                                HttpHandler.UserController.setConnUnalertProperties(user.getEmail(), user.getPassword(), user.getId());
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Location null", Toast.LENGTH_LONG).show();
-                            for (int i = 0; i < locationList.size(); i++) {
-                                EmergencyBuilding item = locationList.get(i);
-                                if (numbers[0] == 0 && item.getCategory() == 1) {
-                                    numbers[0] = item.getPhone();
-                                }
-                                if (numbers[1] == 0 && item.getCategory() == 2) {
-                                    numbers[1] = item.getPhone();
-                                }
-                                if (numbers[2] == 0 && item.getCategory() == 3) {
-                                    numbers[2] = item.getPhone();
-                                }
-                            }
                         }
                     }
                 });
         for (int i = 0; i < locationList.size(); i++) {
             EmergencyBuilding item = locationList.get(i);
-            if (numbers[0] == 0 && item.getCategory() == 1) {
+            if (numbers[0] == 0 && item.getCategory() == 2) {
                 numbers[0] = item.getPhone();
             }
-            if (numbers[1] == 0 && item.getCategory() == 2) {
+            if (numbers[1] == 0 && item.getCategory() == 3) {
                 numbers[1] = item.getPhone();
             }
-            if (numbers[2] == 0 && item.getCategory() == 3) {
+            if (numbers[2] == 0 && item.getCategory() == 4) {
                 numbers[2] = item.getPhone();
             }
         }
+        if (linkedUsersDisplayList != null) {
+            LinkedUser lu = linkedUsersDisplayList.get(0);
+            int userId = lu.getUserIdTarget();
+            User targetUser = HttpHandler.UserController.getUserById(user.getEmail(), user.getPassword(), userId);
+            numbers[3] = Long.parseLong(targetUser.getPhone());
+        }
+        new GetLinkedUsersTask().execute();
 
         // Create custom dialog object
         final Dialog dialog = new Dialog(MainActivity.this);
@@ -269,6 +265,8 @@ public class MainActivity extends Activity {
         hospital.setText("" + numbers[1]);
         Button police = (Button) dialog.findViewById(R.id.policeBtn);
         police.setText("" + numbers[2]);
+        Button guardian = (Button) dialog.findViewById(R.id.guardianBtn);
+        guardian.setText("" + numbers[3]);
 
         dialog.show();
 
@@ -392,7 +390,7 @@ public class MainActivity extends Activity {
 
             // Making a request to url and getting response
             String SERVICE_URL = "http://guardiannewwestapi.azurewebsites.net/emergencybldg/get/all/";
-            String jsonStr = sh.makeServiceCall(SERVICE_URL);
+            String jsonStr = sh.makeServiceCall(SERVICE_URL, user.getEmail(), user.getPassword());
             Log.e(TAG, "Response from url: " + jsonStr);
 
             if (jsonStr != null) {
@@ -555,6 +553,45 @@ public class MainActivity extends Activity {
         String basicAuthHeader = username + ":" + password;
         basicAuthHeader = Base64.encodeToString(basicAuthHeader.getBytes("UTF-8"), Base64.NO_WRAP);
         return basicAuthHeader;
+    }
+    private class GetLinkedUsersTask extends AsyncTask<Void, Void, List<LinkedUser>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingDialog.show();
+        }
+
+        @Override
+        protected List<LinkedUser> doInBackground(Void... voidArgs) {
+            return HttpHandler.LinkedUserController.getLinkedUsersById(user.getEmail(), user.getPassword(), user.getId());
+        }
+
+        @Override
+        protected void onPostExecute(List<LinkedUser> luList) {
+            super.onPostExecute(luList);
+            getLinkedUsersResponse(luList);
+            loadingDialog.dismiss();
+        }
+    }
+    private void getLinkedUsersResponse(List<LinkedUser> luList) {
+        if (luList != null) {
+            displayLinkedUserLists(luList);
+        }
+    }
+    private void displayLinkedUserLists(List<LinkedUser> luList) {
+        if (luList != null) {
+            linkedUsersDisplayList = constructLinkedUsersGivenLinkedUserList(luList);
+        }
+    }
+    private List<LinkedUser> constructLinkedUsersGivenLinkedUserList(List<LinkedUser> luList) {
+        List<LinkedUser> linkedUsers = new ArrayList<>();
+
+        for (LinkedUser lu : luList) {
+            if (lu.isAddedMe() && lu.isAddedTarget() && !lu.isDeleted()) {
+                linkedUsers.add(lu);
+            }
+        }
+        return linkedUsers.size() == 0 ? null : linkedUsers;
     }
 }
 
