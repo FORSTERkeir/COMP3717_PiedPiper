@@ -392,6 +392,7 @@ namespace GuardianNewWestAPI.Controllers
                         ArrayList conditionS1 = new ArrayList();
                         string s1;
                         assignS1.Add(LinkedUser.COL_ADDED1 + "=1");
+                        assignS1.Add(LinkedUser.COL_ALERT1 + "=1");
                         assignS1.Add(LinkedUser.COL_DELETED + "=0");
                         conditionS1.Add(LinkedUser.COL_USERID1 + "=" + idMe
                             + QueryGenerator.SPACE + QueryGenerator.KW_AND + QueryGenerator.SPACE
@@ -403,6 +404,7 @@ namespace GuardianNewWestAPI.Controllers
                         ArrayList conditionS2 = new ArrayList();
                         string s2;
                         assignS2.Add(LinkedUser.COL_ADDED2 + "=1");
+                        assignS2.Add(LinkedUser.COL_ALERT2 + "=1");
                         assignS2.Add(LinkedUser.COL_DELETED + "=0");
                         conditionS2.Add(LinkedUser.COL_USERID1 + "=" + idTarget
                             + QueryGenerator.SPACE + QueryGenerator.KW_AND + QueryGenerator.SPACE
