@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import ca.bcit.comp3717.guardian.R;
 import ca.bcit.comp3717.guardian.api.HttpHandler;
 import ca.bcit.comp3717.guardian.database.DatabaseHelper;
@@ -43,7 +42,9 @@ public class LandingActivity extends AppCompatActivity {
         tx.setTypeface(custom_font);
         loadingDialog = DialogBuilder.constructLoadingDialog(LandingActivity.this,
                 R.layout.dialog_loading);
-        new GetLocalLoginValuesTask().execute();
+        if (!getIntent().getBooleanExtra("logout", false)) {
+            new GetLocalLoginValuesTask().execute();
+        }
     }
 
     @Override
@@ -154,7 +155,6 @@ public class LandingActivity extends AppCompatActivity {
         i.putExtra("password", user.getPassword());
         i.putExtra("email", user.getEmail());
         i.putExtra("phoneNumber", user.getPhone());
-        Toast.makeText(this.getBaseContext(), user.getUserName() + " Logged in", Toast.LENGTH_SHORT).show();
         startActivity(i);
     }
 

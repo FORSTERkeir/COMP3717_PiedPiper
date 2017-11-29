@@ -176,9 +176,9 @@ public class HttpHandler {
 
                 } else {
                     InputStream in = new BufferedInputStream(conn.getInputStream());
-                    boolean logoutFail = UserValidation.validateUserLogoutResponse(HttpHandler.convertStreamToString(in));
+                    boolean logoutSuccess = UserValidation.validateUserLogoutResponse(HttpHandler.convertStreamToString(in));
 
-                    if (logoutFail) {
+                    if (!logoutSuccess) {
                         Log.e(TAG, "logoutByEmail() response: failed to logout " + email);
                     }
                 }
