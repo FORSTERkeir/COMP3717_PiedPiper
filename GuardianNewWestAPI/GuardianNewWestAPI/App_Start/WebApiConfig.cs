@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using GuardianNewWestAPI.Filters;
 using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
 using System.Web.Http;
 
 namespace ContactList
@@ -25,6 +22,8 @@ namespace ContactList
             // JSON response
             GlobalConfiguration.Configuration.Formatters.Clear();
             GlobalConfiguration.Configuration.Formatters.Add(new JsonMediaTypeFormatter());
+
+            config.MessageHandlers.Add(new AuthenticationHandler());
         }
     }
 }

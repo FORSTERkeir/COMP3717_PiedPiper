@@ -3,6 +3,9 @@ package ca.bcit.comp3717.guardian.controller;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -11,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -517,8 +521,7 @@ public class MainActivity extends Activity {
     }
 
     // firebase
-    public void registerWithNotificationHubs()
-    {
+    public void registerWithNotificationHubs() {
         if (checkPlayServices()) {
             // Start IntentService to displayRegisterUserDialog this application with FCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);
