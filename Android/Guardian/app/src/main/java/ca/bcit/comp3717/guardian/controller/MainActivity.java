@@ -562,8 +562,8 @@ public class MainActivity extends Activity {
             }
 
             protected void onPostExecute(Object result) {
-                Toast.makeText(context, "Logged in and registered.",
-                        Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "Logged in and registered.",
+                //        Toast.LENGTH_LONG).show();
             }
         }.execute(null, null, null);
     }
