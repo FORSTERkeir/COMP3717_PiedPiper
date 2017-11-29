@@ -61,25 +61,25 @@
 
     <EditText
         android:id="@+id/editText_landingActivity_password"
-        android:layout_width="0dp"
+        android:layout_width="212dp"
         android:layout_height="49dp"
+        android:layout_marginBottom="62dp"
+        android:layout_marginEnd="83dp"
+        android:layout_marginStart="83dp"
+        android:layout_marginTop="65dp"
         android:ems="10"
         android:hint="@string/passwordHint"
         android:inputType="textPassword"
-        android:layout_marginStart="83dp"
-        android:layout_marginEnd="83dp"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/button_landingActivity_login"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="65dp"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="62dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editText_landingActivity_email"
         app:layout_constraintHorizontal_bias="0.421"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editText_landingActivity_email"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <Button
         android:id="@+id/button_landingActivity_login"

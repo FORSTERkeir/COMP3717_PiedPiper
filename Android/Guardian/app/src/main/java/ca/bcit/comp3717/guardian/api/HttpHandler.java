@@ -217,6 +217,29 @@ public class HttpHandler {
                 Log.e(TAG, "ERROR in refreshToken(): " + e.getMessage());
             }
         }
+
+        // GetUserById, GetLinkedUsersById
+        public static void setConnAlertProperties(String email, String password, int userId,
+                                                   double lat, double lng) {
+            final String URL_AlertUser = "http://guardiannewwestapi.azurewebsites.net/alert";
+
+            try {
+                HttpURLConnection conn = openConnection(URL_AlertUser);
+
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Authorization", getB64Auth(email, password));
+                conn.setRequestProperty("userid", String.valueOf(userId));
+                conn.setRequestProperty("lat", String.valueOf(lat));
+                conn.setRequestProperty("lng", String.valueOf(lng));
+                conn.setRequestMethod("POST");
+
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public static class LinkedUserController {
@@ -539,11 +562,14 @@ public class HttpHandler {
         return linkedUserList;
     }
 
-    public static String makeServiceCall(String reqUrl) {
+    public static String makeServiceCall(String reqUrl, String email, String password) {
         String response = null;
         try {
             HttpURLConnection conn = openConnection(reqUrl);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", getB64Auth("test@test.com", "test"));
             conn.setRequestMethod("GET");
+
 
             // read the response
             InputStream in = new BufferedInputStream(conn.getInputStream());

@@ -56,6 +56,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        Intent i = getIntent();
+
+        user = new User();
+        user.setId(i.getIntExtra("userId", -1));
+        user.setUserName(i.getStringExtra("userName"));
+        user.setEmail(i.getStringExtra("email"));
+        user.setPassword(i.getStringExtra("password"));
+        user.setPhone(i.getStringExtra("phoneNumber"));
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationList = new ArrayList<>();
         Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/Guardians.ttf");
@@ -72,15 +81,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        Intent i = getIntent();
-
-        user = new User();
-        user.setId(i.getIntExtra("userId", -1));
-        user.setUserName(i.getStringExtra("userName"));
-        user.setEmail(i.getStringExtra("email"));
-        user.setPassword(i.getStringExtra("password"));
-        user.setPhone(i.getStringExtra("phoneNumber"));
 
     }
 
@@ -174,16 +174,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
         for (int i = 0; i < locationList.size(); i++) {
             EmergencyBuilding item = locationList.get(i);
-            if ((fireFilter && item.getCategory() == 1) || (hospitalFilter && item.getCategory() == 2) || (policeFilter && item.getCategory() == 3)) {
+            if ((fireFilter && item.getCategory() == 2) || (hospitalFilter && item.getCategory() == 3) || (policeFilter && item.getCategory() == 4)) {
                 LatLng latLng = new LatLng(Float.parseFloat(item.getLatitutde()), Float.parseFloat(item.getLongitude()));
                 switch(item.getCategory()) {
-                    case 1:
+                    case 2:
                         mMap.addMarker(new MarkerOptions().position(latLng).title(item.getBldgName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker)));
                         break;
-                    case 2:
+                    case 3:
                         mMap.addMarker(new MarkerOptions().position(latLng).title(item.getBldgName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.darkgreen_marker)));
                         break;
-                    case 3:
+                    default:
                         mMap.addMarker(new MarkerOptions().position(latLng).title(item.getBldgName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_marker)));
                         break;
                 }
@@ -241,7 +241,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             // Making a request to url and getting response
             String SERVICE_URL = "http://guardiannewwestapi.azurewebsites.net/emergencybldg/get/all/";
-            String jsonStr = HttpHandler.makeServiceCall(SERVICE_URL);
+            String jsonStr = HttpHandler.makeServiceCall(SERVICE_URL, user.getEmail(), user.getPassword());
             Log.e(TAG, "Response from url: " + jsonStr);
 
             if (jsonStr != null) {

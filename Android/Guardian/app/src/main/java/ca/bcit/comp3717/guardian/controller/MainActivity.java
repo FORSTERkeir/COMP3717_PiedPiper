@@ -226,15 +226,17 @@ public class MainActivity extends Activity {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            Toast.makeText(getApplicationContext(), "" + location.getLatitude(), Toast.LENGTH_LONG).show();
+                            HttpHandler.UserController.setConnAlertProperties(user.getEmail(), user.getPassword(), user.getId(), location.getLatitude(), location.getLongitude());
                             for (int i = 0; i < locationList.size(); i++) {
                                 EmergencyBuilding item = locationList.get(i);
-                                if (numbers[0] == 0 && item.getCategory() == 1) {
+                                if (numbers[0] == 0 && item.getCategory() == 2) {
                                     numbers[0] = item.getPhone();
                                 }
-                                if (numbers[1] == 0 && item.getCategory() == 2) {
+                                if (numbers[1] == 0 && item.getCategory() == 3) {
                                     numbers[1] = item.getPhone();
                                 }
-                                if (numbers[2] == 0 && item.getCategory() == 3) {
+                                if (numbers[2] == 0 && item.getCategory() == 4) {
                                     numbers[2] = item.getPhone();
                                 }
                             }
@@ -242,13 +244,13 @@ public class MainActivity extends Activity {
                             Toast.makeText(getApplicationContext(), "Location null", Toast.LENGTH_LONG).show();
                             for (int i = 0; i < locationList.size(); i++) {
                                 EmergencyBuilding item = locationList.get(i);
-                                if (numbers[0] == 0 && item.getCategory() == 1) {
+                                if (numbers[0] == 0 && item.getCategory() == 2) {
                                     numbers[0] = item.getPhone();
                                 }
-                                if (numbers[1] == 0 && item.getCategory() == 2) {
+                                if (numbers[1] == 0 && item.getCategory() == 3) {
                                     numbers[1] = item.getPhone();
                                 }
-                                if (numbers[2] == 0 && item.getCategory() == 3) {
+                                if (numbers[2] == 0 && item.getCategory() == 4) {
                                     numbers[2] = item.getPhone();
                                 }
                             }
@@ -257,13 +259,13 @@ public class MainActivity extends Activity {
                 });
         for (int i = 0; i < locationList.size(); i++) {
             EmergencyBuilding item = locationList.get(i);
-            if (numbers[0] == 0 && item.getCategory() == 1) {
+            if (numbers[0] == 0 && item.getCategory() == 2) {
                 numbers[0] = item.getPhone();
             }
-            if (numbers[1] == 0 && item.getCategory() == 2) {
+            if (numbers[1] == 0 && item.getCategory() == 3) {
                 numbers[1] = item.getPhone();
             }
-            if (numbers[2] == 0 && item.getCategory() == 3) {
+            if (numbers[2] == 0 && item.getCategory() == 4) {
                 numbers[2] = item.getPhone();
             }
         }
@@ -403,7 +405,7 @@ public class MainActivity extends Activity {
 
             // Making a request to url and getting response
             String SERVICE_URL = "http://guardiannewwestapi.azurewebsites.net/emergencybldg/get/all/";
-            String jsonStr = sh.makeServiceCall(SERVICE_URL);
+            String jsonStr = sh.makeServiceCall(SERVICE_URL, user.getEmail(), user.getPassword());
             Log.e(TAG, "Response from url: " + jsonStr);
 
             if (jsonStr != null) {
