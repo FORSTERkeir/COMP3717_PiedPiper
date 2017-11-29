@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.bcit.comp3717.guardian.model.LinkedUser;
+import ca.bcit.comp3717.guardian.model.Location;
 import ca.bcit.comp3717.guardian.model.User;
 import ca.bcit.comp3717.guardian.util.UserValidation;
 
@@ -392,6 +393,34 @@ public class HttpHandler {
         }
     }
 
+    public static class LocationController {
+        private static final String URL_GetAllLocations = "http://guardiannewwestapi.azurewebsites.net/location/get/all";
+
+        public static List<Location> getLocationsById(String email, String password, int userId) {
+            List<Location> locationList = null;
+
+            try {
+                HttpURLConnection conn = openConnection(URL_GetAllLocations);
+                HttpHandler.setConnRequestProperties(conn, email, password, userId);
+
+                if (conn.getResponseCode() != 200) {
+                    Log.e(TAG, "getLocationsById() response code: " + conn.getResponseCode());
+
+                } else {
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    String response = HttpHandler.convertStreamToString(in);
+                    locationList = HttpHandler.convertResponseToLocationList(response);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e(TAG, "ERROR in getLocationsById(): " + e.getMessage());
+            }
+            return locationList;
+        }
+    }
+
+
     private static HttpURLConnection openConnection(String urlString) throws IOException {
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -571,6 +600,38 @@ public class HttpHandler {
                 linkedUser.setStatusTarget(jsonObjLinkedUser.getInt("StatusTarget"));
 
                 linkedUserList.add(linkedUser);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e(TAG, "ERROR in convertResponseToLinkedUserList(): " + e.getMessage());
+        }
+        return linkedUserList;
+    }
+
+    private static List<Location> convertResponseToLocationList(String response) {
+        List<Location> linkedUserList = null;
+
+        try {
+            JSONObject responseObj = new JSONObject(response);
+            JSONArray jsonArrLinkedUsers = responseObj.getJSONArray("locations");
+
+            if (jsonArrLinkedUsers.length() > 0) {
+                linkedUserList = new ArrayList<>();
+            }
+
+            for (int i = 0; i < jsonArrLinkedUsers.length(); i++) {
+                JSONObject jsonObjLinkedUser = jsonArrLinkedUsers.getJSONObject(i);
+                Location location = new Location();
+
+                location.setLocationId(jsonObjLinkedUser.getInt("ID"));
+                location.setUserId(jsonObjLinkedUser.getInt("UserID"));
+                location.setLat(jsonObjLinkedUser.getDouble("Lat"));
+                location.setLng(jsonObjLinkedUser.getDouble("Lng"));
+                location.setAlertTime(jsonObjLinkedUser.getString("AlertTime"));
+                location.setUserName(jsonObjLinkedUser.getString("UserName"));
+
+                linkedUserList.add(location);
             }
 
         } catch (JSONException e) {

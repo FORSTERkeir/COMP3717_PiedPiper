@@ -1,5 +1,6 @@
 package ca.bcit.comp3717.guardian.api;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -41,7 +42,7 @@ public class NotificationHandler extends NotificationsHandler {
 
     private void sendNotification(String msg) {
         Intent intent = new Intent(ctx, MapsActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         mNotificationManager = (NotificationManager)
                 ctx.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -69,6 +70,9 @@ public class NotificationHandler extends NotificationsHandler {
         mBuilder.setContentText(msg);
 
         mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        Notification notification = mBuilder.build();
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
     }
 }

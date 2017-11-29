@@ -16,5 +16,6 @@ namespace GuardianNewWestAPI.Models
         public double Lat { get; set; }
         public double Lng { get; set; }
         public DateTime AlertTime { get; set; }
+        public string UserName { get; set; }
     }
 }
