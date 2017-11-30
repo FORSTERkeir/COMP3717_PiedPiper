@@ -107,7 +107,6 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\GenericStorage.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\EmergencyBldgController.cs" />
@@ -116,7 +115,6 @@
     <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\ContactsController.cs" />
     <Compile Include="Filters\ApiIdentity.cs" />
     <Compile Include="Filters\AuthenticationHandler.cs" />
     <Compile Include="Filters\BasicAuthenticationFilterAttribute.cs" />
@@ -128,7 +126,6 @@
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Notifications.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\Contact.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\JsonContent.cs" />
     <Compile Include="Utilities\QueryGenerator.cs" />

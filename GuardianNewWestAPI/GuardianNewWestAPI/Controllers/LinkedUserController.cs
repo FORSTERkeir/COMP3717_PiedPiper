@@ -110,7 +110,7 @@ namespace GuardianNewWestAPI.Controllers
                         }
                         linkedUsers.Sort();
 
-                        // query linked user name
+                        // query linked user name and status
                         ArrayList columsS2 = new ArrayList();
                         ArrayList conditionsS2 = new ArrayList();
                         ArrayList ordersS2 = new ArrayList();
@@ -119,6 +119,7 @@ namespace GuardianNewWestAPI.Controllers
                         columsS2.Add(Models.User.COL_ID);
                         columsS2.Add(Models.User.COL_DELETED);
                         columsS2.Add(Models.User.COL_USERNAME);
+                        columsS2.Add(Models.User.COL_STATUS);
                         for (int i = 0; i < linkedUsers.Count; ++i)
                         {
                             if (i > 0)
@@ -137,18 +138,23 @@ namespace GuardianNewWestAPI.Controllers
                         {
                             int i = 0;
 
-                            while (dr.Read())
+                            if (linkedUsers.Count > 0)
                             {
-                                if (((LinkedUser)linkedUsers[i]).UserIDTarget == dr.GetInt32(0)
-                                    && !dr.GetBoolean(1))
+                                while (dr.Read())
                                 {
-                                    ((LinkedUser)linkedUsers[i]).NameTarget = dr.GetString(2);
+                                    if (((LinkedUser)linkedUsers[i]).UserIDTarget == dr.GetInt32(0)
+                                        && !dr.GetBoolean(1))
+                                    {
+                                        ((LinkedUser)linkedUsers[i]).NameTarget = dr.GetString(2);
+                                        ((LinkedUser)linkedUsers[i]).StatusTarget = dr.GetInt32(3);
+                                    }
+                                    else
+                                    {
+                                        ((LinkedUser)linkedUsers[i]).NameTarget = string.Empty;
+                                        ((LinkedUser)linkedUsers[i]).StatusTarget = 5;
+                                    }
+                                    i++;
                                 }
-                                else
-                                {
-                                    ((LinkedUser)linkedUsers[i]).NameTarget = string.Empty;
-                                }
-                                i++;
                             }
                             dr.Close();
                         }
@@ -165,11 +171,9 @@ namespace GuardianNewWestAPI.Controllers
             }
             catch (Exception e)
             {
-                return ResponseMessage(JsonContent.ReturnMessage("The request is invalid.", ""));
+                return ResponseMessage(JsonContent.ReturnMessage("The request is invalid.", e.ToString()));
             }
-
-            if (linkedUsers.Count == 0)
-                return ResponseMessage(JsonContent.ReturnMessage("No linked-user is found.", ""));
+            
             return Ok(new { linkedUsers });
         }
 
