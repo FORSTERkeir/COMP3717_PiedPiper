@@ -622,6 +622,17 @@ public class LinkedAccountActivity extends AppCompatActivity {
                 switch (v.getId()) {
 
                     case R.id.button_listView3column_confirm:
+
+                        if (linkedUsersAdapter == null) {
+                            linkedUsersDisplayList = new ArrayList<>();
+//                            linkedUsersDisplayList.add(this.linkedUser);
+
+                            linkedUsersAdapter = new LinkedUsersAdapter(
+                                LinkedAccountActivity.this, R.layout.listview_5column, R.drawable.ic_delete_red, linkedUsersDisplayList);
+                            displayLinkedUsers(linkedUsersDisplayList);
+                            linkedUsersAdapter.notifyDataSetChanged(); // Update linkedUsers gui list
+                        }
+
                         linkedUserRequestsAdapter.remove(this.linkedUser); // Remove from linkedUserRequests gui list
                         this.linkedUser.setConfirmedByGui(true); // Set as confirmed
                         linkedUsersAdapter.add(this.linkedUser); // Add to linkedUsers gui list
